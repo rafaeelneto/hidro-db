@@ -1,6 +1,8 @@
 document.querySelector('#sidebarCollapse').addEventListener('click', function(){
-    console.log('miaaaaaaau')
-    document.querySelector('#sidebar').classList.toggle('active');
+	document.querySelector('#sidebar').classList.toggle('active');
+	document.querySelector('.content').classList.toggle('active');
+	document.querySelector('.omnibox').classList.toggle('active');
+	document.querySelector('#sidebarCollapse').classList.toggle('actived');
 });
 
 //-1.41501/-48.42868
@@ -12,3 +14,5 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 	id: 'mapbox.light',
 	accessToken: 'pk.eyJ1IjoicmFmYWVlbCIsImEiOiJjano4dDh1OHMwM2xtM2JwbG9jcWFmaXhzIn0.SihsXFXEW54INSxYcZ6_BQ'
 }).addTo(map);
+
+map.zoomControl.setPosition('bottomright');
