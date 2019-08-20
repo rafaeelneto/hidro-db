@@ -1,0 +1,28 @@
+{
+  "name": "cosanpa-db",
+  "version": "1.0.0",
+  "description": "Project of cosanpa-db to acess and control cosanpa informations",
+  "main": "app.js",
+  "scripts": {
+    "scss": "node-sass -w public/scss/ -r -o public/css/",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "cosanpa",
+    "database"
+  ],
+  "author": "Rafael Gomes",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bootstrap": "^4.3.1",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "express-session": "^1.16.2",
+    "pg": "^7.12.1"
+  },
+  "devDependencies": {
+    "node-sass": "^4.12.0"
+  }
+}
