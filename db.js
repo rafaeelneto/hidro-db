@@ -1,9 +1,13 @@
-import {Pool} from 'pg';
+const Pool = require('pg');
 
-const pool = new Poll(process.env.DB_URL);
-pgClient.connect();
+const pool = new Pool();
 
-pool.query('SELECT NOW()', (err, res) => {
-    console.log(err, res)
-    pool.end();
-})
+module.exports = {
+    queryAll: (queryText, param) => pool.query(queryText, param),
+}
+
+/*
+    pool.query('SELECT * FROM poços', (err, res) => {
+        console.log(err, res)
+        pool.end()
+    })*/

@@ -1,10 +1,13 @@
 /*! `Custom` Bootstrap 4 theme */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,700");
-$font-family-base:Open Sans;
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,400i,700&display=swap');
+$font-family-base:Roboto;
 
 $enable-grid-classes:false;
-$primary:#07689F;
-$secondary:#a6c2d2;
+$primary:#104A65;
+$primaryDark: #232a2c;
+$secondary:#9bafbb;
+$yellowLight: #E2A74F;
 $success:#0ead99;
 $danger:#F67280;
 $info:#A2D5F2;
@@ -42,7 +45,7 @@ $btn-border-radius:.25rem;
 }
 
 .omnibox {
-    margin: 5px;
+    margin: 10px;
     width: 50%;
     display: block;
     position: absolute;
@@ -71,23 +74,31 @@ $btn-border-radius:.25rem;
     z-index: 1;
 }
 
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
 /*
 ===============
 Sidebar
 ===============
 */
 
+$sidebarSize: 280px;
+
 #sidebar {
     transition: all 0.3s;
     width: 0px;
-    max-width: 250px;
+    max-width: $sidebarSize;
     position: fixed; /* Stay in place */
     z-index: 1; /* Stay on top */
     top: 0;
     left: 0;
     padding: 10px;
     height: 100vh;
-    background: #223338;
+    background: $primaryDark;
 }
 
 #sidebar ul.components {
@@ -95,32 +106,28 @@ Sidebar
     border-bottom: 1px solid #47748b;
 }
 
-#sidebar ul p {
-    color: #fff;
-    padding: 10px;
-}
-
-a, a:hover, a:focus {
-    color: inherit;
-    text-decoration: none;
-    transition: all 0.3s;
+#sidebar ul li {
+    display: block;
 }
 
 #sidebar ul li a {
-    color: #fff;
+    margin: 2px 0 2px 0;
+    color: $yellowLight;
+    font-weight: 700;
+    letter-spacing: .3em;
     border-radius: 10px;
     padding: 10px;
-    font-size: 1.1em;
+    font-size: 14px;
     display: block;
+    white-space: nowrap;
 }
 #sidebar ul li a:hover {
-    color: #416975;
-    background: #538fa1;
+    color: $yellowLight;
+    background: #3e4749;
 }
 
 #sidebar ul li.active > a {
-    color: #fff;
-    background: #85bdce;
+    background: $primary;
 }
 ul ul a {
     font-size: 0.9em !important;
@@ -129,7 +136,7 @@ ul ul a {
 }
 
 #sidebar.active {
-    width: 250px;
+    width: $sidebarSize;
 }
 
 #sidebar ul.components {
@@ -138,14 +145,14 @@ ul ul a {
 }
 
 .content.active{
-    margin-left: 250px;
+    margin-left: $sidebarSize;
 }
 
 .header-logo{
     width: 230px;
     height: auto;
     background: url("./../images/logo_db.png");
-    padding: 60px 20px 15px 60px;
+    padding: 60px 20px 20px 60px;
 }
 
 #sidebarCollapse {
@@ -188,5 +195,5 @@ ul ul a {
 }
 
 .omnibox.active{
-    left: 250px;
+    left: $sidebarSize;
 }
