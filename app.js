@@ -10,18 +10,19 @@ const session = require('express-session');
 
 const users = require('./models/users');
 
+const dashboard = require('./routes/dashboard');
+
 //Configure the express extension
 const app = express();
 
 //Import routers
-const index = require('./routes/index');
 
 //Initialize extension
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser())
 app.use(session({
     key: 'user_sid',
-    secret: 'somerandonstuffs',
+    secret: 'uemacosanpaparamiau',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -45,35 +46,42 @@ var sessionChecker = (req, res, next) => {
     }    
 };
 
-//The index acess
+//The index and login acess
 app.route('/')
-    .get(sessionChecker, (reg, res) => {
-        res.sendFile(resolve('./public/index.html'));
-    })
-    .post(sessionChecker, async (req, res) => {
+.get(sessionChecker, (reg, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+})
+.post(sessionChecker, async (req, res) => {
 
-        let username = req.body.username;
-        let password = req.body.password;
-    
-        const isValid = await users.compare(username, password);
-        if (res) {
-            console.log('login feito')
-            req.session.user = [username, password];
-            res.redirect('/dashboard');
+    let username = req.body.username;
+    let password = req.body.password;
+
+    const passTo = () => {
+        req.session.user = [username, password];
+        res.redirect('/dashboard');
+    }
+
+    if(username == 'visitante'){
+        password = 'visitante';
+        passTo();
+    }else{
+        const isValid = await users.autheUser(username, password)
+        console.log(isValid + 'cu');
+        if (isValid) {
+            console.log('true');
+            passTo();
         }
-    });
-
-app.use("/", express.static('./public/'));
-
-app.get('/dashboard', (req, res) => {
-    console.log('redirect to get /dashboard')
-    if (req.session.user && req.cookies.user_sid) {
-        res.sendFile(__dirname + '/public/dashboard.html');
-    } else {
-        res.redirect('/');
     }
 });
 
+
+//Server the static files of the public folder
+app.use('/', express.static('./public/'));
+
+//Acess to the dashboard
+app.use('/dashboard', dashboard);
+
+//Initialize the server on the enviroment port
 app.listen(process.env.PORT || 3000, ()=>{
     console.log(`Listening on port ${process.env.PORT}`)
 });

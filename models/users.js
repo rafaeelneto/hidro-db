@@ -1,15 +1,30 @@
 const db = require('./../database/db');
 
-const selectQuery = 'SELECT * FROM editores WHERE username=$username && password=$password'
+const selectQuery = 'SELECT * FROM editores WHERE username=$username && password=$password';
+
+async function autheticateUser(username, password){
+    const resultQuery = await db.query('SELECT * FROM editores WHERE username=$1 AND pass=$2', [username, password]);
+    const rows = resultQuery.rows;
+    if(rows.length >= 1){
+        //console.log('true');
+        return true;
+    }else{
+        //console.log('false');
+        return false;
+    }
+}
+
+/*
+const insertNewUser = async (userAdmin, passAdmin, userNew, passNew) => {
+    if(autheticateUser(userAdmin, passAdmin)){
+        const {results} = await db.querySelect('SELECT * FROM editores WHERE username=$1 AND pass=$2', [username, password]);
+    }else{
+        console.log('Invalid administration user');
+    }
+}*/
 
 module.exports = {
-    compare: async (username, password) => {
-        const {rows} = await db.queryAll('SELECT * FROM editores WHERE username=$1 AND pass=$2', [username, password]);
-        if(rows.lenght !== 0){
-            return true;
-        }else{
-            return false;
-        }
-    }
+    autheUser: (usr, psw) => autheticateUser(usr, psw)
+    //insertNewUser: insertNewUser
 }
 

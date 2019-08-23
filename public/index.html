@@ -1,25 +1,57 @@
-<html>
-    <head>
-        <title>Login Here</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    </head>
-    <body class="container">
-      <div class="container row">
-        <div class="jumbotron col-sm-4 pull-center">
-            <form action="/" method="post">
-                <div>
-                    <label>Username:</label>
-                    <input type="text" name="username"/>
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input type="password" name="password"/>
-                </div>
-                <div>
-                    <input class="btn btn-primary" type="submit" value="Log In"/>
-                </div>
-            </form>                  
-        </div>          
-      </div>
-    </body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSANPA-db</title>
+    <link rel="shortcut icon" type="image/png" href="./images/favicon.png"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="/css/custom.css">
+</head>
+<body>
+    <div class="limiter w-100 h-100">
+        <div class="container-fluid d-flex">
+            <div class="info-div d-flex flex-column justify-content-around align-items-center">
+                <img src="images/logo_img_mainpage.png">
+                <p class="font-weight-bold text-center">Obtenha informações atualizadas  sobre nossos pontos de captação e tudo mais em nosso banco de dados</p>
+                <button class="btn btn-yellow" id="visitante">VISITANTE</button>
+            </div>
+            <div class="d-flex justify-content-around align-items-center">
+                <div class="d-flex justify-content-center align-items-center login-box input-group">
+                        <form id="login-form" action="/" method="post">
+                            <span class="form-title">
+                                Entrar como editor
+                            </span>
+                            <div class="form-group usr">
+                                <input class="form-control" type="text" name="username" id="user" required/>
+                                <span class="label">USUÁRIO</span>
+                            </div>
+                            <div class="form-group psw">
+                                
+                                <input class="form-control" type="password" name="password" required/>
+                                <span class="label">SENHA</span>
+                            </div>
+                            <button class="btn btn-blue">ENTRAR</button>
+                        </form>
+                </div>          
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('#visitante').addEventListener('click', function(){
+            var form = document.querySelector('#login-form');
+            var user = document.querySelector('#user');
+            user.value = "visitante"
+            form.submit();
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+</body>
 </html>
