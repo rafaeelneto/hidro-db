@@ -4,8 +4,12 @@
   "description": "Project of cosanpa-db to acess and control cosanpa informations",
   "main": "app.js",
   "scripts": {
-    "scss": "node-sass -w public/scss/ -r -o public/css/",
-    "dev": "nodemon app.js"
+    "webpack": "webpack --watch --mode development"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "public/*"
+    ]
   },
   "keywords": [
     "cosanpa",
@@ -14,9 +18,12 @@
   "author": "Rafael Gomes",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.3.1",
     "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
@@ -24,6 +31,15 @@
     "pg": "^7.12.1"
   },
   "devDependencies": {
-    "node-sass": "^4.12.0"
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.3.1",
+    "url-loader": "^2.1.0",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
   }
 }

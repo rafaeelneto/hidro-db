@@ -8,17 +8,29 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
-const users = require('./models/users');
+const users = require('./models/Users');
 
 const dashboard = require('./routes/dashboard');
 
 //Configure the express extension
 const app = express();
 
+ //app.use(cors());
+app.use(function(req, res, next) {
+
+    res.header("Access-Control-Allow-Origin", "localhost");
+  
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  
+    next();
+  
+});
+
 //Import routers
 
 //Initialize extension
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(cookieParser())
 app.use(session({
     key: 'user_sid',
@@ -62,15 +74,13 @@ app.route('/')
     }
 
     if(username == 'visitante'){
-        password = 'visitante';
+        password = username;
+    }
+    const isValid = await users.autheticateUser(username, password);
+    if (isValid) {
         passTo();
     }else{
-        const isValid = await users.autheUser(username, password)
-        console.log(isValid + 'cu');
-        if (isValid) {
-            console.log('true');
-            passTo();
-        }
+        res.send("erroooou");
     }
 });
 
@@ -80,6 +90,15 @@ app.use('/', express.static('./public/'));
 
 //Acess to the dashboard
 app.use('/dashboard', dashboard);
+
+//Logout
+app.get('/logout', (req, res) => {
+    if (req.session.user && req.cookies.user_sid) {
+        res.clearCookie('user_sid');
+        users.closeDB();
+    }
+    res.redirect('/');
+});
 
 //Initialize the server on the enviroment port
 app.listen(process.env.PORT || 3000, ()=>{
