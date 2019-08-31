@@ -6,7 +6,6 @@
     <title>COSANPA-db</title>
     <link rel="shortcut icon" type="image/png" href="./images/favicon.png"/>
 
-    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/leaflet.extra-markers.min.css">
 
     <!--alterar-->
@@ -16,11 +15,36 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="/main.css">
 </head>
+
+<!--
+    <li>
+        <button class="btn" id="mapa">MAPA PRINCIPAL</button>
+    </li>
+    <li>
+        <button class="btn"  id="notificaçoes">NOTIFICAÇÕES</button>
+    </li>
+    <li>
+        <button class="btn"  id="processos">PROCESSOS</button>
+    </li>
+    <li>
+        <button class="btn"  id="outorgas">OUTORGAS</button>
+    </li>
+    <li >
+        <button class="btn"  id="licenças">LICENÇAS</button>
+    </li>
+    <li> 
+        <button class="btn"  id="autos">AUTOS DE INFRAÇÃO</button>
+    </li >
+    <li>
+        <button class="btn"  id="sobre">SOBRE</button>
+    </li>
+-->
+
 <body>
     <div class="wrapper d-flex">
         <nav class="d-md-block sidebar" id="sidebar">
             <div class="sidebar-header header-logo"></div>
-            <div class="info-container">
+            <div class="usr-container">
                 <div>
                     <p>Olá,</p>
                     <h4 id="user-name">Wandilson</h4>
@@ -29,22 +53,25 @@
             </div>
             <ul class="list-unstyled components">
                 <li class="active">
-                    <a href="#homeSubmenu">MAPA</a>
+                    <a href="#">MAPA PRINCIPAL</a>
                 </li>
                 <li>
-                    <a href="#">PROCESSOS</a>
+                    <a href="#notificaçoes">NOTIFICAÇÕES</a>
                 </li>
                 <li>
-                    <a href="#pageSubmenu">OUTORGAS</a>
+                    <a href="#processos">PROCESSOS</a>
                 </li>
                 <li>
-                    <a href="#">LICENÇAS</a>
+                    <a href="#outorgas">OUTORGAS</a>
                 </li>
                 <li>
-                    <a href="#">AUTOS DE INFRAÇÃO</a>
+                    <a href="#licenças">LICENÇAS</a>
                 </li>
                 <li>
-                    <a href="#">SOBRE</a>
+                    <a href="#autosinfra">AUTOS DE INFRAÇÃO</a>
+                </li >
+                <li>
+                    <a href="#sobre">SOBRE</a>
                 </li>
             </ul>
         </nav>
@@ -67,6 +94,36 @@
             </div>
             <div class="container-flex" id="map"></div>
         </div>
+        <div class="d-md-block info-sidebar">
+            <button class= "btn btn-circle" id="close-info-btn"><i class="material-icons">close</i></button>
+            <div class="info-group">
+                <div class="editing-tools">
+                </div>
+                <div class="d-flex justify-content-center align-items-center info-form-group">
+                    <form id="info-form">
+                            <!--
+                                <ul class="list-unstyled components info-list">
+                                <li>
+                                    <input class="form-control" type="text" name="nome" id="nome" value="P1 - Milagre" disabled required/>
+                                </li>
+                                <li>
+                                    <div class="form-group">
+                                        <span class="label">COORDENADAS</span>
+                                        <input class="form-control" type="text" value="5°20′45.60″S, 49°8′11.00″W" name="coords" disabled quired/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="form-group">
+                                        <span class="label">SETOR</span>
+                                        <input class="form-control" type="text" name="sadf" value="Setor Milagre" disabled required/>
+                                    </div>
+                                </li>
+                                </ul>
+                            -->
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -76,11 +133,10 @@
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
     <script src="js/library/leaflet.extra-markers.min.js"></script>
 
+    <script src='https://unpkg.com/leaflet.gridlayer.googlemutant@latest/Leaflet.GoogleMutant.js'></script>
+
     <script src="bundle.js"></script>
-    
-    <!--
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZkl-9ec3cYby1B7KvFclQLKnvlLpebpc&callback=initMap" async defer></script>
-    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZkl-9ec3cYby1B7KvFclQLKnvlLpebpc"></script>
     
 </body>
 </html>

@@ -58,6 +58,11 @@ var sessionChecker = (req, res, next) => {
     }    
 };
 
+const passTo = (req, res, username) => {
+    req.session.user = [username];
+    res.redirect('/dashboard');
+}
+
 //The index and login acess
 app.route('/')
 .get(sessionChecker, (reg, res) => {
@@ -67,23 +72,39 @@ app.route('/')
 
     let username = req.body.username;
     let password = req.body.password;
-
-    const passTo = () => {
-        req.session.user = [username, password];
-        res.redirect('/dashboard');
-    }
-
-    if(username == 'visitante'){
+    
+    if(username == users.visitante){
         password = username;
     }
     const isValid = await users.autheticateUser(username, password);
     if (isValid) {
-        passTo();
+        passTo(req, res, username);
     }else{
         res.send("erroooou");
     }
 });
 
+app.route('/usr/create')
+.post(sessionChecker, async (req, res) => {
+
+    let usernameAdmin = req.body.usernameAdmin;
+    let passwordAdmin = req.body.passwordAdmin;
+    let username = req.body.username;
+    let password = req.body.password;
+
+    const isValid = await users.autheticateUser(usernameAdmin, passwordAdmin);
+    if(isValid){
+        const sucess = await users.insertNewUser(usernameAdmin, passwordAdmin, username, password);
+        if(sucess){
+            const isValid = await users.autheticateUser(username, password);
+            passTo(req, res, username);
+        }else{
+            res.send(false);
+        }
+    }else{
+        res.send(false);
+    }
+});
 
 //Server the static files of the public folder
 app.use('/', express.static('./public/'));

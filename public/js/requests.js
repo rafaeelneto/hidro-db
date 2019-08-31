@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const dashboardBase = '/dashboard';
-const gisURL = '/gis'
+const infoURL = '/info'
 
 async function makeSimpleGetRequest(base, url) {
     try {
@@ -12,9 +12,9 @@ async function makeSimpleGetRequest(base, url) {
     }
 }
 
-async function loadInfo(base, url, query){
+async function loadInfoQuery(base, url, query){
   try {
-    console.log(base + url + query)
+    
     const response = await axios.get(base + url + query);
     return response.data;
   } catch (error) {
@@ -24,7 +24,7 @@ async function loadInfo(base, url, query){
 
 export {
     makeSimpleGetRequest,
-    loadInfo,
+    loadInfoQuery,
     dashboardBase,
-    gisURL
+    infoURL
 }

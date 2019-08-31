@@ -1,8 +1,14 @@
 import style from './../scss/custom.scss';
-import * as base from './views/Base';
+import {elements} from './views/Base';
 import User from './models/User';
+import {getKeyValues, tablesKeys} from './models/Data';
+
+import Info from './models/Info';
+
 import * as mapView from './views/mapView';
-import GisData from './models/GisData';
+import {loadPoçoView, loadSuperfView, loadInfoForm, clearInfoForm, loadSetores} from './views/infoView';
+
+import TableData from './models/TableData';
 import * as requests from './requests';
 
 /**
@@ -12,35 +18,72 @@ import * as requests from './requests';
 */
 
 //Set Sidebar-right Event Listeners
-base.sidebarBtnID.addEventListener('click', function(){
-	base.sidebarID.classList.toggle('active');
-	base.contentClass.classList.toggle('active');
-	base.omniboxClass.classList.toggle('active');
-	base.sidebarBtnID.classList.toggle('actived');
+elements.sidebarBtnID.addEventListener('click', function(){
+	elements.sidebarID.classList.toggle('active');
+	elements.contentClass.classList.toggle('active');
+	elements.omniboxClass.classList.toggle('active');
+	elements.sidebarBtnID.classList.toggle('actived');
 });
 
-//Initialize the user and set hello msg
+//Set Infobar Event Listeners
+
+function toggleInfobar(active){
+	if (active){
+		elements.infoSideClass.classList.add('active');
+		elements.contentClass.classList.add('info-active');
+	}else{
+		elements.infoSideClass.classList.remove('active');
+		elements.contentClass.classList.remove('info-active');
+	}
+}
+
+elements.closeInfobarID.addEventListener('click', () => {
+	toggleInfobar(false);
+	clearInfo(elements.infoList);
+});
+
+
+//Initialize the user and load table and init map
 const user = new User();
+const tableData = new TableData();
 (async () => {
 	const name = await user.getUser();
-	base.userNameID.innerHTML = name;
+	elements.userNameID.innerHTML = name;
 	if(name === 'visitante'){
-		base.logoutBtnClass.innerHTML = 'Entrar';
+		elements.logoutBtnID.innerHTML = 'Entrar';
 	}
+	await tableData.loadAll();
+	loadMap();
+	console.log(tableData.tables);
+	loadSetores(2, tableData.tables[tablesKeys.setoresSedes]);
 })();
+
+
+async function loadInfo(type, id){
+	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
+	const info = new Info(infoRes.table, infoRes.joinTables);
+	let html;
+	switch (infoRes.type){
+		case 'poço_id':
+			html = loadPoçoView(info, tableData.tables);
+			break;
+		case 'super_id':
+			html = loadSuperfView(info);
+			break;
+		case 'outorga_id':
+			html = loadSuperfView(info); //fix it
+			break;
+		default:
+			break;
+	}
+	loadInfoForm(elements.infoForm, html);
+}
 
 /**
  * ------------------------
  * Map settings
  * ------------------------
 */
-const gisData = new GisData();
-mapView.initMap();
-
-async function getInfo(type, id){
-	let infoRes = await requests.loadInfo(requests.dashboardBase, requests.gisURL + '/cap', `?id=${id}&type=${type}`);
-	console.log(infoRes);
-}
 
 function clickPointListener (feature, layer) {
 	layer.on({
@@ -56,14 +99,17 @@ function clickPointListener (feature, layer) {
 				keys.push(i);
 				values.push(s[i]);
 			}
-			getInfo(keys[0], values[0]);
+			toggleInfobar(true);
+			loadInfo(keys[0], values[0]);
 		}
 	});
 }
 
-(async () => {
-	const gisResults = await gisData.loadAll('cap');
-	console.log(gisResults);
-	poçosLayer = mapView.loadPointLayer('poço', gisResults[0], clickPointListener, mapView.stylePoços);
-	superfLayer = mapView.loadPointLayer('superf', gisResults[1], clickPointListener, mapView.stylePoços);
-})();
+function loadMap(){
+	elements.mapViewClass.classList.toggle('show');
+	mapView.initMap();
+	(async () => {
+		let poçosLayer = mapView.loadPointLayer('poço', tableData.tables.poços, clickPointListener, mapView.stylePoços);
+		let superfLayer = mapView.loadPointLayer('superf', tableData.tables.capSuperf, clickPointListener, mapView.stylePoços);
+	})();
+}

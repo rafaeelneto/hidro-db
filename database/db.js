@@ -18,6 +18,7 @@ module.exports = {
         }
     },
     query: (text, params) => pool.query(text, params),
+    queryAuth: (text, params) => this.poolUsr.query(text, params),
     closeDB: () => {
         this.poolUsr.end();
         console.log("User connection closed");

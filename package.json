@@ -4,7 +4,8 @@
   "description": "Project of cosanpa-db to acess and control cosanpa informations",
   "main": "app.js",
   "scripts": {
-    "webpack": "webpack --watch --mode development"
+    "webpack": "webpack --watch --mode development",
+    "devStart": "nodemon app.js"
   },
   "nodemonConfig": {
     "ignore": [
@@ -28,6 +29,7 @@
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "express-session": "^1.16.2",
+    "feather-icons": "^4.24.1",
     "pg": "^7.12.1"
   },
   "devDependencies": {
@@ -37,6 +39,7 @@
     "css-loader": "^3.2.0",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.12.0",
+    "nodemon": "^1.19.1",
     "sass-loader": "^7.3.1",
     "url-loader": "^2.1.0",
     "webpack": "^4.39.2",
