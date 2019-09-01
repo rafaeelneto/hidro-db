@@ -467,6 +467,15 @@ Map
     border-radius: 25px;
     transition: all 0.3;
 }
+.leaflet-tooltip.labels-setores {
+    font-family: $roboto;
+    font-weight: 600;
+    color: $dark;
+    padding: 0 10px;
+    background-color: $light;
+    border-radius: 25px;
+    transition: all 0.3;
+}
 
 /*
 ===============

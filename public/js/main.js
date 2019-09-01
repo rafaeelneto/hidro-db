@@ -39,7 +39,7 @@ function toggleInfobar(active){
 
 elements.closeInfobarID.addEventListener('click', () => {
 	toggleInfobar(false);
-	clearInfo(elements.infoList);
+	clearInfoForm(elements.infoList);
 });
 
 
@@ -107,9 +107,5 @@ function clickPointListener (feature, layer) {
 
 function loadMap(){
 	elements.mapViewClass.classList.toggle('show');
-	mapView.initMap();
-	(async () => {
-		let poçosLayer = mapView.loadPointLayer('poço', tableData.tables.poços, clickPointListener, mapView.stylePoços);
-		let superfLayer = mapView.loadPointLayer('superf', tableData.tables.capSuperf, clickPointListener, mapView.stylePoços);
-	})();
+	mapView.initMap(tableData.tables, clickPointListener);
 }

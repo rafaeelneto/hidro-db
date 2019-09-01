@@ -18,22 +18,20 @@
  })();
  */
 
-const map = L.map('map', {
-	zoomControl: false,
-	center: [-1.5, -48.0],
-	zoom: 9,
-});
+import {tablesKeys} from './../models/Data'
 
+let map;
+let layerControl;
 
 const baseMaps = {
 	"Esquematico": schemathic,
-	"Satelite": satellite
+	"Satélite": satellite
 };
 
-const schemathic = L.tileLayer(process.env.MAP_URL, {
+const schemathic = L.tileLayer('https://api.mapbox.com/styles/v1/rafaeel/cjz8tael002on1dqclsqt84ik/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicmFmYWVlbCIsImEiOiJjano4dDh1OHMwM2xtM2JwbG9jcWFmaXhzIn0.SihsXFXEW54INSxYcZ6_BQ', {
 	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 	maxZoom: 30,
-	id: 'mapbox.streets'
+	id: 'mapbox.streets',
 	});
 const satellite = L.gridLayer.googleMutant({
 		type: 'satellite'	// valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
@@ -87,51 +85,81 @@ function stylePoços(feature){
 	};
 };
 
-function initMap() {
-	L.tileLayer('https://api.mapbox.com/styles/v1/rafaeel/cjz8tael002on1dqclsqt84ik/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicmFmYWVlbCIsImEiOiJjano4dDh1OHMwM2xtM2JwbG9jcWFmaXhzIn0.SihsXFXEW54INSxYcZ6_BQ', {
-	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-	maxZoom: 30,
-	id: 'mapbox.streets',
-	accessToken: 'pk.eyJ1IjoicmFmYWVlbCIsImEiOiJjano4dDh1OHMwM2xtM2JwbG9jcWFmaXhzIn0.SihsXFXEW54INSxYcZ6_BQ'
-	}).addTo(map);
+function styleSetores(){
+	return {
+		fillColor: '#FF6331',
+		radius: 3,
+		weight: 1,
+		opacity: 1,
+		color: 'black',
+		fillOpacity: 0.7
+	};
+};
 
-	//L.control.layers(baseMaps).addTo(map);
+function initMap(tables, clickPointListerner) {
+	map = L.map('map', {
+		zoomControl: false,
+		center: [-1.5, -48.0],
+		zoom: 9
+	});
+
+	schemathic.addTo(map);
+
+	layerControl = L.control.layers().addTo(map);
+	layerControl.position = 'topright';
+	layerControl.collapse = false;
+	layerControl.addBaseLayer(schemathic, "Esquemático");
+	layerControl.addBaseLayer(satellite, "Satélite");
 
 	L.control.zoom({
 		position: 'bottomright'
 	}).addTo(map);
-}
 
-function loadPointLayer(type, geoJson, clickListener, stylesLayer){
-	let pointLayer;
-	pointLayer = L.geoJSON(null, {
+	const setoresLayer = L.geoJSON(null, {
 		pointToLayer: (feature, latlng) => {
 			let label = String(feature.properties.nome);
-			switch (type) {
-				case 'poço':
-					return L.circleMarker(latlng).bindTooltip(label, {permanent: false, opacity: 0.9, className: "labels"}).openTooltip();
-				case 'superf':
-					return new L.Marker(latlng, {icon: getIcon(feature.properties.situaçao)}).bindTooltip(label, {permanent: false, opacity: 0.9, className: "labels"}).openTooltip();
-				default:
-					break;
-			}
+			return L.circleMarker(latlng).bindTooltip(label, {permanent: false, opacity: 0.9, className: "labels-setores"}).openTooltip();
 		},
-		style: stylesLayer,
-		onEachFeature: clickListener
+		style: styleSetores,
+		onEachFeature: clickPointListerner
 	}).addTo(map);
 
-	pointLayer.addData(geoJson);
+	const superfLayer = L.geoJSON(null, {
+		pointToLayer: (feature, latlng) => {
+			let label = String(feature.properties.nome);
+			return new L.Marker(latlng, {icon: getIcon(feature.properties.situaçao)}).bindTooltip(label, {permanent: false, opacity: 0.9, className: "labels"}).openTooltip();
+		},
+		style: stylePoços,
+		onEachFeature: clickPointListerner
+	}).addTo(map);
 
-	map.addLayer(pointLayer);
+	const poçosLayer = L.geoJSON(null, {
+		pointToLayer: (feature, latlng) => {
+			let label = String(feature.properties.nome);
+			return L.circleMarker(latlng).bindTooltip(label, {permanent: false, opacity: 0.9, className: "labels"}).openTooltip();
+		},
+		style: stylePoços,
+		onEachFeature: clickPointListerner
+	}).addTo(map);
+
+	poçosLayer.addData(tables[tablesKeys.poços]);
+	superfLayer.addData(tables[tablesKeys.capSuperf]);
+	setoresLayer.addData(tables[tablesKeys.setoresSedes]);
+	
+	map.addLayer(setoresLayer);
+	map.addLayer(poçosLayer);
+	map.addLayer(superfLayer);
+
+	layerControl.addOverlay(poçosLayer, "Poços");
+	layerControl.addOverlay(superfLayer, "Cap. Superficial");
+	layerControl.addOverlay(setoresLayer, "Setores");
 
 	map.invalidateSize();
-
-	return pointLayer;
 }
 
+
 export {
-	map, 
-	loadPointLayer, 
+	map,
 	initMap,
 	stylePoços
 }; 
