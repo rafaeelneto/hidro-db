@@ -114,6 +114,8 @@ function initMap(tables, clickPointListerner) {
 	L.control.zoom({
 		position: 'bottomright'
 	}).addTo(map);
+	
+	document.querySelector('.leaflet-control-layers-toggle').insertAdjacentHTML('afterbegin', '<h6 id="mapBaseTitle">CAMADAS</h6>');
 
 	const setoresLayer = L.geoJSON(null, {
 		pointToLayer: (feature, latlng) => {
@@ -155,6 +157,9 @@ function initMap(tables, clickPointListerner) {
 	layerControl.addOverlay(setoresLayer, "Setores");
 
 	map.invalidateSize();
+
+	document.querySelector('.leaflet-control-layers-base').insertAdjacentHTML('afterbegin', '<h6 id="mapBaseTitle">Mapas base</h6>');
+	document.querySelector('.leaflet-control-layers-overlays').insertAdjacentHTML('afterbegin', '<h6 id="mapOverlayTitle">Camadas</h6>');
 }
 
 

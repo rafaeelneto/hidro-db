@@ -477,6 +477,60 @@ Map
     transition: all 0.3;
 }
 
+.leaflet-touch {
+    .leaflet-control-layers, .leaflet-bar{
+        border: none;
+    }
+    .leaflet-control-layers{
+        border: 2px solid $light;
+        background: $primaryMiddleDrk;
+        border-radius: 20px;
+        h6{
+            font-family: $roboto;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .3em;
+            color: $orange;
+        }
+        &.leaflet-control-layers-expanded{
+            background: $light;
+            border-radius: 10px;
+            width: auto;
+            height: auto;
+            padding: 15px;
+            font-family: $roboto;
+            color: $dark;
+        }
+    }
+    .leaflet-control-layers-toggle{
+        width: auto;
+        height: 34px;
+        padding: 10px;
+        background: url('/images/icons/baseline_icon.png') 95% 50% no-repeat;
+        background-size: auto 80%;
+        h6{
+            color: $light;
+            margin: 0 30px 0 10px;
+        }
+    }
+    .leaflet-control-zoom.leaflet-bar{
+        .leaflet-control-zoom-in, .leaflet-control-zoom-out{
+            width: 35px;
+            height: 35px;
+            color: $light;
+            border: 2px solid $light;
+            background: $primaryMiddleDrk;
+            border-radius: 20px;
+            &:hover{
+                background: $primaryMiddleLght;
+            }
+        }
+    }
+}
+
+
+
 /*
 ===============
 info panel

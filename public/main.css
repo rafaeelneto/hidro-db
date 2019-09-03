@@ -6819,6 +6819,49 @@ Map
   border-radius: 25px;
   transition: all 0.3; }
 
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+  border: none; }
+
+.leaflet-touch .leaflet-control-layers {
+  border: 2px solid #F2F2F2;
+  background: #024454;
+  border-radius: 20px; }
+  .leaflet-touch .leaflet-control-layers h6 {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .3em;
+    color: #E3A84F; }
+  .leaflet-touch .leaflet-control-layers.leaflet-control-layers-expanded {
+    background: #F2F2F2;
+    border-radius: 10px;
+    width: auto;
+    height: auto;
+    padding: 15px;
+    font-family: "Roboto", sans-serif;
+    color: #4e4e4e; }
+
+.leaflet-touch .leaflet-control-layers-toggle {
+  width: auto;
+  height: 34px;
+  padding: 10px;
+  background: url("/images/icons/baseline_icon.png") 95% 50% no-repeat;
+  background-size: auto 80%; }
+  .leaflet-touch .leaflet-control-layers-toggle h6 {
+    color: #F2F2F2;
+    margin: 0 30px 0 10px; }
+
+.leaflet-touch .leaflet-control-zoom.leaflet-bar .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom.leaflet-bar .leaflet-control-zoom-out {
+  width: 35px;
+  height: 35px;
+  color: #F2F2F2;
+  border: 2px solid #F2F2F2;
+  background: #024454;
+  border-radius: 20px; }
+  .leaflet-touch .leaflet-control-zoom.leaflet-bar .leaflet-control-zoom-in:hover, .leaflet-touch .leaflet-control-zoom.leaflet-bar .leaflet-control-zoom-out:hover {
+    background: #42919A; }
+
 /*
 ===============
 info panel
