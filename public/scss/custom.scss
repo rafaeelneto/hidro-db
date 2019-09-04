@@ -417,7 +417,7 @@ $infoBarBorder: 10px;
         left: 50px;
     }
 
-    #close-info-btn{
+    #close-infoside-btn{
         margin-top: $infoBarBorder;
         margin-left: $infoBarBorder;
         position: absolute;
@@ -529,7 +529,55 @@ Map
     }
 }
 
+/*
+===============
+table-panel
+===============
+*/
 
+.table-panel{
+    transition: all 0.3s;
+    position: absolute; 
+    z-index: 1100;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    padding-left: 50px;
+    height: 100%;
+    width: 100%;
+    background: rgba(88, 88, 88, 0.445);
+    .group-panel{
+        background: $light;
+        border-radius: 15px;
+        padding: 20px;
+        height: 80%;
+        .list-reg{
+            margin-right: 30px;
+        }
+        .panel-header{
+            border-bottom: 3px solid $primaryMiddleDrk;
+        }
+    }
+    section{
+        width: 50%;
+    }
+    #close-other-btn{
+        margin-top: 2%;
+        margin-left: 2%;
+        width: 100px;
+        padding: 5px;
+        border-radius: 10px;
+        background: $light;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        &:hover, &:focus{
+            background: $primaryDark;
+            color: $light;
+        }
+    }
+}
 
 /*
 ===============
@@ -537,7 +585,21 @@ info panel
 ===============
 */
 
-.info-group{
+.editing-tools{
+    .btn{
+        margin: 0 10px 5px 10px;
+        border: none;
+        color: $orange;
+        height: 35px;
+        width: 35px;
+        &:hover, &:focus{
+            color: $yellowLight;
+            background: $light;
+        }
+    }
+}
+
+.info-group, .table-info-section{
     overflow-y: auto;
 }
 
@@ -583,3 +645,4 @@ info panel
         letter-spacing: .2em;
     }
 }
+

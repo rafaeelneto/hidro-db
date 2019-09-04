@@ -10,7 +10,7 @@ export const elements = {
     logoutBtnID: document.querySelector('#btn-logout'),
 
     //Sidebar info
-    closeInfobarID: document.querySelector('#close-info-btn'),
+    closeInfobarID: document.querySelector('#close-infoside-btn'),
     infoSideClass: document.querySelector('.info-sidebar'),
 
     //Info element

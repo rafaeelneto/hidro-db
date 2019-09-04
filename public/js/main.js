@@ -40,6 +40,7 @@ function toggleInfobar(active){
 elements.closeInfobarID.addEventListener('click', () => {
 	toggleInfobar(false);
 	clearInfoForm(elements.infoList);
+	map.invalidateSize();
 });
 
 
@@ -52,7 +53,7 @@ const tableData = new TableData();
 	if(name === 'visitante'){
 		elements.logoutBtnID.innerHTML = 'Entrar';
 	}
-	await tableData.loadAll();
+	//await tableData.loadAll();
 	loadMap();
 	console.log(tableData.tables);
 	loadSetores(2, tableData.tables[tablesKeys.setoresSedes]);
@@ -76,7 +77,7 @@ async function loadInfo(type, id){
 		default:
 			break;
 	}
-	loadInfoForm(elements.infoForm, html);
+	//loadInfoForm(elements.infoForm, html);
 }
 
 /**

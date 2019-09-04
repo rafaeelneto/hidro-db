@@ -2,8 +2,6 @@ import {elementSelectors, nullVeryfier, elements} from './Base';
 import Info from './../models/Info';
 import {tablesKeys, getKeyValues} from './../models/Data';
 
-const labelsPoço = ['SETOR', 'UNID. DE NEGÓCIOS',];
-
 function loadSetores(selectID, table){
     const setores = table.features;
 
@@ -83,73 +81,73 @@ function loadPoçoView(info, tables){
             <li>
                 <div class="form-group">
                     <span class="label">PROFUNDIDADE (m)</span>
-                    <input class="form-control" type="text" name="${keys[9]}" value="${s[keys[9]]}" disabled required/>
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">NÍVEL ESTÁTICO</span>
                     <input class="form-control" type="text" name="${keys[10]}" value="${s[keys[10]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="form-group">
-                    <span class="label">NÍVEL DINÂMICO</span>
+                    <span class="label">NÍVEL ESTÁTICO</span>
                     <input class="form-control" type="text" name="${keys[11]}" value="${s[keys[11]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="form-group">
-                    <span class="label">REVESTIMENTO</span>
+                    <span class="label">NÍVEL DINÂMICO</span>
                     <input class="form-control" type="text" name="${keys[12]}" value="${s[keys[12]]}" disabled required/>
                 </div>
             </li>
             <li>
-                <div class="vazao-list">
-                    <span class="label">VAZÃO MÁXIMA (m³/h)</span>
+                <div class="form-group">
+                    <span class="label">REVESTIMENTO</span>
                     <input class="form-control" type="text" name="${keys[13]}" value="${s[keys[13]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="vazao-list">
-                    <span class="label">DATA OPERAÇÃO</span>
+                    <span class="label">VAZÃO MÁXIMA (m³/h)</span>
                     <input class="form-control" type="text" name="${keys[14]}" value="${s[keys[14]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="vazao-list">
-                    <span class="label">DATA PERFURAÇÃO</span>
+                    <span class="label">DATA OPERAÇÃO</span>
                     <input class="form-control" type="text" name="${keys[15]}" value="${s[keys[15]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="vazao-list">
-                    <span class="label">BOMBA</span>
+                    <span class="label">DATA PERFURAÇÃO</span>
                     <input class="form-control" type="text" name="${keys[16]}" value="${s[keys[16]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="vazao-list">
-                    <span class="label">HORAS DE BOMBEAMENTO</span>
+                    <span class="label">BOMBA</span>
                     <input class="form-control" type="text" name="${keys[17]}" value="${s[keys[17]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="vazao-list">
-                    <span class="label">RELATÓRIO</span>
+                    <span class="label">HORAS DE BOMBEAMENTO</span>
                     <input class="form-control" type="text" name="${keys[18]}" value="${s[keys[18]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="vazao-list">
+                    <span class="label">RELATÓRIO</span>
+                    <input class="form-control" type="text" name="${keys[19]}" value="${s[keys[19]]}" required/>
+                </div>
+            </li>
+            <li>
+                <div class="vazao-list">
                     <span class="label">LICENCIAMENTO</span>
-                    <input class="form-control" type="text" name="${keys[19]}" value="${s[keys[19]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[20]}" value="${s[keys[20]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="vazao-list">
                     <span class="label">OBS</span>
-                    <input class="form-control" type="text" name="${keys[20]}" value="${s[keys[20]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[21]}" value="${s[keys[21]]}" disabled required/>
                 </div>
             </li>
         </ul>

@@ -6768,14 +6768,14 @@ info-side
     z-index: 1;
     top: 10px;
     left: 50px; }
-  .info-sidebar #close-info-btn {
+  .info-sidebar #close-infoside-btn {
     margin-top: 10px;
     margin-left: 10px;
     position: absolute;
     z-index: 1;
     top: 0;
     left: 0; }
-    .info-sidebar #close-info-btn:hover {
+    .info-sidebar #close-infoside-btn:hover {
       background: #022133;
       color: #F2F2F2; }
 
@@ -6864,10 +6864,62 @@ Map
 
 /*
 ===============
+table-panel
+===============
+*/
+.table-panel {
+  transition: all 0.3s;
+  position: absolute;
+  z-index: 1100;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  padding-left: 50px;
+  height: 100%;
+  width: 100%;
+  background: rgba(88, 88, 88, 0.445); }
+  .table-panel .group-panel {
+    background: #F2F2F2;
+    border-radius: 15px;
+    padding: 20px;
+    height: 80%; }
+    .table-panel .group-panel .list-reg {
+      margin-right: 30px; }
+    .table-panel .group-panel .panel-header {
+      border-bottom: 3px solid #024454; }
+  .table-panel section {
+    width: 50%; }
+  .table-panel #close-other-btn {
+    margin-top: 2%;
+    margin-left: 2%;
+    width: 100px;
+    padding: 5px;
+    border-radius: 10px;
+    background: #F2F2F2;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0; }
+    .table-panel #close-other-btn:hover, .table-panel #close-other-btn:focus {
+      background: #022133;
+      color: #F2F2F2; }
+
+/*
+===============
 info panel
 ===============
 */
-.info-group {
+.editing-tools .btn {
+  margin: 0 10px 5px 10px;
+  border: none;
+  color: #E3A84F;
+  height: 35px;
+  width: 35px; }
+  .editing-tools .btn:hover, .editing-tools .btn:focus {
+    color: #F0D675;
+    background: #F2F2F2; }
+
+.info-group, .table-info-section {
   overflow-y: auto; }
 
 .info-form-group ul.components {
