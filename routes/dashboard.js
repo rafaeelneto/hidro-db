@@ -34,6 +34,7 @@ router.get('/all', async (req, res) => {
     const municipios = await tables.getTableGeneric(tables.tableNames.municipios, 'municipio_id, nome');
     const outorgas = await tables.getTableGeneric(tables.tableNames.outorgas, 'outorga_id, num_outorga, validade');
     const processos = await tables.getTableGeneric(tables.tableNames.processos, 'processo_id, num_processo, situaçao');
+    const licenças = await tables.getTableGeneric(tables.tableNames.licenças, 'licen_id, num_licen');
     const autosInfraçao = await tables.getTableGeneric(tables.tableNames.autosInfra, 'autoifr_id, num_infra, situaçao_auto');
     const notificaçoes = await tables.getTableGeneric(tables.tableNames.notificaçoes, 'notif_id, num_notif, situaçao_notif');
     const analisesFQB = await tables.getTableGeneric(tables.tableNames.analises, 'analise_id, numafq, numab, potabilidade');
@@ -48,6 +49,7 @@ router.get('/all', async (req, res) => {
         setoresSedes: setoresSedes,
         municipios: municipios,
         outorgas: outorgas,
+        licenças: licenças,
         processos: processos,
         autosInfraçao: autosInfraçao,
         notificaçoes: notificaçoes,
@@ -56,7 +58,6 @@ router.get('/all', async (req, res) => {
         orgaos: orgaos,
         situaçoes: situaçoes
     };
-
     res.json(response);
 });
 
@@ -83,15 +84,22 @@ async function getInf(type, id){
             columns = tables.superfInfoColumns;
             joinsQueries = [tables.outorgaSuperfJoinInfo, tables.processoSuperfJoinInfo, tables.vazoesSuperfJoin];
             break;
+        case 'outorga_id':
+            tableName = 'outorgas';
+            columns = tables.outorgaInfoColumns;
+            joinsQueries = [tables.outorgaSuperfJoinInfo, tables.processoSuperfJoinInfo];
+            break;
         default:
             break;
     }
+
     let joinTables = [];
+
     for (let i = 0; i < joinsQueries.length; i++) {
         let result = await db.query(joinsQueries[i], [type, id]);
         joinTables.push(result.rows);
     }
-
+    
     const result = await tables.getInfo(tableName, columns, '', `WHERE ${type} = ${id}`, []);
 
     return {

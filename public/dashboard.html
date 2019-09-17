@@ -53,7 +53,7 @@
                 <button id="btn-logout" class="btn btn-yellow text-primary" onclick="location.href='http://localhost/logout';">Sair<i class="material-icons">exit_to_app</i></button>
             </div>
             <ul class="list-unstyled components">
-                <li class="active">
+                <li>
                     <a href="#notificaçoes">NOTIFICAÇÕES</a>
                 </li>
                 <li>
@@ -92,23 +92,25 @@
             </div>
             <div class="container-flex" id="map"></div>
         </div>
-
-        <div class="table-panel d-flex justify-content-center align-items-center">
-            <button class= "shadow btn btn-circle" id="close-other-btn"><i class="material-icons">arrow_back</i> VOLTAR</button>
-            <div class="shadow container group-panel">
+        <div class="table-panel">
+            <a href='#'>
+                <button class= "shadow btn btn-circle" id="close-panel-btn"><i class="material-icons">arrow_back</i> VOLTAR</button>
+            </a>
+            <div class="shadow container d-flex flex-column align-items-stretch group-panel">
                 <div class="panel-header d-flex justify-content-between">
-                    <h3 id="table-title">Outorgas</h3>
+                    <h3 id="panel-title">Panel title</h3>
                     <div class="editing-tools d-flex justify-content-end align-items-center">
                         <button class= "btn btn-circle" id="edit-info-btn"><i class="material-icons">edit</i></button>
                         <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">cloud_upload</i></button>
-                        <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">backspace</i></button>
+                        <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">undo</i></button>
                     </div>
                 </div>
-                <div class="d-flex justify-content-around group-sections">
+                <div class="d-flex justify-content-around flex-grow-1 group-sections">
                     <section class="list-group">
-                        <ul class="list-unstyled components list-reg">
+                        <div class="d-flex flex-column section-container">
+                            <ul class="list-unstyled list-reg">
                                 <li class="active">
-                                    <a href="#notificaçoes">292/2013</a>
+                                    <a href="#outorgas=4">292/2013</a>
                                 </li>
                                 <li>
                                     <a href="#processos">573/2016</a>
@@ -152,63 +154,50 @@
                                 <li>
                                     <a href="#processos">573/2016</a>
                                 </li>
-                        </ul>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                                <li>
+                                    <a href="#processos">573/2016</a>
+                                </li>
+                            </ul>
+                        </div>
                     </section>
                     <section class="table-info-section">
-                        <div class="info-group">
-                        <div class="d-flex justify-content-center align-items-center info-form-group">
-                            <form id="info-form">
-                                <ul class="list-unstyled components info-list">
-                                        <li>
-                                            <input class="form-control" type="text" id="nomeField" name="nome" value="P4 - Padre Manoel Raiol" disabled="" required="" style="font-size: 20px;">
-                                            <p id="last-modif">Última modificação em - por -</p>
-                                        </li>
-                                        <li>
-                                            <div class="form-group">
-                                                <span class="label">SETOR</span>
-        
-                                <select class="browser-default custom-select" name="setor_id">
-                                    <option value="null" disabled="" selected=""></option><option value="1">Benguí</option><option value="2">Benjamin Sodré</option><option value="3">Ariri Bolonha</option><option value="4">Catalina</option><option value="5">Cord. de Farias</option><option value="6">Coqueiro</option><option value="7">IPASEP</option><option value="8">Panorama</option><option value="9">Canarinho</option><option value="10">Tenoné</option><option value="11">Pratinha</option><option value="12">Verdejante</option><option value="13">Águas Negras</option><option value="14">Brasília</option><option value="15">S. J. do Outeir</option><option value="16">Morada de Deus</option><option value="17">COHAB</option><option value="18">Água Boa</option><option value="19">São Roque</option><option value="20">Souza Franco</option><option value="21">Eduardo Angelim</option><option value="22">Paracurí</option><option value="23">Tocantins</option><option value="24">Cotijuba</option><option value="25">Mata Fome</option><option value="26">Raim. Jinking</option><option value="27">Pratinha I</option><option value="28">Pratinha II</option><option value="29">Viver Primaver</option><option value="30">CDP - 10º Setor</option>
-                                </select>
-        
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-group">
-                                                <span class="label">UNID. DE NEGÓCIOS</span>
-        
-                                <select class="browser-default custom-select" name="un_id">
-                                    <option value="null" disabled="" selected=""></option><option value="1" selected="">UNSUL</option><option value="2">UN-NORTE</option><option value="3">UN-AM</option><option value="4">UN-BR</option><option value="5">UN-NE</option><option value="6">UN-IL</option><option value="7">UN-BA</option><option value="8">UN-TO</option><option value="9">UNSUL</option>
-                                </select>
-        
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-group">
-                                                <span class="label">MUNICÍPIO</span>
-        
-                                <select class="browser-default custom-select" name="municipio_id">
-                                    <option value="null" disabled="" selected=""></option><option value="3">Acará</option><option value="12">Augusto Corrêa</option><option value="13">Aurora Do Pará</option><option value="14">Aveiro</option><option value="39">Conceição Do Araguaia</option><option value="121">São Geraldo Do Araguaia</option><option value="28">Breves</option><option value="30">Cachoeira Do Piriá</option><option value="31">Cachoeira Do Arari</option><option value="32">Cametá</option><option value="33">Canaã Dos Carajás</option><option value="41">Cumaru Do Norte</option><option value="42">Curionópolis</option><option value="44">Curuá</option><option value="139">Uruará</option><option value="15">Bagre</option><option value="16">Baião</option><option value="17">Bannach</option><option value="46">Dom Eliseu</option><option value="48">Faro</option><option value="49">Floresta Do Araguaia</option><option value="50">Garrafão Do Norte</option><option value="51">Goianésia Do Pará</option><option value="52">Gurupá</option><option value="54">Igarapé-Miri</option><option value="56">Ipixuna Do Pará</option><option value="57">Irituia</option><option value="58">Itaituba</option><option value="59">Itupiranga</option><option value="60">Jacareacanga</option><option value="66">Marabá</option><option value="88">Paragominas</option><option value="70">Medicilândia</option><option value="71">Melgaço</option><option value="73">Moju</option><option value="74">Monte Alegre</option><option value="75">Muaná</option><option value="76">Nova Esperança Do Piriá</option><option value="79">Novo Progresso</option><option value="80">Novo Repartimento</option><option value="81">Óbidos</option><option value="82">Oeiras Do Pará</option><option value="83">Oriximiná</option><option value="85">Ourilândia Do Norte</option><option value="86">Pacajá</option><option value="93">Placas</option><option value="100">Redenção</option><option value="101">Rio Maria</option><option value="102">Rondon Do Pará</option><option value="103">Rurópolis</option><option value="112">Santana Do Araguaia</option><option value="113">Santarém</option><option value="119">São Félix Do Xingu</option><option value="18">Barcarena</option><option value="19" selected="">Belém</option><option value="20">Belterra</option><option value="128">Senador José Porfírio</option><option value="130">Tailândia</option><option value="98">Primavera</option><option value="141">Viseu</option><option value="1">Abaetetuba</option><option value="2">Abel Figueiredo</option><option value="9">Anajás</option><option value="10">Ananindeua</option><option value="11">Anapu</option><option value="4">Afuá</option><option value="5">Água Azul Do Norte</option><option value="6">Alenquer</option><option value="7">Almeirim</option><option value="8">Altamira</option><option value="23">Bonito</option><option value="24">Bragança</option><option value="25">Brasil Novo</option><option value="34">Capanema</option><option value="35">Capitão Poço</option><option value="21">Benevides</option><option value="120">São Francisco Do Pará</option><option value="22">Bom Jesus Do Tocantins</option><option value="38">Colares</option><option value="26">Brejo Grande Do Araguaia</option><option value="27">Breu Branco</option><option value="29">Bujaru</option><option value="36">Castanhal</option><option value="37">Chaves</option><option value="78">Nova Timboteua</option><option value="40">Concórdia Do Pará</option><option value="131">Terra Alta</option><option value="43">Curralinho</option><option value="45">Curuçá</option><option value="47">Eldorado Dos Carajás</option><option value="53">Igarapé-Açu</option><option value="55">Inhangapi</option><option value="61">Jacundá</option><option value="62">Juruti</option><option value="64">Mãe Do Rio</option><option value="63">Limoeiro Do Ajuru</option><option value="65">Magalhães Barata</option><option value="87">Palestina Do Pará</option><option value="89">Parauapebas</option><option value="90">Pau D'Arco</option><option value="67">Maracanã</option><option value="91">Peixe-Boi</option><option value="68">Marapanim</option><option value="69">Marituba</option><option value="72">Mocajuba</option><option value="77">Nova Ipixuna</option><option value="84">Ourém</option><option value="92">Piçarra</option><option value="94">Ponta De Pedras</option><option value="95">Portel</option><option value="96">Porto De Moz</option><option value="97">Prainha</option><option value="104">Salinópolis</option><option value="99">Quatipuru</option><option value="105">Salvaterra</option><option value="111">Santa Maria Do Pará</option><option value="106">Santa Bárbara Do Pará</option><option value="114">Santarém Novo</option><option value="107">Santa Cruz Do Arari</option><option value="108">Santa Isabel Do Pará</option><option value="109">Santa Luzia Do Pará</option><option value="110">Santa Maria Das Barreiras</option><option value="115">Santo Antônio Do Tauá</option><option value="117">São Domingos Do Araguaia</option><option value="116">São Caetano De Odivelas</option><option value="118">São Domingos Do Capim</option><option value="122">São João Da Ponta</option><option value="123">São João De Pirabas</option><option value="124">São João Do Araguaia</option><option value="125">São Miguel Do Guamá</option><option value="126">São Sebastião Da Boa Vista</option><option value="127">Sapucaia</option><option value="129">Soure</option><option value="132">Terra Santa</option><option value="133">Tomé-Açu</option><option value="134">Tracuateua</option><option value="135">Trairão</option><option value="136">Tucumã</option><option value="137">Tucuruí</option><option value="138">Ulianópolis</option><option value="140">Vigia</option><option value="142">Vitória Do Xingu</option><option value="143">Xinguara</option>
-                                </select>
-        
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-group">
-                                                <span class="label">COORDENADAS</span>
-                                                <input class="form-control-nomodif" type="text" value="1°9′29.55″S, 48°28′3.23″W" name="coords" disabled="">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-group">
-                                                <span class="label">SITUAÇÃO</span>
-                                                <input class="form-control" type="text" name="situaçao" value="Ativo" disabled="" required="">
-                                            </div>
-                                        </li>
-                                </ul>
-                            </form>
-                        </div>
-                    </div>
+                        
                     </section>
                 </div>
             </div>
@@ -217,18 +206,21 @@
         <div class="d-md-block info-sidebar">
             <button class= "btn btn-circle" id="close-infoside-btn"><i class="material-icons">close</i></button>
             <!--separate this from the rest of container to add dinamiclly-->
-            <div class="info-group">
-                <div class="editing-tools d-flex justify-content-end align-items-center">
-                    <button class= "btn btn-circle" id="edit-info-btn"><i class="material-icons">edit</i></button>
-                    <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">cloud_upload</i></button>
-                    <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">backspace</i></button>
-                </div>
-                <div class="d-flex justify-content-center align-items-center info-form-group">
-                    <form id="info-form">
-                        
-                    </form>
-                </div>
+            <div class="editing-tools d-flex justify-content-end align-items-center">
+                <button class= "btn btn-circle" id="edit-info-btn"><i class="material-icons">edit</i></button>
+                <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">cloud_upload</i></button>
+                <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">undo</i></button>
             </div>
+            <section class="infobar-section">
+                <!--
+                    <div class="info-group">
+                        <div class="d-flex justify-content-center align-items-center info-form-group">
+                            <form id="info-form">
+                            </form>
+                        </div>
+                    </div>
+                -->
+            </section>
         </div>
     </div>
 

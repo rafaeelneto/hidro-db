@@ -1,15 +1,17 @@
 import style from './../scss/custom.scss';
-import {elements} from './views/Base';
+import {elements, elementSelectors} from './views/Base';
 import User from './models/User';
 import {getKeyValues, tablesKeys} from './models/Data';
 
 import Info from './models/Info';
 
 import * as mapView from './views/mapView';
-import {loadPoçoView, loadSuperfView, loadInfoForm, clearInfoForm, loadSetores} from './views/infoView';
+import {loadPoçoView, loadSuperfView, loadOutorView, loadInfoForm, clearInfoForm} from './views/infoView';
 
 import TableData from './models/TableData';
 import * as requests from './requests';
+
+import {showPanel, removePanel, addPanel} from './views/panelView';
 
 /**
  * ------------------------
@@ -17,16 +19,18 @@ import * as requests from './requests';
  * ------------------------
 */
 
+
 //Set Sidebar-right Event Listeners
-elements.sidebarBtnID.addEventListener('click', function(){
+function toggleSidebar(){
 	elements.sidebarID.classList.toggle('active');
 	elements.contentClass.classList.toggle('active');
 	elements.omniboxClass.classList.toggle('active');
 	elements.sidebarBtnID.classList.toggle('actived');
-});
+}
 
-//Set Infobar Event Listeners
+elements.sidebarBtnID.addEventListener('click', toggleSidebar);
 
+//Set Side infobar to show
 function toggleInfobar(active){
 	if (active){
 		elements.infoSideClass.classList.add('active');
@@ -36,15 +40,14 @@ function toggleInfobar(active){
 		elements.contentClass.classList.remove('info-active');
 	}
 }
-
+//Set event listener to the close button on side infobar
 elements.closeInfobarID.addEventListener('click', () => {
 	toggleInfobar(false);
 	clearInfoForm(elements.infoList);
 	map.invalidateSize();
 });
 
-
-//Initialize the user and load table and init map
+//Initialize the user, load tables and init map
 const user = new User();
 const tableData = new TableData();
 (async () => {
@@ -53,31 +56,31 @@ const tableData = new TableData();
 	if(name === 'visitante'){
 		elements.logoutBtnID.innerHTML = 'Entrar';
 	}
-	//await tableData.loadAll();
+	await tableData.loadAll();
 	loadMap();
-	console.log(tableData.tables);
-	loadSetores(2, tableData.tables[tablesKeys.setoresSedes]);
+	tableController();
 })();
 
-
-async function loadInfo(type, id){
+async function loadInfo(parent, type, id){
+	console.log("Did you call me?", type, id);
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
+	console.log(infoRes);
 	const info = new Info(infoRes.table, infoRes.joinTables);
-	let html;
+	let htmlList;
 	switch (infoRes.type){
 		case 'poço_id':
-			html = loadPoçoView(info, tableData.tables);
+			htmlList = loadPoçoView(info, tableData.tables);
 			break;
 		case 'super_id':
-			html = loadSuperfView(info);
+			htmlList = loadSuperfView(info, tableData.tables);
 			break;
 		case 'outorga_id':
-			html = loadSuperfView(info); //fix it
+			htmlList = loadOutorView(info, tableData.tables); 
 			break;
 		default:
 			break;
 	}
-	//loadInfoForm(elements.infoForm, html);
+	loadInfoForm(parent, htmlList);
 }
 
 /**
@@ -93,15 +96,9 @@ function clickPointListener (feature, layer) {
 			const markerBounds = L.latLngBounds(latLngs);
 			mapView.map.fitBounds(markerBounds, {maxZoom: 20});
 
-			const s = feature.properties;
-			let keys = [];
-			let values = [];
-			for(var i in s) {
-				keys.push(i);
-				values.push(s[i]);
-			}
+			const keysArrays = getKeyValues(feature.properties);
 			toggleInfobar(true);
-			loadInfo(keys[0], values[0]);
+			loadInfo(elements.infobarSection, keysArrays.keys[0], keysArrays.values[0]);
 		}
 	});
 }
@@ -110,3 +107,72 @@ function loadMap(){
 	elements.mapViewClass.classList.toggle('show');
 	mapView.initMap(tableData.tables, clickPointListener);
 }
+
+/**
+ * ------------------------
+ * set table listeners
+ * ------------------------
+*/
+
+function tableController(){
+	const hash = window.location.hash.replace('#', '').replace('%C3%A7', 'ç');
+	const id = hash.split('=')[1];
+
+	let tableTitle;
+	let s;
+	switch (true) {
+		case hash.includes('notificaçoes'):
+			tableTitle = 'Notificações';
+			s = tableData.tables[tablesKeys.notificaçoes]
+			break;
+		case hash.includes('processos'):
+			tableTitle = 'Processos';
+			s = tableData.tables[tablesKeys.processos]
+			break;
+		case hash.includes('outorgas'):
+			tableTitle = 'Outorgas';
+			s = tableData.tables[tablesKeys.outorgas]
+			break;
+		case hash.includes('licenças'):
+			tableTitle = 'Licenças';
+			s = tableData.tables[tablesKeys.licenças];
+			break;
+		case hash.includes('autosinfra'):
+			tableTitle = 'Autos de infração';
+			s = tableData.tables[tablesKeys.autosInfraçao]
+			break;
+		case hash.includes('sobre'):
+			//SHOW THE CREDITS PAGE
+			break;
+		default:
+			//DO SOMETHING BEFORE COME BACK TO MAP
+			return null;
+	}
+
+	let objArrays = {
+		keys: [],
+		values: []
+	};
+
+	for (let i = 0; i < s.length; i++) {
+		let keyValues = getKeyValues(s[i]);
+		objArrays.keys = keyValues.keys;
+		objArrays.values.push(keyValues.values);
+	}
+	
+	console.log(objArrays);
+
+	let identifHash;
+	if(id !== undefined){
+		identifHash = hash.split('=')[0];
+		//CALL THE INFO LOADING PASSING THE ID
+		loadInfo(elements.panelForm, objArrays.keys[0], id);
+	}else{
+		identifHash = hash;
+	}
+
+	showPanel(tableTitle, objArrays.keys, objArrays.values, identifHash);
+}
+
+elements.closePanelBtn.addEventListener('click', removePanel);
+window.addEventListener('hashchange', tableController);

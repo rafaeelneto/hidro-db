@@ -19,6 +19,7 @@ export const tablesKeys = {
     regionais: 'regionais',
     municipios: 'municipios',
     outorgas: 'outorgas',
+    licenças: 'licenças',
     processos: 'processos',
     autosInfraçao: 'autosInfraçao',
     notificaçoes: 'notificaçoes',

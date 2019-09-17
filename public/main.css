@@ -6868,28 +6868,39 @@ table-panel
 ===============
 */
 .table-panel {
+  display: none; }
+
+.table-panel.active {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition: all 0.3s;
   position: absolute;
   z-index: 1100;
   top: 0;
   left: 0;
-  padding: 10px;
-  padding-left: 50px;
+  padding: 10% 0 10% 0;
   height: 100%;
   width: 100%;
   background: rgba(88, 88, 88, 0.445); }
-  .table-panel .group-panel {
+  .table-panel.active .group-panel {
+    height: 80vh;
     background: #F2F2F2;
     border-radius: 15px;
-    padding: 20px;
-    height: 80%; }
-    .table-panel .group-panel .list-reg {
-      margin-right: 30px; }
-    .table-panel .group-panel .panel-header {
+    padding: 20px; }
+    .table-panel.active .group-panel .group-sections {
+      height: 85%; }
+      .table-panel.active .group-panel .group-sections > * {
+        flex-direction: column;
+        flex: 0 0 auto;
+        overflow-y: scroll; }
+      .table-panel.active .group-panel .group-sections section {
+        width: 50%;
+        height: auto; }
+    .table-panel.active .group-panel .panel-header {
       border-bottom: 3px solid #024454; }
-  .table-panel section {
-    width: 50%; }
-  .table-panel #close-other-btn {
+  .table-panel.active #close-panel-btn {
     margin-top: 2%;
     margin-left: 2%;
     width: 100px;
@@ -6900,7 +6911,7 @@ table-panel
     z-index: 1;
     top: 0;
     left: 0; }
-    .table-panel #close-other-btn:hover, .table-panel #close-other-btn:focus {
+    .table-panel.active #close-panel-btn:hover, .table-panel.active #close-panel-btn:focus {
       background: #022133;
       color: #F2F2F2; }
 
@@ -6918,9 +6929,6 @@ info panel
   .editing-tools .btn:hover, .editing-tools .btn:focus {
     color: #F0D675;
     background: #F2F2F2; }
-
-.info-group, .table-info-section {
-  overflow-y: auto; }
 
 .info-form-group ul.components {
   border-top: 3px solid #024454; }

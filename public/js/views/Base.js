@@ -15,6 +15,14 @@ export const elements = {
 
     //Info element
     infoForm: document.querySelector('#info-form'),
+    infobarSection: document.querySelector('.infobar-section'),
+    infoTableSection: document.querySelector('.table-info-section'),
+
+    //Panel elements
+    panelTitle: document.querySelector('#panel-title'),
+    panel: document.querySelector('.table-panel'),
+    closePanelBtn: document.querySelector('#close-panel-btn'),
+    panelForm: document.querySelector('.table-info-section'),
 
     //map
     mapViewClass: document.querySelector('.map-view'),
@@ -22,7 +30,7 @@ export const elements = {
 }
 
 export const elementSelectors = {
-    infoList: '.info-list'
+    infoGroup: 'info-group'
 }
 
 export const nullVeryfier = (v)=> {

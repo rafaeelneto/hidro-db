@@ -536,32 +536,45 @@ table-panel
 */
 
 .table-panel{
+    display: none;
+}
+
+.table-panel.active{
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transition: all 0.3s;
-    position: absolute; 
+    position: absolute;
     z-index: 1100;
     top: 0;
     left: 0;
-    padding: 10px;
-    padding-left: 50px;
+    padding: 10% 0 10% 0;
     height: 100%;
     width: 100%;
     background: rgba(88, 88, 88, 0.445);
     .group-panel{
+        height: 80vh;
         background: $light;
         border-radius: 15px;
         padding: 20px;
-        height: 80%;
-        .list-reg{
-            margin-right: 30px;
+        .group-sections{
+            height: 85%;
+	        >*{
+                flex-direction: column;
+	        	flex: 0 0 auto;			
+                overflow-y: scroll;
+	        }
+            section{
+                width: 50%;
+                height: auto;
+            }
         }
         .panel-header{
             border-bottom: 3px solid $primaryMiddleDrk;
         }
     }
-    section{
-        width: 50%;
-    }
-    #close-other-btn{
+    #close-panel-btn{
         margin-top: 2%;
         margin-left: 2%;
         width: 100px;
@@ -598,11 +611,6 @@ info panel
         }
     }
 }
-
-.info-group, .table-info-section{
-    overflow-y: auto;
-}
-
 .info-form-group{
     ul.components {
         border-top: 3px solid $primaryMiddleDrk;
