@@ -62,7 +62,6 @@ const tableData = new TableData();
 })();
 
 async function loadInfo(parent, type, id){
-	console.log("Did you call me?", type, id);
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
 	console.log(infoRes);
 	const info = new Info(infoRes.table, infoRes.joinTables);
@@ -95,7 +94,7 @@ function clickPointListener (feature, layer) {
 			const latLngs = [e.target.getLatLng()];
 			const markerBounds = L.latLngBounds(latLngs);
 			mapView.map.fitBounds(markerBounds, {maxZoom: 20});
-
+			
 			const keysArrays = getKeyValues(feature.properties);
 			toggleInfobar(true);
 			loadInfo(elements.infobarSection, keysArrays.keys[0], keysArrays.values[0]);

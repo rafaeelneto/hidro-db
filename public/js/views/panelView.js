@@ -9,6 +9,7 @@ function showPanel(tableTitle, keys, values, identifHash){
 }
 
 function removePanel(){
+    clearInfoForm(elements.infobarSection);
     elements.panel.classList.remove('active');
 }
 function addPanel(){
