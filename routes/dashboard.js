@@ -62,7 +62,7 @@ router.get('/all', async (req, res) => {
 });
 
 router.get('/info', async (req, res) => {
-    if (req.query.id) {
+    if(req.query.id){
         const info = await getInf(req.query.type, req.query.id);
         res.json(info);
     }
@@ -73,7 +73,7 @@ async function getInf(type, id){
     let tableName;
     let columns;
     let joinsQueries;
-    switch (type) {
+    switch(type){
         case 'poço_id':
             tableName = 'poços';
             columns = tables.poçoInfoColumns;
@@ -87,7 +87,12 @@ async function getInf(type, id){
         case 'outorga_id':
             tableName = 'outorgas';
             columns = tables.outorgaInfoColumns;
-            joinsQueries = [tables.outorgaSuperfJoinInfo, tables.processoSuperfJoinInfo];
+            joinsQueries = [tables.outorgaSuperfJoinInfo, tables.outorgaPoçoJoinInfo];
+            break;
+        case 'processo_id':
+            tableName = 'processos';
+            columns = tables.processoInfoColumns;
+            joinsQueries = [tables.processoPoçoJoinInfo, tables.processoSuperfJoinInfo];
             break;
         default:
             break;

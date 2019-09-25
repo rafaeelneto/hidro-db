@@ -19,6 +19,7 @@ $danger:#F67280;
 $info:#A2D5F2;
 $warning:#f2c260;
 $light:#F2F2F2;
+$lightMiddle:#e8e8e8;
 $dark:#4e4e4e;
 $spacer:1.2rem;
 $border-width:1px;
@@ -416,7 +417,6 @@ $infoBarBorder: 10px;
         top: $infoBarBorder;
         left: 50px;
     }
-
     #close-infoside-btn{
         margin-top: $infoBarBorder;
         margin-left: $infoBarBorder;
@@ -559,14 +559,40 @@ table-panel
         border-radius: 15px;
         padding: 20px;
         .group-sections{
+            height: 80%;
 	        >*{
                 flex-direction: column;
 	        	flex: 0 0 auto;			
                 overflow-y: scroll;
-	        }
+            }
+            .list-reg{
+                li a{
+                    margin: 2px 0 2px 0;
+                    color: $dark;
+                    font-weight: 700;
+                    letter-spacing: .2em;
+                    border-radius: 10px;
+                    padding: 10px;
+                    font-size: 14px;
+                    display: block;
+                    white-space: nowrap;
+                }
+                li.active a{
+                    font-weight: 700;
+                    color: $orange;
+                }
+                li:hover{
+                    background: $lightMiddle;
+                }
+            }
             section{
                 width: 50%;
-                height: auto;
+                .info-group{
+                    padding-left: 2%;
+                }
+                .info-form{
+                    width: 100%;
+                }
             }
         }
         .panel-header{
@@ -611,9 +637,6 @@ info panel
     }
 }
 .info-form-group{
-    ul.components {
-        border-top: 3px solid $primaryMiddleDrk;
-    }
     li{
         background: $light;
         padding: 2px;

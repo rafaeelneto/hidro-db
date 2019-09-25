@@ -11,7 +11,7 @@ import {loadPoçoView, loadSuperfView, loadOutorView, loadInfoForm, clearInfoFor
 import TableData from './models/TableData';
 import * as requests from './requests';
 
-import {showPanel, removePanel, addPanel} from './views/panelView';
+import {showPanel, removePanel} from './views/panelView';
 
 /**
  * ------------------------
@@ -63,8 +63,8 @@ const tableData = new TableData();
 
 async function loadInfo(parent, type, id){
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
-	console.log(infoRes);
 	const info = new Info(infoRes.table, infoRes.joinTables);
+	console.log(info.keys);
 	let htmlList;
 	switch (infoRes.type){
 		case 'poço_id':
@@ -120,23 +120,23 @@ function tableController(){
 	let tableTitle;
 	let s;
 	switch (true) {
-		case hash.includes('notificaçoes'):
+		case hash.includes(tablesKeys.notificaçoes):
 			tableTitle = 'Notificações';
 			s = tableData.tables[tablesKeys.notificaçoes]
 			break;
-		case hash.includes('processos'):
+		case hash.includes(tablesKeys.processos):
 			tableTitle = 'Processos';
 			s = tableData.tables[tablesKeys.processos]
 			break;
-		case hash.includes('outorgas'):
+		case hash.includes(tablesKeys.outorgas):
 			tableTitle = 'Outorgas';
 			s = tableData.tables[tablesKeys.outorgas]
 			break;
-		case hash.includes('licenças'):
+		case hash.includes(tablesKeys.licenças):
 			tableTitle = 'Licenças';
 			s = tableData.tables[tablesKeys.licenças];
 			break;
-		case hash.includes('autosinfra'):
+		case hash.includes(tablesKeys.autosInfraçao):
 			tableTitle = 'Autos de infração';
 			s = tableData.tables[tablesKeys.autosInfraçao]
 			break;
@@ -158,11 +158,11 @@ function tableController(){
 		objArrays.keys = keyValues.keys;
 		objArrays.values.push(keyValues.values);
 	}
-	
+
 	console.log(objArrays);
 
 	let identifHash;
-	if(id !== undefined){
+	if(id >= 0){
 		identifHash = hash.split('=')[0];
 		//CALL THE INFO LOADING PASSING THE ID
 		loadInfo(elements.panelForm, objArrays.keys[0], id);
@@ -170,8 +170,28 @@ function tableController(){
 		identifHash = hash;
 	}
 
-	showPanel(tableTitle, objArrays.keys, objArrays.values, identifHash);
+	showPanel(tableTitle, objArrays.values, identifHash, id);
 }
 
 elements.closePanelBtn.addEventListener('click', removePanel);
 window.addEventListener('hashchange', tableController);
+
+function search(input){
+	let list = [];
+	const query = elements.searchInput.value;
+	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.poços), tablesKeys.poços, 'Poço', 'nome'));
+	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.capSuperf), tablesKeys.capSuperf, 'Cap. Superf.', 'nome'));
+	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.setoresSedes), tablesKeys.setoresSedes, 'Setor', 'nome'));
+	list.push(...tableData.search(query, tableData.tables[tablesKeys.outorgas], tablesKeys.outorgas, 'Outorga', 'num_outorga'));
+	list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'num_processo'));
+	list.push(...tableData.search(query, tableData.tables[tablesKeys.licenças], tablesKeys.outorgas, 'Licença', 'num_licen'));
+	list.push(...tableData.search(query, tableData.tables[tablesKeys.autosInfraçao], tablesKeys.autosInfraçao, 'Auto de Infração', 'num_infra'));
+
+	console.log(list);
+	for (let i = 0; i < list.length; i++) {
+		const element = list[i];
+		console.log(element.label);
+	}
+}
+
+elements.searchInput.addEventListener('input', search);

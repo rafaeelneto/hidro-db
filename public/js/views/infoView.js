@@ -273,85 +273,73 @@ function loadOutorView(info, tables){
     let outrInfoHTML = `
         <ul class="list-unstyled components info-list">
             <li>
-                <input class="form-control" type="text" id="nome" name="${keys[1]}" value="${s[keys[1]]}" disabled required/>
-                <p id="last-modif">Última modificação em ${s[keys[2]]} por ${s[keys[3]]}</p>
+                <input class="form-control" type="text" id="nomeField" name="${keys[1]}" value="${s[keys[1]]}" disabled required/>
             </li>
             <li>
                 <div class="form-group">
-                    <span class="label">SETOR</span>
-                    ${loadSetores(s[keys[4]], tables[tablesKeys.setoresSedes])}
+                    <span class="label">TIPO</span>
+                    <input class="form-control" type="text" name="${keys[2]}" value="${s[keys[2]]}" name="coords" disabled quired/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">DATA DE ENTRADA</span>
+                    <input class="form-control" type="text" name="${keys[3]}" value="${s[keys[3]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">VALIDADE</span>
+                    <input class="form-control" type="text" name="${keys[4]}" value="${s[keys[4]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">RESPONSÁVEL</span>
+                    <input class="form-control" type="text" name="${keys[5]}" value="${s[keys[5]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">TIPO DE CAPTAÇÃO</span>
+                    <input class="form-control" type="text" name="${keys[6]}" value="${s[keys[6]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">LINK DA OUTORGA</span>
+                    <textarea class="form-control" name="${keys[7]}">${s[keys[7]]}</textarea>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">ORGÃO</span>
+                    ${loadSitus(keys[8], situaçoesValues, s[keys[8]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">TIPO DE CAPTAÇÃO</span>
+                    <input class="form-control" type="text" name="${keys[9]}" value="${s[keys[9]]}" disabled required/>
+                </div>
+            </li>
+
+            <li>
+                <div class="form-group">
+                    <span class="label">OBSERVAÇÃO</span>
+                    <textarea class="form-control" name="${keys[10]}">${s[keys[10]]}</textarea>
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">UNID. DE NEGÓCIOS</span>
-                    ${composeDropDownList(keys[5], tables[tablesKeys.uns], s[keys[5]])}
+                    ${composeDropDownList(keys[11], tables[tablesKeys.uns], s[keys[11]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">MUNICÍPIO</span>
-                    ${composeDropDownList(keys[6], tables[tablesKeys.municipios], s[keys[6]])}
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">COORDENADAS</span>
-                    <input class="form-control-nomodif" type="text" value="${s[keys[7]]}, ${s[keys[8]]}" name="coords" disabled quired/>
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">CORPO HÍDRICO</span>
-                    <input class="form-control" type="text" name="${keys[9]}" value="${s[keys[9]]}" name="coords" disabled quired/>
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">SITUAÇÃO</span>
-                    ${loadSitus(keys[10], situaçoesValues, s[keys[10]])}
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">VAZÃO MÁXIMA (m³/h)</span>
-                    <input class="form-control" type="date" name="${keys[11]}" value="${s[keys[11]]}" disabled required/>
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">DATA OPERAÇÃO</span>
-                    <input class="form-control" type="date" name="${keys[12]}" value="${s[keys[12]]}" disabled required/>
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">BOMBA</span>
-                    <input class="form-control" type="text" name="${keys[13]}" value="${s[keys[13]]}" disabled required/>
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">HORAS DE BOMBEAMENTO</span>
-                    <input class="form-control" type="text" name="${keys[14]}" value="${s[keys[14]]}" disabled required/>
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">RELATÓRIO</span>
-                    <textarea class="form-control" name="${keys[15]}">${s[keys[15]]}</textarea>
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">LICENCIAMENTO</span>
-                    ${loadSitus(keys[16], licenciamentoValues, s[keys[16]])}
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
-                    <span class="label">OBSERVAÇÃO</span>
-                    <textarea class="form-control" name="${keys[17]}">${s[keys[17]]}</textarea>
+                    ${composeDropDownList(keys[12], tables[tablesKeys.municipios], s[keys[12]])}
                 </div>
             </li>
         </ul>
@@ -363,7 +351,7 @@ function loadInfoForm(parent, htmlList){
 
     const htmlForm = `
     <div class="info-group">
-        <div class="d-flex justify-content-center align-items-center info-form-group">
+        <div class="d-flex justify-content-start align-items-center info-form-group">
             <form id="info-form">
                 ${htmlList}
             </form>

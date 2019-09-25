@@ -10,6 +10,7 @@ export default class Info{
 			values.push(s[i]);
         }
         this.keys = keys;
+        this.values = values;
         this.s = s;
         this.joins = joinTables;
     }

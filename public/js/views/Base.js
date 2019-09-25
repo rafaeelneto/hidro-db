@@ -21,16 +21,21 @@ export const elements = {
     //Panel elements
     panelTitle: document.querySelector('#panel-title'),
     panel: document.querySelector('.table-panel'),
+    sectionContainer: document.querySelector('.section-container'),
     closePanelBtn: document.querySelector('#close-panel-btn'),
     panelForm: document.querySelector('.table-info-section'),
 
     //map
     mapViewClass: document.querySelector('.map-view'),
-    mapID: document.getElementById('map')
+    mapID: document.getElementById('map'),
+
+    //search
+    searchInput: document.getElementById('search-input')
 }
 
 export const elementSelectors = {
-    infoGroup: 'info-group'
+    infoGroup: '.info-group',
+    listRegisters: '.list-reg'
 }
 
 export const nullVeryfier = (v)=> {

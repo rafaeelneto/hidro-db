@@ -8,7 +8,6 @@
 
     <link rel="stylesheet" href="css/leaflet.extra-markers.min.css">
 
-    <!--alterar-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
@@ -16,30 +15,6 @@
     
     <link rel="stylesheet" href="/main.css">
 </head>
-
-<!--
-    <li>
-        <button class="btn" id="mapa">MAPA PRINCIPAL</button>
-    </li>
-    <li>
-        <button class="btn"  id="notificaçoes">NOTIFICAÇÕES</button>
-    </li>
-    <li>
-        <button class="btn"  id="processos">PROCESSOS</button>
-    </li>
-    <li>
-        <button class="btn"  id="outorgas">OUTORGAS</button>
-    </li>
-    <li >
-        <button class="btn"  id="licenças">LICENÇAS</button>
-    </li>
-    <li> 
-        <button class="btn"  id="autos">AUTOS DE INFRAÇÃO</button>
-    </li >
-    <li>
-        <button class="btn"  id="sobre">SOBRE</button>
-    </li>
--->
 
 <body>
     <div class="wrapper d-flex">
@@ -83,7 +58,7 @@
                 </button>
                 <div class="p-1 bg-light rounded rounded-pill w-100 search-box">
                     <div class="input-group h-5">
-                        <input type="search" placeholder="Procure poços, outorgas, endereços e tudo mais..." aria-describedby="button-addon1" class="form-control border-0 bg-light">
+                        <input id="search-input" type="search" placeholder="Procure poços, outorgas, endereços e tudo mais..." aria-describedby="button-addon1" class="form-control border-0 bg-light">
                         <div class="input-group-append">
                             <button id="button-search" type="submit" class="btn btn-link text-primary"><i class="material-icons">search</i></button>
                         </div>
@@ -108,96 +83,16 @@
                 <div class="d-flex justify-content-around flex-grow-1 group-sections">
                     <section class="list-group">
                         <div class="d-flex flex-column section-container">
+                            <!--
                             <ul class="list-unstyled list-reg">
-                                <li class="active">
+                                <li class="active" id="id-4">
                                     <a href="#outorgas=4">292/2013</a>
                                 </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
-                                <li>
-                                    <a href="#processos">573/2016</a>
-                                </li>
                             </ul>
+                            -->
                         </div>
                     </section>
                     <section class="table-info-section">
-                        
                     </section>
                 </div>
             </div>
@@ -232,6 +127,7 @@
     <script src="js/library/leaflet.extra-markers.min.js"></script>
 
     <script src='https://unpkg.com/leaflet.gridlayer.googlemutant@latest/Leaflet.GoogleMutant.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.0.1/dist/js/autoComplete.min.js"></script>
 
     <script src="bundle.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZkl-9ec3cYby1B7KvFclQLKnvlLpebpc"></script>
