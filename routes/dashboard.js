@@ -65,8 +65,9 @@ router.get('/info', async (req, res) => {
     if(req.query.id){
         const info = await getInf(req.query.type, req.query.id);
         res.json(info);
+    }else{
+        res.send('error');
     }
-    res.send('error');
 });
 
 async function getInf(type, id){

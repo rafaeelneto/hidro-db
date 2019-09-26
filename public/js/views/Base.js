@@ -30,12 +30,14 @@ export const elements = {
     mapID: document.getElementById('map'),
 
     //search
-    searchInput: document.getElementById('search-input')
+    searchInput: document.getElementById('search-input'),
+    resultDiv: document.querySelector('.results-search')
 }
 
 export const elementSelectors = {
     infoGroup: '.info-group',
-    listRegisters: '.list-reg'
+    listRegisters: '.list-reg',
+    listResults: '.result-list'
 }
 
 export const nullVeryfier = (v)=> {

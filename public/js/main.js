@@ -13,6 +13,8 @@ import * as requests from './requests';
 
 import {showPanel, removePanel} from './views/panelView';
 
+import {showResults, removeResults} from './views/searchView';
+
 /**
  * ------------------------
  * Event Listeners
@@ -159,8 +161,6 @@ function tableController(){
 		objArrays.values.push(keyValues.values);
 	}
 
-	console.log(objArrays);
-
 	let identifHash;
 	if(id >= 0){
 		identifHash = hash.split('=')[0];
@@ -187,10 +187,9 @@ function search(input){
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.licenças], tablesKeys.outorgas, 'Licença', 'num_licen'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.autosInfraçao], tablesKeys.autosInfraçao, 'Auto de Infração', 'num_infra'));
 
-	console.log(list);
-	for (let i = 0; i < list.length; i++) {
-		const element = list[i];
-		console.log(element.label);
+	showResults(list);
+	if(query === ''){
+		removeResults();
 	}
 }
 

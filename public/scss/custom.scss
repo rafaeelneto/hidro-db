@@ -235,6 +235,40 @@ $btn-border-radius:.25rem;
     background-color: transparent;
 }
 
+.results-search{
+    display: none;
+    &.active{
+        display: flex;
+    }
+    position: absolute;
+    top: 50px;
+    left: 60px;
+    width: 60%;
+    max-height: 70vh;
+    border-radius: 10px;
+    background: $light;
+    padding: 5px;
+    overflow-y: auto;
+    transition: all 0.4s;
+    ul.result-list, li{
+        border-radius: 10px;
+        margin-bottom: 0;
+        transition: all 0.4s;
+        a{
+            small{
+                background: $orange;
+                border-radius: 20px;
+                color: #fff;
+                font-family: $open-sans;
+                font-size: 8pt;
+                padding: 2px 5px 2px 5px;
+                font-weight: 600;
+                font-style: italic;
+            }
+        }
+    }
+}
+
 .form-control:focus {
     box-shadow: none;
 }
@@ -565,26 +599,6 @@ table-panel
 	        	flex: 0 0 auto;			
                 overflow-y: scroll;
             }
-            .list-reg{
-                li a{
-                    margin: 2px 0 2px 0;
-                    color: $dark;
-                    font-weight: 700;
-                    letter-spacing: .2em;
-                    border-radius: 10px;
-                    padding: 10px;
-                    font-size: 14px;
-                    display: block;
-                    white-space: nowrap;
-                }
-                li.active a{
-                    font-weight: 700;
-                    color: $orange;
-                }
-                li:hover{
-                    background: $lightMiddle;
-                }
-            }
             section{
                 width: 50%;
                 .info-group{
@@ -614,6 +628,27 @@ table-panel
             background: $primaryDark;
             color: $light;
         }
+    }
+}
+
+.list-reg, .result-list{
+    li a{
+        margin: 2px 0 2px 0;
+        color: $dark;
+        font-weight: 700;
+        letter-spacing: .2em;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 14px;
+        display: block;
+        white-space: nowrap;
+    }
+    li.active a{
+        font-weight: 700;
+        color: $orange;
+    }
+    li:hover{
+        background: $lightMiddle;
     }
 }
 

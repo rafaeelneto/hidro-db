@@ -6613,6 +6613,34 @@ a.text-dark:hover, a.text-dark:focus {
   width: 40%;
   background-color: transparent; }
 
+.results-search {
+  display: none;
+  position: absolute;
+  top: 50px;
+  left: 60px;
+  width: 60%;
+  max-height: 70vh;
+  border-radius: 10px;
+  background: #F2F2F2;
+  padding: 5px;
+  overflow-y: auto;
+  transition: all 0.4s; }
+  .results-search.active {
+    display: flex; }
+  .results-search ul.result-list, .results-search li {
+    border-radius: 10px;
+    margin-bottom: 0;
+    transition: all 0.4s; }
+    .results-search ul.result-list a small, .results-search li a small {
+      background: #E3A84F;
+      border-radius: 20px;
+      color: #fff;
+      font-family: "Open Sans", sans-serif;
+      font-size: 8pt;
+      padding: 2px 5px 2px 5px;
+      font-weight: 600;
+      font-style: italic; }
+
 .form-control:focus {
   box-shadow: none; }
 
@@ -6895,21 +6923,6 @@ table-panel
         flex-direction: column;
         flex: 0 0 auto;
         overflow-y: scroll; }
-      .table-panel.active .group-panel .group-sections .list-reg li a {
-        margin: 2px 0 2px 0;
-        color: #4e4e4e;
-        font-weight: 700;
-        letter-spacing: .2em;
-        border-radius: 10px;
-        padding: 10px;
-        font-size: 14px;
-        display: block;
-        white-space: nowrap; }
-      .table-panel.active .group-panel .group-sections .list-reg li.active a {
-        font-weight: 700;
-        color: #E3A84F; }
-      .table-panel.active .group-panel .group-sections .list-reg li:hover {
-        background: #e8e8e8; }
       .table-panel.active .group-panel .group-sections section {
         width: 50%; }
         .table-panel.active .group-panel .group-sections section .info-group {
@@ -6932,6 +6945,24 @@ table-panel
     .table-panel.active #close-panel-btn:hover, .table-panel.active #close-panel-btn:focus {
       background: #022133;
       color: #F2F2F2; }
+
+.list-reg li a, .result-list li a {
+  margin: 2px 0 2px 0;
+  color: #4e4e4e;
+  font-weight: 700;
+  letter-spacing: .2em;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 14px;
+  display: block;
+  white-space: nowrap; }
+
+.list-reg li.active a, .result-list li.active a {
+  font-weight: 700;
+  color: #E3A84F; }
+
+.list-reg li:hover, .result-list li:hover {
+  background: #e8e8e8; }
 
 /*
 ===============
