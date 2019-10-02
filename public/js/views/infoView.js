@@ -347,32 +347,32 @@ function loadOutorView(info, tables){
     return outrInfoHTML;
 }
 
-function loadInfoForm(parent, htmlList){
+function loadInfoForm(identif, parent, htmlList, tableName, key){
 
     const htmlForm = `
-    <div class="info-group">
+    <div class="info-group${identif}">
         <div class="d-flex justify-content-start align-items-center info-form-group">
-            <form id="info-form">
+            <form id="info-form-${tableName}-${key}" onsubmit="return submitInfo()">
                 ${htmlList}
             </form>
         </div>
     </div>
     `;
 
-    clearInfoForm(parent);
+    clearInfoForm(parent, identif);
     
     parent.insertAdjacentHTML('afterbegin', htmlForm);
 
-    if(parent === elements.infoForm){
-        const fieldName = document.querySelector('.info-list #nomeField');
+    if(parent === elements.infobarSection){
+        const fieldName = document.querySelector('#nomeField');
         if (fieldName.value.length > 17){
             fieldName.style.fontSize = '20px';
         }
     }
 }
 
-function clearInfoForm(parent){
-    const infoElement = document.querySelector(elementSelectors.infoGroup);
+function clearInfoForm(parent, identif){
+    const infoElement = document.querySelector(elementSelectors.infoGroup + identif);
     if (infoElement){
         parent.removeChild(infoElement);
     }

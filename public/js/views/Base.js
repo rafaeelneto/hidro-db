@@ -18,6 +18,8 @@ export const elements = {
     infobarSection: document.querySelector('.infobar-section'),
     infoTableSection: document.querySelector('.table-info-section'),
 
+    uploadButton: document.querySelectorAll('#upload-info-btn'),
+
     //Panel elements
     panelTitle: document.querySelector('#panel-title'),
     panel: document.querySelector('.table-panel'),
@@ -28,12 +30,14 @@ export const elements = {
     //map
     mapViewClass: document.querySelector('.map-view'),
     mapID: document.getElementById('map'),
+    coordinates: document.querySelector('.coordinates'),
 
     //search
     searchInput: document.getElementById('search-input'),
     resultDiv: document.querySelector('.results-search')
 }
 
+//Selectors used by the clean list functions
 export const elementSelectors = {
     infoGroup: '.info-group',
     listRegisters: '.list-reg',

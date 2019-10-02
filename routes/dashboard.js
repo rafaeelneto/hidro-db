@@ -63,14 +63,14 @@ router.get('/all', async (req, res) => {
 
 router.get('/info', async (req, res) => {
     if(req.query.id){
-        const info = await getInf(req.query.type, req.query.id);
+        const info = await getInfo(req.query.type, req.query.id);
         res.json(info);
     }else{
         res.send('error');
     }
 });
 
-async function getInf(type, id){
+async function getInfo(type, id){
     let tableName;
     let columns;
     let joinsQueries;

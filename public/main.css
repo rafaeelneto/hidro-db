@@ -6443,6 +6443,24 @@ a.text-dark:hover, a.text-dark:focus {
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
+/* width */
+::-webkit-scrollbar {
+  width: 5px; }
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e8e8e8;
+  border-radius: 10px; }
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #024454;
+  border-radius: 10px; }
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #42919A; }
+
 .btn {
   margin: 15px 25% 0 25%;
   color: #fff;
@@ -6596,7 +6614,7 @@ a.text-dark:hover, a.text-dark:focus {
 
 .omnibox {
   margin: 10px;
-  width: 50%;
+  width: 40%;
   display: block;
   position: absolute;
   top: 0;
@@ -6618,11 +6636,12 @@ a.text-dark:hover, a.text-dark:focus {
   position: absolute;
   top: 50px;
   left: 60px;
-  width: 60%;
+  width: 80%;
   max-height: 70vh;
   border-radius: 10px;
   background: #F2F2F2;
   padding: 5px;
+  overflow: hidden;
   overflow-y: auto;
   transition: all 0.4s; }
   .results-search.active {
@@ -6631,15 +6650,17 @@ a.text-dark:hover, a.text-dark:focus {
     border-radius: 10px;
     margin-bottom: 0;
     transition: all 0.4s; }
-    .results-search ul.result-list a small, .results-search li a small {
-      background: #E3A84F;
-      border-radius: 20px;
-      color: #fff;
-      font-family: "Open Sans", sans-serif;
-      font-size: 8pt;
-      padding: 2px 5px 2px 5px;
-      font-weight: 600;
-      font-style: italic; }
+    .results-search ul.result-list a, .results-search li a {
+      font-size: 15px; }
+      .results-search ul.result-list a small, .results-search li a small {
+        background: #E3A84F;
+        border-radius: 20px;
+        color: #fff;
+        font-family: "Open Sans", sans-serif;
+        font-size: 8pt;
+        padding: 2px 5px 2px 5px;
+        font-weight: 600;
+        font-style: italic; }
 
 .form-control:focus {
   box-shadow: none; }
@@ -6792,10 +6813,7 @@ info-side
     width: 25vw;
     padding: 10px 0 0 50px; }
   .info-sidebar .info-group {
-    position: absolute;
-    z-index: 1;
-    top: 10px;
-    left: 50px; }
+    border-top: 2px solid #024454; }
   .info-sidebar #close-infoside-btn {
     margin-top: 10px;
     margin-left: 10px;
@@ -6846,6 +6864,38 @@ Map
   background-color: #F2F2F2;
   border-radius: 25px;
   transition: all 0.3; }
+
+.leaflet-control-scale-line {
+  border: 3px solid #024454;
+  border-top: none;
+  border-radius: 2px;
+  font-family: "Open Sans", sans-serif;
+  letter-spacing: 0.3em;
+  font-weight: 700;
+  font-size: 10pt;
+  color: #043852;
+  background: #fff;
+  box-shadow: 1px 1px 7px 1px rgba(0, 0, 0, 0.217); }
+
+.coord-box {
+  position: absolute;
+  z-index: 2;
+  width: 350px;
+  text-align: center;
+  bottom: 5%;
+  right: 50%;
+  transform: translate(50%, 0%);
+  border: 2px solid #024454;
+  color: #024454;
+  background: #fff;
+  border-radius: 20px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .3em; }
+  .coord-box .coordinates {
+    margin: 0; }
 
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
   border: none; }
@@ -6935,7 +6985,6 @@ table-panel
     margin-top: 2%;
     margin-left: 2%;
     width: 100px;
-    padding: 5px;
     border-radius: 10px;
     background: #F2F2F2;
     position: absolute;
@@ -6976,7 +7025,6 @@ info panel
   height: 35px;
   width: 35px; }
   .editing-tools .btn:hover, .editing-tools .btn:focus {
-    color: #F0D675;
     background: #F2F2F2; }
 
 .info-form-group li {

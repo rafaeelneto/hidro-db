@@ -16,14 +16,45 @@ export default class TableData {
     }
 
     getFeaturesProperties(layer){
-      
       const tableFeatures = this.tables[layer].features;
 
-      const layerFeatures = []
+      const featuresProperties = [];
+
       for (let i = 0; i < tableFeatures.length; i++) {
-        layerFeatures.push(tableFeatures[i].properties);
+        featuresProperties.push(tableFeatures[i].properties);
       }
-      return layerFeatures;
+
+      return featuresProperties;
+    }
+    
+    getSpatialProperties(layer, valueID){
+      const tableFeatures = this.tables[layer].features;
+      const featuresProperties = this.getFeaturesProperties(layer);
+
+      let key, latLng;
+
+      for (let i = 0; i < featuresProperties.length; i++) {
+        const element = featuresProperties[i];
+        const keyValues = getKeyValues(element);
+        key = keyValues.keys[0];
+        if(keyValues.values[0] == valueID){
+          const coord = tableFeatures[i].geometry.coordinates;
+          latLng = [
+            {
+              lat: coord[1],
+              lng: coord[0]
+            }
+          ]
+        }
+      }
+
+      console.log(latLng);
+
+      return {
+        latLng: latLng,
+        key: key,
+        valueID: valueID
+      }
     }
 
     search(query, table, tableNameQuery, tableLabelQuery, labelColumn){

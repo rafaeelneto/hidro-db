@@ -1,5 +1,7 @@
+//IMPORTANT TO WEBPACK COMPILER
 import style from './../scss/custom.scss';
-import {elements, elementSelectors} from './views/Base';
+
+import {elements} from './views/Base';
 import User from './models/User';
 import {getKeyValues, tablesKeys} from './models/Data';
 
@@ -17,7 +19,15 @@ import {showResults, removeResults} from './views/searchView';
 
 /**
  * ------------------------
- * Event Listeners
+ * Global State Variables
+ * ------------------------
+*/
+
+let formActive, oldFormActive, tableName, selectedID, info;
+
+/**
+ * ------------------------
+ * GENERAL EVENT LISTENERS
  * ------------------------
 */
 
@@ -28,6 +38,7 @@ function toggleSidebar(){
 	elements.contentClass.classList.toggle('active');
 	elements.omniboxClass.classList.toggle('active');
 	elements.sidebarBtnID.classList.toggle('actived');
+	mapView.map.invalidateSize();
 }
 
 elements.sidebarBtnID.addEventListener('click', toggleSidebar);
@@ -41,7 +52,9 @@ function toggleInfobar(active){
 		elements.infoSideClass.classList.remove('active');
 		elements.contentClass.classList.remove('info-active');
 	}
+	mapView.map.invalidateSize();
 }
+
 //Set event listener to the close button on side infobar
 elements.closeInfobarID.addEventListener('click', () => {
 	toggleInfobar(false);
@@ -63,30 +76,49 @@ const tableData = new TableData();
 	tableController();
 })();
 
+/**
+ * ------------------------
+ * INFO FORM CONTROLLER
+ * ------------------------
+*/
+
+//Load info from the server
 async function loadInfo(parent, type, id){
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
-	const info = new Info(infoRes.table, infoRes.joinTables);
+	info = new Info(infoRes.table, infoRes.joinTables);
+
 	console.log(info.keys);
+
 	let htmlList;
+	let identif = '';
 	switch (infoRes.type){
 		case 'poço_id':
+			tableName = tablesKeys.poços;
+			selectedID = id;
 			htmlList = loadPoçoView(info, tableData.tables);
+			identif = '-spatial';
 			break;
 		case 'super_id':
+			tableName = tablesKeys.capSuperf;
+			selectedID = id;
 			htmlList = loadSuperfView(info, tableData.tables);
+			identif = '-spatial';
 			break;
 		case 'outorga_id':
-			htmlList = loadOutorView(info, tableData.tables); 
+			htmlList = loadOutorView(info, tableData.tables);
 			break;
 		default:
 			break;
 	}
-	loadInfoForm(parent, htmlList);
+	
+	loadInfoForm(identif, parent, htmlList, tableName, selectedID);
+
+	formActive = document.getElementById(`info-form-${tableName}-${selectedID}`);
 }
 
 /**
  * ------------------------
- * Map settings
+ * MAP SETTINGS
  * ------------------------
 */
 
@@ -94,26 +126,60 @@ function clickPointListener (feature, layer) {
 	layer.on({
 		click: (e) => {
 			const latLngs = [e.target.getLatLng()];
-			const markerBounds = L.latLngBounds(latLngs);
-			mapView.map.fitBounds(markerBounds, {maxZoom: 20});
-			
 			const keysArrays = getKeyValues(feature.properties);
-			toggleInfobar(true);
-			loadInfo(elements.infobarSection, keysArrays.keys[0], keysArrays.values[0]);
+
+			spatialInfo(keysArrays.keys[0], keysArrays.values[0], latLngs);
 		}
 	});
 }
 
+function spatialInfo(key, valueID, latLngs){
+	const markerBounds = L.latLngBounds(latLngs);
+	mapView.map.fitBounds(markerBounds, {maxZoom: 20});
+
+	toggleInfobar(true);
+
+	loadInfo(elements.infobarSection, key, valueID);
+}
+
+function hoverListenner(ev){
+	const lat = ev.latlng.lat;
+	const lng = ev.latlng.lng;
+
+	elements.coordinates.innerHTML = convertDMS(lat, lng);
+}
+
+function convertDMS(lat, lng) {
+	const convertLat = Math.abs(lat);
+	const LatDeg = Math.floor(convertLat);
+	const latMinDecimal = ((convertLat - LatDeg) * 60);
+	const LatMin = (Math.floor(latMinDecimal));
+	const LatSec = ((latMinDecimal-LatMin) * 60).toFixed(2);
+	const LatCardinal = ((lat > 0) ? "N" : "S");
+
+	var convertLng = Math.abs(lng);
+	var LngDeg = Math.floor(convertLng);
+	var lngMinDecimal = ((convertLng - LngDeg) * 60);
+	var LngMin = Math.floor(lngMinDecimal);
+	const LngSec = ((lngMinDecimal-LngMin) * 60).toFixed(2);
+	var LngCardinal = ((lng > 0) ? "E" : "W");
+
+	return LatDeg + '° ' + LatMin + '\' ' + LatSec  + '\" ' + LatCardinal + " | " + LngDeg + '° ' + LngMin + '\' ' + LngSec  + '\" ' + LngCardinal
+}
+
 function loadMap(){
 	elements.mapViewClass.classList.toggle('show');
-	mapView.initMap(tableData.tables, clickPointListener);
+	mapView.initMap(tableData.tables, clickPointListener, hoverListenner);
 }
 
 /**
  * ------------------------
- * set table listeners
+ * SET THE SHOW TABLE LISTENER
  * ------------------------
 */
+
+elements.closePanelBtn.addEventListener('click', removePanel);
+window.addEventListener('hashchange', tableController);
 
 function tableController(){
 	const hash = window.location.hash.replace('#', '').replace('%C3%A7', 'ç');
@@ -121,32 +187,50 @@ function tableController(){
 
 	let tableTitle;
 	let s;
+
 	switch (true) {
-		case hash.includes(tablesKeys.notificaçoes):
-			tableTitle = 'Notificações';
-			s = tableData.tables[tablesKeys.notificaçoes]
-			break;
+		case hash.includes(tablesKeys.poços):
+			const poço = tableData.getSpatialProperties(tablesKeys.poços, id);
+			tableName = tablesKeys.poços;
+			selectedID = id;
+			spatialInfo(poço.key, poço.valueID, poço.latLng);
+			return null;
+		case hash.includes(tablesKeys.capSuperf):
+			const cap = tableData.getSpatialProperties(tablesKeys.capSuperf, id);
+			tableName = tablesKeys.capSuperf;
+			selectedID = id;
+			spatialInfo(cap.key, cap.valueID, cap.latLng);
+			return null;
+		case hash.includes(tablesKeys.setoresSedes):
+			const setor = tableData.getSpatialProperties(tablesKeys.setoresSedes, id);
+			tableName = tablesKeys.setoresSedes;
+			selectedID = id;
+			spatialInfo(setor.key, setor.valueID, setor.latLng);
+			return null;
 		case hash.includes(tablesKeys.processos):
 			tableTitle = 'Processos';
-			s = tableData.tables[tablesKeys.processos]
+			s = tableData.tables[tablesKeys.processos];
+			tableName = tablesKeys.processos;
 			break;
 		case hash.includes(tablesKeys.outorgas):
 			tableTitle = 'Outorgas';
-			s = tableData.tables[tablesKeys.outorgas]
+			s = tableData.tables[tablesKeys.outorgas];
+			tableName = tablesKeys.outorgas;
 			break;
 		case hash.includes(tablesKeys.licenças):
 			tableTitle = 'Licenças';
 			s = tableData.tables[tablesKeys.licenças];
+			tableName = tablesKeys.licenças;
 			break;
 		case hash.includes(tablesKeys.autosInfraçao):
 			tableTitle = 'Autos de infração';
-			s = tableData.tables[tablesKeys.autosInfraçao]
+			s = tableData.tables[tablesKeys.autosInfraçao];
+			tableName = tablesKeys.autosInfraçao;
 			break;
 		case hash.includes('sobre'):
 			//SHOW THE CREDITS PAGE
 			break;
 		default:
-			//DO SOMETHING BEFORE COME BACK TO MAP
 			return null;
 	}
 
@@ -164,7 +248,7 @@ function tableController(){
 	let identifHash;
 	if(id >= 0){
 		identifHash = hash.split('=')[0];
-		//CALL THE INFO LOADING PASSING THE ID
+		selectedID = id;
 		loadInfo(elements.panelForm, objArrays.keys[0], id);
 	}else{
 		identifHash = hash;
@@ -173,12 +257,38 @@ function tableController(){
 	showPanel(tableTitle, objArrays.values, identifHash, id);
 }
 
-elements.closePanelBtn.addEventListener('click', removePanel);
-window.addEventListener('hashchange', tableController);
+/**
+ * ------------------------
+ * EARLY IMPLEMENTATION OF SUBMITION DATA TO THE SERVER
+ * ------------------------
+*/
+
+function submitInfo(){
+	for (let i = 1; i < info.keys.length; i++) {
+		console.log(info.keys[i]);
+		if(!((info.keys[i] === 'usr_modif') || (info.keys[i] === 'data_modif') || (info.keys[i] === 'latitude') || (info.keys[i] === 'longitude'))){
+			const value = formActive.elements[info.keys[i]].value;
+			console.log(value);
+		}
+	}
+}
+
+for (let i = 0; i < elements.uploadButton.length; i++) {
+	elements.uploadButton[i].addEventListener('click', function(){
+		submitInfo();
+	});
+}
+
+/**
+ * ------------------------
+ * SEARCH CONTROLLER
+ * ------------------------
+*/
 
 function search(input){
 	let list = [];
 	const query = elements.searchInput.value;
+
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.poços), tablesKeys.poços, 'Poço', 'nome'));
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.capSuperf), tablesKeys.capSuperf, 'Cap. Superf.', 'nome'));
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.setoresSedes), tablesKeys.setoresSedes, 'Setor', 'nome'));
@@ -188,9 +298,11 @@ function search(input){
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.autosInfraçao], tablesKeys.autosInfraçao, 'Auto de Infração', 'num_infra'));
 
 	showResults(list);
+
 	if(query === ''){
 		removeResults();
 	}
 }
+
 
 elements.searchInput.addEventListener('input', search);

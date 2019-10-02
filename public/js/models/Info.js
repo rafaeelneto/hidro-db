@@ -15,6 +15,7 @@ export default class Info{
         this.joins = joinTables;
     }
 
+    //Future use to submit information to server
     storeInputs(s){
         this.s = s;
     }
