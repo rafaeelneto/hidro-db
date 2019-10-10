@@ -39,6 +39,7 @@ $btn-border-radius:.25rem;
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
 }
 
 /* Track */
@@ -376,7 +377,7 @@ $sidebarSize: 280px;
 }
 ul ul a {
     font-size: 0.9em !important;
-    padding-left: 30px !important;
+    padding-left: 30px;
     background: #295563;
 }
 
@@ -604,15 +605,24 @@ Map
         }
     }
     .leaflet-control-zoom.leaflet-bar{
-        .leaflet-control-zoom-in, .leaflet-control-zoom-out{
-            width: 35px;
-            height: 35px;
+        .leaflet-control-zoom-in, .leaflet-control-zoom-out, .leaflet-control-home, .leaflet-control-label{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
             color: $light;
             border: 2px solid $light;
             background: $primaryMiddleDrk;
             border-radius: 20px;
             &:hover{
                 background: $primaryMiddleLght;
+            }
+        }
+        .leaflet-control-label{
+            margin-bottom: 30px;
+            &.active{
+                background: $orange;
             }
         }
     }
@@ -624,24 +634,26 @@ table-panel
 ===============
 */
 
-.table-panel{
+.table-panel, .about-panel{
     display: none;
+    &.active{
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s;
+        position: absolute;
+        z-index: 1100;
+        top: 0;
+        left: 0;
+        padding: 10% 0 10% 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(88, 88, 88, 0.445);
+    }
 }
 
 .table-panel.active{
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s;
-    position: absolute;
-    z-index: 1100;
-    top: 0;
-    left: 0;
-    padding: 10% 0 10% 0;
-    height: 100%;
-    width: 100%;
-    background: rgba(88, 88, 88, 0.445);
     .group-panel{
         height: 80vh;
         background: $light;
@@ -713,7 +725,7 @@ info panel
 */
 
 .editing-tools{
-    .btn{
+    i{
         margin: 0 10px 5px 10px;
         border: none;
         color: $orange;
@@ -723,10 +735,6 @@ info panel
 
         height: 35px;
         width: 35px;
-        &:hover, &:focus{
-            //color: $yellowLight;
-            background: $light;
-        }
     }
 }
 .info-form-group{
@@ -736,6 +744,22 @@ info panel
         margin-bottom: 10px;
         vertical-align: top;
         text-align: start;
+    }
+    .join-list{
+        li{
+            background: none;
+            a{
+                padding-left: 0;
+                background: none;
+                margin: 1px 0 1px 0;
+                color: $dark;
+                font-weight: 700;
+                letter-spacing: .2em;
+                font-size: 14px;
+                display: block;
+                white-space: nowrap;
+            }
+        }
     }
     input, select{
         padding: 0px;

@@ -23,7 +23,6 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   
     next();
-  
 });
 
 //Import routers
@@ -34,12 +33,9 @@ app.use(bodyParser.json());
 app.use(cookieParser())
 app.use(session({
     key: 'user_sid',
-    secret: 'uemacosanpaparamiau',
+    secret: 'YUBnçsiuaSIDSFOjadiywghdjshADShaA',
     resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: 600000
-    }
+    saveUninitialized: false
 }));
 
 app.use((req, res, next) => {

@@ -93,12 +93,12 @@ export default class TableData {
     //console.log(tableData.searchByID(tablesKeys.uns, 'un_id', 2, 'nome'));
     searchByID(table, key, queryID, property){
         let s = this.tables[table];
-        if(s.properties){
-            s = s.properties;
+        if(s.features){
+            s = this.getFeaturesProperties(table);
         }
         for(let i in s) {
             let id = s[i][key];
-            if (id === queryID){
+            if (id == queryID){
                 return s[i][property];
             }
         }

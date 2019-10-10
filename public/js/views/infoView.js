@@ -1,6 +1,11 @@
-import {elementSelectors, nullVeryfier, elements} from './Base';
+import {elementSelectors, nullVeryfier, elements, formatData} from './Base';
 import Info from './../models/Info';
 import {tablesKeys, getKeyValues} from './../models/Data';
+
+const situaçoesValues = ['Ativo', 'Inativo', 'Em construção'];
+const licenciamentoValues = ['Outorgado', 'Em processo', 'Sem outorga'];
+
+let tableData;
 
 function loadSetores(selectID, table){
     const setores = table.features;
@@ -12,10 +17,6 @@ function loadSetores(selectID, table){
     }
     return composeDropDownList('setor_id', features, selectID);
 }
-
-const situaçoesValues = ['Ativo', 'Inativo', 'Em construção'];
-const licenciamentoValues = ['Outorgado', 'Em processo', 'Sem outorga'];
-
 
 function loadSitus(type, list, selected){
     let optionsList = '<option value="-" disabled selected value></option>';
@@ -29,7 +30,7 @@ function loadSitus(type, list, selected){
     }
 
     let dropList = `
-    <select class = "browser-default custom-select" name="${type}">
+    <select class = "browser-default custom-select" name="${type}" disabled>
         ${optionsList}
     </select>
     `;
@@ -52,7 +53,7 @@ function composeDropDownList (type, features, selectID){
     }
 
     let dropList = `
-    <select class = "browser-default custom-select" name="${type}">
+    <select class = "browser-default custom-select" name="${type} disabled">
         ${optionsList}
     </select>
     `;
@@ -60,10 +61,101 @@ function composeDropDownList (type, features, selectID){
     return dropList;
 }
 
-function loadPoçoView(info, tables){
+function composeMMJoinList(keys, tableName, keyColumn, propertyColumn){
+
+    let listItems = '';
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i][keyColumn];
+
+        const newItem = `
+        <li>
+            <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${key}">
+                ${tableData.searchByID(tableName, keyColumn, key, propertyColumn)}
+            </a>
+        </li>`;
+
+        listItems = listItems + newItem;
+    }
+
+    /*
+    if(keys.length === 0){
+        listItems = `
+            <li>
+                <a class="d-flex justify-content-between align-items-center">
+                    -
+                </a>
+            </li>
+        `;
+    }
+    */
+
+    return `
+        <ul class="list-unstyled join-list">
+            ${listItems}
+        </ul>
+    `;
+}
+function compose1MJoinList(key, tableName, keyColumn, propertyColumn){
+    const table = tableData[tableName];
+
+    if(table === undefined){
+        return `
+            <ul class="list-unstyled join-list">
+            </ul>
+        `;
+    }
+
+    let listItems = '';
+    for (let i = 0; i < table.length; i++) {
+        let id = table[i][keyColumn];
+        let value = table[i][propertyColumn];
+
+        if(id == key){
+            const newItem = `
+            <li>
+                <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${key}">
+                    ${value}
+                </a>
+            </li>`;
+    
+            listItems = listItems + newItem;
+        }
+
+    }
+
+    return `
+        <ul class="list-unstyled join-list">
+            ${listItems}
+        </ul>
+    `;
+}
+
+function composeVazoesList(tableVazoes){
+    let listItems = '';
+    for (let i = 0; i < tableVazoes.length; i++) {
+        const vazao = tableVazoes[i];
+
+        const newItem = `
+        <li>
+            <a class="d-flex justify-content-start align-items-center">
+                ${vazao['vazao']} m³/h em ${(formatData(vazao['data_medida']))}
+            </a>
+        </li>`;
+
+        listItems = listItems + newItem;
+    }
+    return `
+        <ul class="list-unstyled join-list">
+            ${listItems}
+        </ul>
+    `;
+}
+
+function loadPoçoView(info, tableDat){
+    const tables = tableDat.tables;
     let keys = info.keys;
     let s = info.s;
-    console.log(keys);
+    tableData = tableDat;
     let poçoInfoHTML = `
         <ul class="list-unstyled components info-list">
             <li>
@@ -108,6 +200,12 @@ function loadPoçoView(info, tables){
             </li>
             <li>
                 <div class="form-group">
+                    <span class="label">VAZÕES</span>
+                    ${composeVazoesList(info.joins[2])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
                     <span class="label">NÍVEL ESTÁTICO</span>
                     <input class="form-control" type="text" name="${keys[11]}" value="${s[keys[11]]}" disabled required/>
                 </div>
@@ -133,13 +231,13 @@ function loadPoçoView(info, tables){
             <li>
                 <div class=form-groupt">
                     <span class="label">DATA OPERAÇÃO</span>
-                    <input class="form-control" type="date" name="${keys[15]}" value="${s[keys[15]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[15]}" value="${s[keys[15]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">DATA PERFURAÇÃO</span>
-                    <input class="form-control" type="date" name="${keys[16]}" value="${s[keys[16]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[16]}" value="${s[keys[16]]}" disabled required/>
                 </div>
             </li>
             <li>
@@ -168,6 +266,18 @@ function loadPoçoView(info, tables){
             </li>
             <li>
                 <div class="form-group">
+                    <span class="label">OUTORGAS</span>
+                    ${composeMMJoinList(info.joins[0], tablesKeys.outorgas, 'outorga_id', 'num_outorga')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PROCESSOS</span>
+                    ${composeMMJoinList(info.joins[1], tablesKeys.processos, 'processo_id', 'num_processo')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
                     <span class="label">OBS</span>
                     <textarea class="form-control" name="${keys[21]}">${s[keys[21]]}</textarea>
                 </div>
@@ -176,13 +286,15 @@ function loadPoçoView(info, tables){
     `;
     return poçoInfoHTML;
 }
-function loadSuperfView(info, tables){
+function loadSuperfView(info, tableDat){
+    const tables = tableDat.tables;
     let keys = info.keys;
     let s = info.s;
+    tableData = tableDat;
     let superfInfoHTML = `
         <ul class="list-unstyled components info-list">
             <li>
-                <input class="form-control" type="text" id="nome" name="${keys[1]}" value="${s[keys[1]]}" disabled required/>
+                <input class="form-control" type="text" id="nomeField" name="${keys[1]}" value="${s[keys[1]]}" disabled required/>
                 <p id="last-modif">Última modificação em ${s[keys[2]]} por ${s[keys[3]]}</p>
             </li>
             <li>
@@ -248,7 +360,7 @@ function loadSuperfView(info, tables){
             <li>
                 <div class="form-group">
                     <span class="label">RELATÓRIO</span>
-                    <textarea class="form-control" name="${keys[15]}">${s[keys[15]]}</textarea>
+                    <textarea class="form-control" name="${keys[15]}" disabled>${s[keys[15]]}</textarea>
                 </div>
             </li>
             <li>
@@ -259,17 +371,31 @@ function loadSuperfView(info, tables){
             </li>
             <li>
                 <div class="form-group">
+                    <span class="label">OUTORGAS</span>
+                    ${composeMMJoinList(info.joins[0], tablesKeys.outorgas, 'outorga_id', 'num_outorga')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PROCESSOS</span>
+                    ${composeMMJoinList(info.joins[1], tablesKeys.processos, 'processo_id', 'num_processo')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
                     <span class="label">OBSERVAÇÃO</span>
-                    <textarea class="form-control" name="${keys[17]}">${s[keys[17]]}</textarea>
+                    <textarea class="form-control" name="${keys[17]}" disabled>${s[keys[17]]}</textarea>
                 </div>
             </li>
         </ul>
     `;
     return superfInfoHTML;
 }
-function loadOutorView(info, tables){
+function loadOutorView(info, tableDat){
+    const tables = tableDat.tables;
     let keys = info.keys;
     let s = info.s;
+    tableData = tableDat;
     let outrInfoHTML = `
         <ul class="list-unstyled components info-list">
             <li>
@@ -284,13 +410,20 @@ function loadOutorView(info, tables){
             <li>
                 <div class="form-group">
                     <span class="label">DATA DE ENTRADA</span>
-                    <input class="form-control" type="text" name="${keys[3]}" value="${s[keys[3]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[3]}" value="${formatData(s[keys[3]])}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">VALIDADE</span>
-                    <input class="form-control" type="text" name="${keys[4]}" value="${s[keys[4]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[4]}" value="${formatData(s[keys[4]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PONTOS OUTORGADOS</span>
+                    ${composeMMJoinList(info.joins[0], tablesKeys.capSuperf, 'super_id', 'nome')}
+                    ${composeMMJoinList(info.joins[1], tablesKeys.poços, 'poço_id', 'nome')}
                 </div>
             </li>
             <li>
@@ -314,7 +447,7 @@ function loadOutorView(info, tables){
             <li>
                 <div class="form-group">
                     <span class="label">ORGÃO</span>
-                    ${loadSitus(keys[8], situaçoesValues, s[keys[8]])}
+                    ${composeDropDownList(keys[8], tables[tablesKeys.orgaos], s[keys[8]])}
                 </div>
             </li>
             <li>
@@ -345,6 +478,70 @@ function loadOutorView(info, tables){
         </ul>
     `;
     return outrInfoHTML;
+}
+
+function loadProcessoView(info, tableDat){
+    const tables = tableDat.tables;
+    let keys = info.keys;
+    let s = info.s;
+    tableData = tableDat;
+    let processoInfoHTML = `
+        <ul class="list-unstyled components info-list">
+            <li>
+                <input class="form-control" type="text" id="nomeField" name="${keys[1]}" value="${s[keys[1]]}" disabled required/>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">DATA DE ENTRADA</span>
+                    <input class="form-control" type="text" name="${keys[2]}" value="${formatData(s[keys[2]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">ORGÃO</span>
+                    ${composeDropDownList(keys[3], tables[tablesKeys.orgaos], s[keys[3]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">SITUAÇÃO</span>
+                    <input class="form-control" type="text" name="${keys[4]}" value="${s[keys[4]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PONTOS SOB PROCESSO</span>
+                    ${composeMMJoinList(info.joins[0], tablesKeys.capSuperf, 'super_id', 'nome')}
+                    ${composeMMJoinList(info.joins[1], tablesKeys.poços, 'poço_id', 'nome')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">UNID. DE NEGÓCIOS</span>
+                    ${composeDropDownList(keys[5], tables[tablesKeys.uns], s[keys[5]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">MUNICÍPIO</span>
+                    ${composeDropDownList(keys[6], tables[tablesKeys.municipios], s[keys[6]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">OUTORGAS</span>
+                    ${compose1MJoinList(keys[7], tablesKeys.outorgas, 'outorga_id', 'num_outorga')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">LICENÇAS</span>
+                    ${compose1MJoinList(keys[8], tablesKeys.licenças, 'licen_id', 'num_licen')}
+                </div>
+            </li>
+        </ul>
+    `;
+    return processoInfoHTML;
 }
 
 function loadInfoForm(identif, parent, htmlList, tableName, key){
@@ -382,6 +579,7 @@ export {
     loadPoçoView,
     loadSuperfView,
     loadOutorView,
+    loadProcessoView,
     clearInfoForm,
     loadInfoForm,
     loadSetores,

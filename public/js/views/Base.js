@@ -32,9 +32,14 @@ export const elements = {
     mapID: document.getElementById('map'),
     coordinates: document.querySelector('.coordinates'),
 
+    homeBtn: document.querySelector('#homeBtn.leaflet-control-home'),
+    labelBtn: document.querySelector('#labelBtn.leaflet-control-label'),
+
     //search
     searchInput: document.getElementById('search-input'),
-    resultDiv: document.querySelector('.results-search')
+    resultDiv: document.querySelector('.results-search'),
+
+    aboutPanel: document.querySelector('.about-panel')
 }
 
 //Selectors used by the clean list functions
@@ -57,4 +62,10 @@ export const nullReplace = (v)=> {
     }else{
         return v;
     }
+}
+
+export const formatData = (date) => {
+    function pad(s) { return (s < 10) ? '0' + s : s; }
+    var d = new Date(date)
+    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
 }

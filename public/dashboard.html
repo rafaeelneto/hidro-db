@@ -87,10 +87,16 @@
                 <div class="panel-header d-flex justify-content-between">
                     <h3 id="panel-title">Panel title</h3>
                     <div class="editing-tools d-flex justify-content-end align-items-center">
-                        <button class= "btn btn-circle" id="edit-info-btn"><i class="material-icons">edit</i></button>
-                        <button class= "btn btn-circle" id="add-info-btn"><i class="material-icons">add_circle_outline</i></button>
-                        <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">undo</i></button>
-                        <button class= "btn btn-circle" id="upload-info-btn"><i class="material-icons">cloud_upload</i></button>
+                        <i class="material-icons">edit</i>
+                        <i class="material-icons">add_circle_outline</i>
+                        <i class="material-icons">undo</i>
+                        <i class="material-icons">cloud_upload</i>
+                        <!--
+                            <button class= "btn btn-circle" id="edit-info-btn"><i class="material-icons">edit</i></button>
+                            <button class= "btn btn-circle" id="add-info-btn"><i class="material-icons">add_circle_outline</i></button>
+                            <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">undo</i></button>
+                            <button class= "btn btn-circle" id="upload-info-btn"><i class="material-icons">cloud_upload</i></button>
+                        -->
                     </div>
                 </div>
                 <div class="d-flex justify-content-around flex-grow-1 group-sections">
@@ -110,14 +116,36 @@
                 </div>
             </div>
         </div>
+
+        <div class="about-panel">
+            <a href='#'>
+                    <button class= "shadow btn btn-circle" id="close-panel-btn"><i class="material-icons">arrow_back</i> VOLTAR</button>
+            </a>
+            <div class="d-flex justify-content-around flex-grow-1 group-sections">
+                    <section class="list-group">
+                        <div class="d-flex flex-column section-container">
+                            <!--
+                            <ul class="list-unstyled list-reg">
+                                <li class="active" id="id-4">
+                                    <a href="#outorgas=4">292/2013</a>
+                                </li>
+                            </ul>
+                            -->
+                        </div>
+                    </section>
+                    <section class="table-info-section">
+                    </section>
+                </div>
+        </div>
         
         <div class="d-md-block info-sidebar">
             <button class= "btn btn-circle" id="close-infoside-btn"><i class="material-icons">close</i></button>
             <!--separate this from the rest of container to add dinamiclly-->
             <div class="editing-tools d-flex justify-content-end align-items-center">
-                <button class= "btn btn-circle" id="edit-info-btn"><i class="material-icons">edit</i></button>
-                <button class= "btn btn-circle" id="upload-info-btn"><i class="material-icons">cloud_upload</i></button>
-                <button class= "btn btn-circle" id="discart-info-btn"><i class="material-icons">undo</i></button>
+                <!--only for demonstration must be inside buttons-->
+                <i class="material-icons">edit</i>
+                <i class="material-icons">undo</i>
+                <i class="material-icons">cloud_upload</i>
             </div>
             <section class="infobar-section">
                 <!--
@@ -145,7 +173,7 @@
     <script src="bundle.js"></script>
 
     <!--FIX THE API KEY TO THE SERVER SIDE-->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZkl-9ec3cYby1B7KvFclQLKnvlLpebpc"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAqjmZFHaNlO4uREygiucDkrWsMOMfJ-s"></script>
     
 </body>
 </html>

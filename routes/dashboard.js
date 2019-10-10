@@ -25,7 +25,15 @@ router.get('/usr', (req, res) => {
     }));
 });
 
+router.get('/apis', (req, res) => {
+    res.send(JSON.stringify({
+        mapbox: 'api',
+        googleMaps: 'api'
+    }));
+});
+
 router.get('/all', async (req, res) => {
+
     const poços = await tables.getGIS(tables.tableNames.poços, 'poço_id, nome, situaçao, licenc_situ');
     const capSuperf = await tables.getGIS(tables.tableNames.cap_super, 'super_id, nome, situaçao,licenc_situ');
     const setoresSedes = await tables.getGIS(tables.tableNames.setores_sedes, 'setor_id, nome, alimentaçao');
@@ -76,33 +84,40 @@ async function getInfo(type, id){
     let joinsQueries;
     switch(type){
         case 'poço_id':
-            tableName = 'poços';
+            tableName = tables.tableNames.poços;
             columns = tables.poçoInfoColumns;
             joinsQueries = [tables.outorgaPoçoJoinInfo, tables.processoPoçoJoinInfo, tables.vazoesPoçoJoin];
             break;
         case 'super_id':
-            tableName = 'cap_super';
+            tableName = tables.tableNames.cap_super;
             columns = tables.superfInfoColumns;
             joinsQueries = [tables.outorgaSuperfJoinInfo, tables.processoSuperfJoinInfo, tables.vazoesSuperfJoin];
             break;
         case 'outorga_id':
-            tableName = 'outorgas';
+            tableName = tables.tableNames.outorgas;
             columns = tables.outorgaInfoColumns;
-            joinsQueries = [tables.outorgaSuperfJoinInfo, tables.outorgaPoçoJoinInfo];
+            joinsQueries = [tables.superfOutorgaJoinInfo, tables.poçoOutorgaJoinInfo];
             break;
         case 'processo_id':
-            tableName = 'processos';
+            tableName = tables.tableNames.processos;
             columns = tables.processoInfoColumns;
-            joinsQueries = [tables.processoPoçoJoinInfo, tables.processoSuperfJoinInfo];
+            joinsQueries = [tables.superfProcessoJoinInfo, tables.superfProcessoJoinInfo];
+            break;
+        case 'notif_id':
+            tableName = tables.tableNames.notificaçoes;
+            columns = tables.notificaçaoInfoColumns;
+            joinsQueries = [tables.superfProcessoJoinInfo, tables.superfProcessoJoinInfo];
             break;
         default:
             break;
     }
 
     let joinTables = [];
+    console.log(columns);
 
     for (let i = 0; i < joinsQueries.length; i++) {
-        let result = await db.query(joinsQueries[i], [type, id]);
+        let result = await db.query(joinsQueries[i](type, id), []);
+
         joinTables.push(result.rows);
     }
     

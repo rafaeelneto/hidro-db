@@ -1,4 +1,5 @@
-import {tablesKeys} from './../models/Data'
+import {tablesKeys} from './../models/Data';
+import {elements} from './Base';
 
 let map;
 let layerControl;
@@ -155,15 +156,66 @@ function initMap(tables, clickPointListerner, hoverListerner) {
 	layerControl.addOverlay(superfLayer, "Cap. Superficial");
 	layerControl.addOverlay(setoresLayer, "Setores");
 
+	let lastZoom;
+	const tooltipThreshold = 17;
+	map.on('zoomend', function() {
+		const zoom = map.getZoom();
+	    if (zoom < tooltipThreshold && (!lastZoom || lastZoom >= tooltipThreshold)) {
+	        toogleLabels(false);
+	    } else if (zoom >= tooltipThreshold && (!lastZoom || lastZoom < tooltipThreshold)) {
+	        toogleLabels(true);
+	    }
+	    lastZoom = zoom;
+	});
+
+	document.querySelector('.leaflet-control-zoom').insertAdjacentHTML('afterbegin', `
+	<a class="leaflet-control-home" id="homeBtn" href="#" title="Home" role="button" aria-label="Zoom inicial"><i class="material-icons">public</i></a>
+	`);
+	
+	document.querySelector('.leaflet-control-zoom').insertAdjacentHTML('afterbegin', `
+	<a class="leaflet-control-label" id="labelBtn" href="#" title="Ativar rótulos" role="button" aria-label="Ativar rótulos"><i class="material-icons">label</i></a>
+	`);
+
 	map.invalidateSize();
 
 	document.querySelector('.leaflet-control-layers-base').insertAdjacentHTML('afterbegin', '<h6 id="mapBaseTitle">Mapas base</h6>');
 	document.querySelector('.leaflet-control-layers-overlays').insertAdjacentHTML('afterbegin', '<h6 id="mapOverlayTitle">Camadas</h6>');
+
+	document.querySelector('#homeBtn.leaflet-control-home').addEventListener('click', ()=>{
+		map.setView([-4.0, -52.0], 6);
+	});
+
+	document.querySelector('#labelBtn.leaflet-control-label').addEventListener('click', () => {
+		toogleLabels(!labelActive);
+	});
+
+	map.on('baselayerchange', function(){
+		map.invalidateSize();
+	})
 }
 
+let labelActive = false;
+
+function toogleLabels(permanent){
+	map.eachLayer(function(l) {
+		if (l.getTooltip()) {
+			const tooltip = l.getTooltip();
+			l.unbindTooltip().bindTooltip(tooltip, {
+				permanent: permanent
+			})
+		}
+	});
+	labelActive = permanent;
+	if(permanent){
+		document.querySelector('#labelBtn.leaflet-control-label').classList.add('active');
+	}else{
+		document.querySelector('#labelBtn.leaflet-control-label').classList.remove('active');
+	}
+}
 
 export {
 	map,
 	initMap,
-	stylePoços
+	stylePoços,
+	toogleLabels
 }; 

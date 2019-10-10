@@ -2,25 +2,29 @@ const users = require('./Users');
 const db = require('../database/db');
 
 //Columns to use
-const poçoInfoColumns = 'poço_id, nome, usr_modif, data_modif, setor_id, un_id, municipio_id, latitude, longitude, situaçao, profun,  ne, nd, revest, vazao_max, data_op, data_perf, bomba, horas_bomb, relatorio, licenc_situ, obspoco';
-const superfInfoColumns = 'super_id, nome, usr_modif, data_modif, setor_id, un_id, municipio_id, latitude, longitude, corpo_hidrc, situaçao, vazao_max, data_op, bomba, horas_bomb, relatorio, licenc_situ, obs_s';
-const outorgaInfoColumns = 'outorga_id, num_outorga, tipo, data_entrada, validade, responsavel, tipo_captacao, outorga_arq, orgao_id, licen_id, obsoutorga, un_id, municipio_id, obsoutorga';
-const processoInfoColumns = 'processo_id, num_processo, data_entrada, orgao_id, situaçao, un_id, municipio_id, outorga_id, licen_id';
-const notificaçaoInfoColumns = 'notif_id, num_notif, tipo_nota, prazo, data_emissao, data_recebim, data_resp, via_receb, condns, situaçao_notif, oficio_id, obs_notif, orgao_id, licen_id, setor_id, municipio_id, un_id';
-const licençaInfoColumns = 'licen_id, num_licen, tipo, data_entrada, validade, atividade, licen_arq, orgao_id';
+const poçoInfoColumns = 'poço_id, nome, usr_modif, data_modif, setor_id, un_id, municipio_id, latitude, longitude, situaçao, profun,  ne, nd, revest, vazao_max, data_op::DATE, data_perf::DATE, bomba, horas_bomb, relatorio, licenc_situ, obspoco';
+const superfInfoColumns = 'super_id, nome, usr_modif, data_modif, setor_id, un_id, municipio_id, latitude, longitude, corpo_hidrc, situaçao, vazao_max, data_op::DATE, bomba, horas_bomb, relatorio, licenc_situ, obs_s';
+const outorgaInfoColumns = 'outorga_id, num_outorga, tipo, data_entrada::DATE, validade::DATE, responsavel, tipo_captacao, outorga_arq, orgao_id, licen_id, obsoutorga, un_id, municipio_id, obsoutorga';
+const processoInfoColumns = 'processo_id, num_processo, data_entrada::DATE, orgao_id, situaçao, un_id, municipio_id, outorga_id, licen_id';
+const notificaçaoInfoColumns = 'notif_id, num_notif, tipo_nota, prazo::DATE, data_emissao, data_recebim, data_resp, via_receb, condns, situaçao_notif, oficio_id, obs_notif, orgao_id, licen_id, setor_id, municipio_id, un_id';
+const licençaInfoColumns = 'licen_id, num_licen, tipo, data_entrada::DATE, validade::DATE, atividade, licen_arq, orgao_id';
 const autoInfraçaoInfoColumns = 'autoifr_id, num_infra, obj_autuado, processo_id, notificaçao_id, situaçao_auto, data_emissao, data_defesa, prazo_defesa, orgao_id, setor_respon, oficio_id, licen_id, municipio_id, un_id, setor_id';
-const analisesInfoColumns = 'analise_id, numafq, numab, data_coleta, data_coletabac, data_exame, data_examebac coletor, fonte, tratamento, potabilidade, diretorio, poço_id, super_id, un_id, obs';
+const analisesInfoColumns = 'analise_id, numafq, numab, data_coleta::DATE, data_coletabac::DATE, data_exame, data_examebac coletor, fonte, tratamento, potabilidade, diretorio, poço_id, super_id, un_id, obs';
 
-const outorgaPoçoJoinInfo = 'SELECT outorga_id FROM outorga_poço_link WHERE $1=$2';
-const outorgaSuperfJoinInfo = 'SELECT outorga_id FROM outorga_superf_link WHERE $1=$2';
-const processoPoçoJoinInfo = 'SELECT processo_id FROM processo_poço_link WHERE $1=$2';
-const processoSuperfJoinInfo = 'SELECT processo_id FROM processo_superf_link WHERE $1=$2';
+const outorgaPoçoJoinInfo = (type, id) => {return `SELECT outorga_id FROM outorga_poço_link WHERE ${type}=${id}`};
+const outorgaSuperfJoinInfo = (type, id) => {return `SELECT outorga_id FROM outorga_superf_link WHERE ${type}=${id}`};
+const processoPoçoJoinInfo = (type, id) => {return `SELECT processo_id FROM processo_poço_link WHERE ${type}=${id}`};
+const processoSuperfJoinInfo = (type, id) => {return `SELECT processo_id FROM processo_superf_link WHERE ${type}=${id}`};
 
-const vazoesPoçoJoin = 'SELECT vazao, nd, data_medida FROM vazoes_poços WHERE $1=$2';
-const vazoesSuperfJoin = 'SELECT vazao, data_medida FROM vazoes_superf WHERE $1=$2';
+const poçoOutorgaJoinInfo = (type, id) => {return `SELECT poço_id FROM outorga_poço_link WHERE ${type}=${id}`};
+const superfOutorgaJoinInfo = (type, id) => {return `SELECT super_id FROM outorga_superf_link WHERE ${type}=${id}`};
+const poçoProcessoJoinInfo = (type, id) => {return `SELECT poço_id FROM processo_poço_link WHERE ${type}=${id}`};
+const superfProcessoJoinInfo = (type, id) => {return `SELECT super_id FROM processo_superf_link WHERE ${type}=${id}`};
+
+const vazoesPoçoJoin = (type, id) => {return `SELECT vazao, nd, data_medida::DATE FROM vazoes_poços WHERE ${type}=${id}`};
+const vazoesSuperfJoin = (type, id) => {return `SELECT vazao, data_medida::DATE FROM vazoes_superf WHERE ${type}=${id}`};
 
 async function getGIS(table, columns, conditions, param){
-    console.log(table);
     const result = await db.query(
         `SELECT *
             FROM (
@@ -44,11 +48,11 @@ async function getGIS(table, columns, conditions, param){
             ) as fc;`, 
         param
     );
+    
     return result.rows[0];
 }
 
 async function getTableGeneric(table, columns){
-    console.log(table);
     const result = await db.query(`SELECT ${columns} FROM ${table}`, []);
     return result.rows;
 }
@@ -98,6 +102,11 @@ exports.outorgaPoçoJoinInfo = outorgaPoçoJoinInfo;
 exports.outorgaSuperfJoinInfo = outorgaSuperfJoinInfo;
 exports.processoPoçoJoinInfo = processoPoçoJoinInfo;
 exports.processoSuperfJoinInfo = processoSuperfJoinInfo;
+
+exports.poçoOutorgaJoinInfo = poçoOutorgaJoinInfo;
+exports.superfOutorgaJoinInfo = superfOutorgaJoinInfo;
+exports.poçoProcessoJoinInfo = poçoProcessoJoinInfo;
+exports.superfProcessoJoinInfo = superfProcessoJoinInfo;
 
 exports.vazoesPoçoJoin = vazoesPoçoJoin;
 exports.vazoesSuperfJoin = vazoesSuperfJoin;

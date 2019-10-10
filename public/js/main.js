@@ -8,7 +8,7 @@ import {getKeyValues, tablesKeys} from './models/Data';
 import Info from './models/Info';
 
 import * as mapView from './views/mapView';
-import {loadPoçoView, loadSuperfView, loadOutorView, loadInfoForm, clearInfoForm} from './views/infoView';
+import {loadPoçoView, loadSuperfView, loadOutorView, loadInfoForm, clearInfoForm, loadProcessoView} from './views/infoView';
 
 import TableData from './models/TableData';
 import * as requests from './requests';
@@ -95,17 +95,23 @@ async function loadInfo(parent, type, id){
 		case 'poço_id':
 			tableName = tablesKeys.poços;
 			selectedID = id;
-			htmlList = loadPoçoView(info, tableData.tables);
+			htmlList = loadPoçoView(info, tableData);
 			identif = '-spatial';
 			break;
 		case 'super_id':
 			tableName = tablesKeys.capSuperf;
 			selectedID = id;
-			htmlList = loadSuperfView(info, tableData.tables);
+			htmlList = loadSuperfView(info, tableData);
 			identif = '-spatial';
 			break;
 		case 'outorga_id':
-			htmlList = loadOutorView(info, tableData.tables);
+			htmlList = loadOutorView(info, tableData);
+			break;
+		case 'processo_id':
+			htmlList = loadProcessoView(info, tableData);
+			break;
+		case 'notif_id':
+			htmlList = loadProcessoView(info, tableData);
 			break;
 		default:
 			break;
@@ -127,7 +133,6 @@ function clickPointListener (feature, layer) {
 		click: (e) => {
 			const latLngs = [e.target.getLatLng()];
 			const keysArrays = getKeyValues(feature.properties);
-
 			spatialInfo(keysArrays.keys[0], keysArrays.values[0], latLngs);
 		}
 	});
@@ -135,7 +140,7 @@ function clickPointListener (feature, layer) {
 
 function spatialInfo(key, valueID, latLngs){
 	const markerBounds = L.latLngBounds(latLngs);
-	mapView.map.fitBounds(markerBounds, {maxZoom: 20});
+	mapView.map.fitBounds(markerBounds, {maxZoom: 18});
 
 	toggleInfobar(true);
 
@@ -194,18 +199,21 @@ function tableController(){
 			tableName = tablesKeys.poços;
 			selectedID = id;
 			spatialInfo(poço.key, poço.valueID, poço.latLng);
+			removePanel();
 			return null;
 		case hash.includes(tablesKeys.capSuperf):
 			const cap = tableData.getSpatialProperties(tablesKeys.capSuperf, id);
 			tableName = tablesKeys.capSuperf;
 			selectedID = id;
 			spatialInfo(cap.key, cap.valueID, cap.latLng);
+			removePanel();
 			return null;
 		case hash.includes(tablesKeys.setoresSedes):
 			const setor = tableData.getSpatialProperties(tablesKeys.setoresSedes, id);
 			tableName = tablesKeys.setoresSedes;
 			selectedID = id;
 			spatialInfo(setor.key, setor.valueID, setor.latLng);
+			removePanel();
 			return null;
 		case hash.includes(tablesKeys.processos):
 			tableTitle = 'Processos';
@@ -227,9 +235,14 @@ function tableController(){
 			s = tableData.tables[tablesKeys.autosInfraçao];
 			tableName = tablesKeys.autosInfraçao;
 			break;
-		case hash.includes('sobre'):
-			//SHOW THE CREDITS PAGE
+		case hash.includes(tablesKeys.notificaçoes):
+			tableTitle = 'Notificações';
+			s = tableData.tables[tablesKeys.notificaçoes];
+			tableName = tablesKeys.notificaçoes;
 			break;
+		case hash.includes('sobre'):
+			elements.aboutPanel.classList.add('active');
+			return null;
 		default:
 			return null;
 	}
@@ -296,6 +309,7 @@ function search(input){
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'num_processo'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.licenças], tablesKeys.outorgas, 'Licença', 'num_licen'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.autosInfraçao], tablesKeys.autosInfraçao, 'Auto de Infração', 'num_infra'));
+	list.push(...tableData.search(query, tableData.tables[tablesKeys.notificaçoes], tablesKeys.notificaçoes, 'Notificação', 'num_notif'));
 
 	showResults(list);
 
@@ -303,6 +317,5 @@ function search(input){
 		removeResults();
 	}
 }
-
 
 elements.searchInput.addEventListener('input', search);
