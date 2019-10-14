@@ -183,7 +183,12 @@ function loadMap(){
  * ------------------------
 */
 
-elements.closePanelBtn.addEventListener('click', removePanel);
+for (const i in elements.closePanelBtn) {
+	if (elements.closePanelBtn.hasOwnProperty(i)) {
+		const element = elements.closePanelBtn[i];
+		element.addEventListener('click', removePanel);
+	}
+}
 window.addEventListener('hashchange', tableController);
 
 function tableController(){

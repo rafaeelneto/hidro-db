@@ -24,7 +24,7 @@ export const elements = {
     panelTitle: document.querySelector('#panel-title'),
     panel: document.querySelector('.table-panel'),
     sectionContainer: document.querySelector('.section-container'),
-    closePanelBtn: document.querySelector('#close-panel-btn'),
+    closePanelBtn: document.querySelectorAll('.close-panel-btn'),
     panelForm: document.querySelector('.table-info-section'),
 
     //map

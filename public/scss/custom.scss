@@ -24,10 +24,28 @@ $dark:#4e4e4e;
 $spacer:1.2rem;
 $border-width:1px;
 $btn-border-radius:.25rem;
+$desktop_break: "screen and (min-width: 993px)";
+$phone_break: "screen and (max-width: 993px)";
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 // Add SASS theme customizations here..
+
+html, 
+body {
+    overflow-x: hidden;
+}
+
+h6{
+    font-family: $roboto;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .3em;
+    line-height: 1.5;
+    color: $orange;
+}
+
 *,
 *:before,
 *:after {
@@ -238,7 +256,7 @@ $btn-border-radius:.25rem;
 .omnibox {
     margin: 10px;
     width: 40%;
-    display: block;
+    display: flex;
     position: absolute;
     top: 0;
     left: 0;
@@ -293,6 +311,19 @@ $btn-border-radius:.25rem;
     }
 }
 
+@media #{$phone_break}{
+    .omnibox{
+        width: 90%;
+    }
+    .search_box{
+        width: 100%;
+    }
+    .results-search{
+        left: 0;
+        width: 105%;
+    }
+}
+
 .form-control:focus {
     box-shadow: none;
 }
@@ -309,17 +340,19 @@ Sidebar
 ===============
 */
 
-$sidebarSize: 280px;
+$sidebarSizePhone: 75%;
+$sidebarSizeDesktop: 280px;
 .sidebar {
     transition: all 0.3s;
     width: 0px;
-    max-width: $sidebarSize;
+    max-width: $sidebarSizePhone;
     position: fixed; /* Stay in place */
     z-index: 1; /* Stay on top */
     top: 0;
     left: 0;
     padding: 10px;
     height: 100vh;
+    overflow-y: auto;
     background: $primaryDark;
 }
 
@@ -382,11 +415,11 @@ ul ul a {
 }
 
 #sidebar.active {
-    width: $sidebarSize;
+    width: $sidebarSizePhone;
 }
 
 .content.active{
-    margin-left: $sidebarSize;
+    margin-left: $sidebarSizePhone;
 }
 
 .header-logo{
@@ -439,7 +472,23 @@ ul ul a {
 }
 
 .omnibox.active{
-    left: $sidebarSize;
+    margin-left: $sidebarSizePhone;
+}
+
+@media #{$desktop_break} {
+    .sidebar {
+        max-width: $sidebarSizeDesktop;
+    }
+    #sidebar.active {
+        width: $sidebarSizeDesktop;
+    }
+    
+    .content.active{
+        margin-left: $sidebarSizeDesktop;
+    }
+    .omnibox.active{
+        margin-left: $sidebarSizeDesktop;
+    }
 }
 
 /*
@@ -448,7 +497,8 @@ info-side
 ===============
 */
 
-$infoBarMap: 25vw;
+$infoBarMapPhone: 100vw;
+$infoBarMapDesktop: 25vw;
 $infoBarTable: 50vh;
 $infoBarBorder: 10px;
 
@@ -456,7 +506,7 @@ $infoBarBorder: 10px;
     overflow-y: auto;
     transition: all 0.3s;
     width: 0; //MUDAR
-    max-width: $infoBarMap;
+    max-width: $infoBarMapPhone;
     position: fixed; 
     z-index: 2;
     top: 0;
@@ -466,14 +516,14 @@ $infoBarBorder: 10px;
     background: $light;
     &.active{
         display: block;
-        width: $infoBarMap;
+        width: $infoBarMapPhone;
         padding: $infoBarBorder  0 0 $infoBarBorder*5;
     }
     .info-group{
         border-top: 2px solid $primaryMiddleDrk;
     }
     #close-infoside-btn{
-        margin-top: $infoBarBorder;
+        margin-top: 60px;
         margin-left: $infoBarBorder;
         position: absolute;
         z-index: 1;
@@ -487,7 +537,20 @@ $infoBarBorder: 10px;
 }
 
 .content.info-active{
-    margin-right: $infoBarMap;
+    margin-right: $infoBarMapPhone;
+}
+
+@media #{$desktop_break} {
+    .info-sidebar {
+        max-width: $infoBarMapDesktop;
+        #close-infoside-btn{
+            top: 0;
+            left: 0;
+        }
+    }
+    .content.info-active{
+        margin-right: $infoBarMapDesktop;
+    }
 }
 
 /*
@@ -546,6 +609,7 @@ Map
 }
 
 .coord-box{
+    display: flex;
     position: absolute;
     z-index: 2;
     width: 350px;
@@ -567,6 +631,14 @@ Map
     }
 }
 
+@media #{$phone_break}{
+    .leaflet-touch {
+        .leaflet-control-layers{
+            margin-top: 70px;
+        }
+    }
+}
+
 .leaflet-touch {
     .leaflet-control-layers, .leaflet-bar{
         border: none;
@@ -575,14 +647,6 @@ Map
         border: 2px solid $light;
         background: $primaryMiddleDrk;
         border-radius: 20px;
-        h6{
-            font-family: $roboto;
-            font-weight: 700;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: .3em;
-            color: $orange;
-        }
         &.leaflet-control-layers-expanded{
             background: $light;
             border-radius: 10px;
@@ -650,54 +714,105 @@ table-panel
         height: 100%;
         width: 100%;
         background: rgba(88, 88, 88, 0.445);
+        .group-panel{
+            height: 80vh;
+            background: $light;
+            border-radius: 15px;
+            padding: 20px;
+            .group-sections{
+                height: 80%;
+                >*{
+                    flex-direction: column;
+                    flex: 0 0 auto;			
+                    overflow-y: scroll;
+                }
+                section{
+                    width: 50%;
+                    .info-group{
+                        padding-left: 2%;
+                    }
+                    .info-form{
+                        width: 100%;
+                    }
+                }
+            }
+            .panel-header{
+                border-bottom: 3px solid $primaryMiddleDrk;
+            }
+        }
+        .close-panel-btn{
+            margin-top: 2%;
+            margin-left: 2%;
+            width: 100px;
+            border-radius: 10px;
+            background: $light;
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            &:hover, &:focus{
+                background: $primaryDark;
+                color: $light;
+            }
+        }
     }
 }
 
-.table-panel.active{
+.about-panel.active {
+    padding: 10% 0 10% 0;
     .group-panel{
-        height: 80vh;
-        background: $light;
-        border-radius: 15px;
-        padding: 20px;
-        .group-sections{
-            height: 80%;
-	        >*{
-                flex-direction: column;
-	        	flex: 0 0 auto;			
-                overflow-y: scroll;
-            }
-            section{
-                width: 50%;
-                .info-group{
-                    padding-left: 2%;
-                }
-                .info-form{
-                    width: 100%;
-                }
-            }
-        }
-        .panel-header{
-            border-bottom: 3px solid $primaryMiddleDrk;
-        }
+        width: 80vw;
     }
-    #close-panel-btn{
-        margin-top: 2%;
-        margin-left: 2%;
-        width: 100px;
-        border-radius: 10px;
-        background: $light;
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        &:hover, &:focus{
-            background: $primaryDark;
-            color: $light;
+    section{
+        width: 100%;
+        overflow-y: auto;
+    }
+    img{
+        height: 50px;
+        margin: 10px;
+    }
+    .logos-div{
+        padding: 0 30px 0 30px;
+        text-align: center;
+    }
+    .company-credits{
+        border-top: 2px solid $primaryMiddleDrk;
+        padding: 10px 0px 10px 0px;
+    }
+    h4, h5{
+        color: $dark;
+        font-family: $roboto;
+        line-height: 1.0;
+        font-weight: 700;
+    }
+    h4{
+        font-size: 12pt;
+    }
+    h5{
+        font-size: 10pt;
+    }
+}
+
+@media #{$desktop_break}{
+    .about-panel.active{
+        .group-panel{
+            width: 50vw;
+        }
+        .company-credits{
+            display: flex;
+            justify-content: space-between;
+            align-items: center
         }
     }
 }
 
-.list-reg, .result-list{
+@media (hover: none) {
+    .coord-box{
+        display: none;
+    }
+} 
+
+.list-reg, .result-list, .credits{
     li a{
         margin: 2px 0 2px 0;
         color: $dark;
@@ -715,6 +830,19 @@ table-panel
     }
     li:hover{
         background: $lightMiddle;
+    }
+}
+
+.credits{
+    li{
+        margin-top: 15px;
+        line-height: 0.5;
+        a:hover{
+            color: $primaryMiddleLght;
+        }
+    }
+    li:hover{
+        background: none;
     }
 }
 
@@ -793,3 +921,19 @@ info panel
     }
 }
 
+@media print{
+    .coord-box{
+        display: none;
+    }
+    @page {
+        size: landscape
+    }
+    .omnibox, .search_box, .results-search{
+        display: none;
+    }
+    .leaflet-touch {
+        .leaflet-control-layers, .leaflet-control-zoom.leaflet-bar{
+            display: none
+        }
+    }
+}

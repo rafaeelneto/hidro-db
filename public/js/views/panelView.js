@@ -44,7 +44,7 @@ function removePanel(){
     clearInfoForm(elements.panelForm);
     clearList();
     elements.panel.classList.remove('active');
-    elements.aboutPanel.classList.remove('active')
+    elements.aboutPanel.classList.remove('active');
 }
 
 export {
