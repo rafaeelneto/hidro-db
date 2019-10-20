@@ -7,6 +7,23 @@ const licenciamentoValues = ['Outorgado', 'Em processo', 'Sem outorga'];
 
 let tableData;
 
+function linkVerifier(link){
+    if(link !== '-'){
+        return `
+        <a href="${link}" target="_blank">
+            Link do relatório
+        </a>
+        `;
+    }else{
+        return `
+        <h6>
+            Não disponível
+        </h6>
+        `;
+    }
+    
+}
+
 function loadSetores(selectID, table){
     const setores = table.features;
 
@@ -45,8 +62,8 @@ function composeDropDownList (type, features, selectID){
     for (let i = 0; i < features.length; i++) {
         let id = features[i][idColumns];
         let value = features[i][uiColumns];
-        let selectString = ''
-        if (id === selectID){
+        let selectString = '';
+        if (id == selectID){
             selectString = 'selected'
         }
         optionsList = optionsList + (`<option value="${id}" ${selectString}>${value}</option>`);
@@ -96,7 +113,7 @@ function composeMMJoinList(keys, tableName, keyColumn, propertyColumn){
     `;
 }
 function compose1MJoinList(key, tableName, keyColumn, propertyColumn){
-    const table = tableData[tableName];
+    const table = tableData.tables[tableName];
 
     if(table === undefined){
         return `
@@ -109,7 +126,6 @@ function compose1MJoinList(key, tableName, keyColumn, propertyColumn){
     for (let i = 0; i < table.length; i++) {
         let id = table[i][keyColumn];
         let value = table[i][propertyColumn];
-
         if(id == key){
             const newItem = `
             <li>
@@ -117,7 +133,6 @@ function compose1MJoinList(key, tableName, keyColumn, propertyColumn){
                     ${value}
                 </a>
             </li>`;
-    
             listItems = listItems + newItem;
         }
 
@@ -137,9 +152,9 @@ function composeVazoesList(tableVazoes){
 
         const newItem = `
         <li>
-            <a class="d-flex justify-content-start align-items-center">
+            <h6 class="d-flex justify-content-start align-items-center">
                 ${vazao['vazao']} m³/h em ${(formatData(vazao['data_medida']))}
-            </a>
+            </h6>
         </li>`;
 
         listItems = listItems + newItem;
@@ -231,13 +246,13 @@ function loadPoçoView(info, tableDat){
             <li>
                 <div class=form-groupt">
                     <span class="label">DATA OPERAÇÃO</span>
-                    <input class="form-control" type="text" name="${keys[15]}" value="${s[keys[15]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[15]}" value="${formatData(s[keys[15]])}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">DATA PERFURAÇÃO</span>
-                    <input class="form-control" type="text" name="${keys[16]}" value="${s[keys[16]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[16]}" value="${formatData(s[keys[16]])}" disabled required/>
                 </div>
             </li>
             <li>
@@ -255,7 +270,7 @@ function loadPoçoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">RELATÓRIO</span>
-                    <textarea class="form-control" name="${keys[19]}">${s[keys[19]]}</textarea>
+                    ${linkVerifier(s[keys[19]])}
                 </div>
             </li>
             <li>
@@ -342,7 +357,7 @@ function loadSuperfView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">DATA OPERAÇÃO</span>
-                    <input class="form-control" type="date" name="${keys[12]}" value="${s[keys[12]]}" disabled required/>
+                    <input class="form-control" type="date" name="${keys[12]}" value="${formatData(s[keys[12]])}" disabled required/>
                 </div>
             </li>
             <li>
@@ -360,7 +375,7 @@ function loadSuperfView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">RELATÓRIO</span>
-                    <textarea class="form-control" name="${keys[15]}" disabled>${s[keys[15]]}</textarea>
+                    ${linkVerifier(s[keys[15]])}
                 </div>
             </li>
             <li>
@@ -441,7 +456,7 @@ function loadOutorView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">LINK DA OUTORGA</span>
-                    <textarea class="form-control" name="${keys[7]}">${s[keys[7]]}</textarea>
+                    ${linkVerifier(s[keys[7]])}
                 </div>
             </li>
             <li>
@@ -544,12 +559,126 @@ function loadProcessoView(info, tableDat){
     return processoInfoHTML;
 }
 
+//'notif_id, num_notif, tipo_nota, prazo::DATE, data_emissao, data_recebim, data_resp, via_receb, condns, situaçao_notif, oficio_id, obs_notif, processo_id, orgao_id, licen_id, setor_id, municipio_id, un_id'
+
+function loadNotifView(info, tableDat){
+    const tables = tableDat.tables;
+    tableData = tableDat;
+
+    let keys = info.keys;
+    let s = info.s;
+    let processoInfoHTML = `
+        <ul class="list-unstyled components info-list">
+            <li>
+                <input class="form-control" type="text" id="nomeField" name="${keys[1]}" value="${s[keys[1]]}" disabled required/>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">TIPO DE NOTA</span>
+                    <input class="form-control" type="text" name="${keys[2]}" value="${s[keys[2]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PRAZO</span>
+                    <input class="form-control" type="text" name="${keys[3]}" value="${formatData(s[keys[3]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">DATA DE EMISSÃO</span>
+                    <input class="form-control" type="text" name="${keys[4]}" value="${formatData(s[keys[4]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">DATA DE RECEBIMENTO</span>
+                    <input class="form-control" type="text" name="${keys[5]}" value="${formatData(s[keys[5]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">DATA DA RESPOSTA</span>
+                    <input class="form-control" type="text" name="${keys[6]}" value="${formatData(s[keys[6]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">VIA DE RECEBIMENTO</span>
+                    <input class="form-control" type="text" name="${keys[7]}" value="${s[keys[7]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">CONDICIONANTES</span>
+                    <textarea class="form-control" name="${keys[8]}">${s[keys[8]]}</textarea>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">SITUAÇÃO</span>
+                    ${composeDropDownList(keys[9], tables[tablesKeys.situaçoes], s[keys[9]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">OFÍCIO</span>
+                    ${composeDropDownList(keys[10], tables[tablesKeys.oficios], s[keys[10]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">OBSERVAÇÕES</span>
+                    <textarea class="form-control" name="${keys[11]}">${s[keys[11]]}</textarea>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PROCESSOS</span>
+                    ${compose1MJoinList(s[keys[12]], tablesKeys.processos, 'processo_id', 'num_processo')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">ORGÃO</span>
+                    ${composeDropDownList(keys[13], tables[tablesKeys.orgaos], s[keys[13]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">LICENÇAS</span>
+                    ${compose1MJoinList(s[keys[14]], tablesKeys.licenças, 'licen_id', 'num_licen')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">SETOR</span>
+                    ${loadSetores(s[keys[15]], tables[tablesKeys.setoresSedes])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">UNID. DE NEGÓCIOS</span>
+                    ${composeDropDownList(keys[16], tables[tablesKeys.uns], s[keys[16]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">MUNICÍPIO</span>
+                    ${composeDropDownList(keys[17], tables[tablesKeys.municipios], s[keys[17]])}
+                </div>
+            </li>
+        </ul>
+    `;
+    return processoInfoHTML;
+}
+
 function loadInfoForm(identif, parent, htmlList, tableName, key){
 
     const htmlForm = `
     <div class="info-group${identif}">
         <div class="d-flex justify-content-start align-items-center info-form-group">
-            <form id="info-form-${tableName}-${key}" onsubmit="return submitInfo()">
+            <form id="info-form" onsubmit="return submitInfo()">
                 ${htmlList}
             </form>
         </div>
@@ -580,6 +709,7 @@ export {
     loadSuperfView,
     loadOutorView,
     loadProcessoView,
+    loadNotifView,
     clearInfoForm,
     loadInfoForm,
     loadSetores,

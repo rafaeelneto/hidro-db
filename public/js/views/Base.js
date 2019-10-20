@@ -36,6 +36,7 @@ export const elements = {
     labelBtn: document.querySelector('#labelBtn.leaflet-control-label'),
 
     //search
+    cleanSearchBox: document.getElementById('button-close-search'),
     searchInput: document.getElementById('search-input'),
     resultDiv: document.querySelector('.results-search'),
 

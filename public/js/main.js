@@ -8,7 +8,7 @@ import {getKeyValues, tablesKeys} from './models/Data';
 import Info from './models/Info';
 
 import * as mapView from './views/mapView';
-import {loadPoçoView, loadSuperfView, loadOutorView, loadInfoForm, clearInfoForm, loadProcessoView} from './views/infoView';
+import {loadPoçoView, loadSuperfView, loadOutorView, loadInfoForm, clearInfoForm, loadProcessoView, loadNotifView} from './views/infoView';
 
 import TableData from './models/TableData';
 import * as requests from './requests';
@@ -58,8 +58,7 @@ function toggleInfobar(active){
 //Set event listener to the close button on side infobar
 elements.closeInfobarID.addEventListener('click', () => {
 	toggleInfobar(false);
-	clearInfoForm(elements.infoList);
-	map.invalidateSize();
+	clearInfoForm(elements.infobarSection, '-spatial');
 });
 
 //Initialize the user, load tables and init map
@@ -87,7 +86,7 @@ async function loadInfo(parent, type, id){
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
 	info = new Info(infoRes.table, infoRes.joinTables);
 
-	console.log(info.keys);
+	console.log(infoRes);
 
 	let htmlList;
 	let identif = '';
@@ -111,7 +110,7 @@ async function loadInfo(parent, type, id){
 			htmlList = loadProcessoView(info, tableData);
 			break;
 		case 'notif_id':
-			htmlList = loadProcessoView(info, tableData);
+			htmlList = loadNotifView(info, tableData);
 			break;
 		default:
 			break;
@@ -183,10 +182,15 @@ function loadMap(){
  * ------------------------
 */
 
+
+
 for (const i in elements.closePanelBtn) {
 	if (elements.closePanelBtn.hasOwnProperty(i)) {
 		const element = elements.closePanelBtn[i];
-		element.addEventListener('click', removePanel);
+		element.addEventListener('click', () => {
+			clearInfoForm(elements.panelForm, '');
+			removePanel();
+		});
 	}
 }
 window.addEventListener('hashchange', tableController);
@@ -286,7 +290,6 @@ function submitInfo(){
 		console.log(info.keys[i]);
 		if(!((info.keys[i] === 'usr_modif') || (info.keys[i] === 'data_modif') || (info.keys[i] === 'latitude') || (info.keys[i] === 'longitude'))){
 			const value = formActive.elements[info.keys[i]].value;
-			console.log(value);
 		}
 	}
 }
@@ -306,6 +309,7 @@ for (let i = 0; i < elements.uploadButton.length; i++) {
 function search(input){
 	let list = [];
 	const query = elements.searchInput.value;
+	elements.cleanSearchBox.classList.add('active');
 
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.poços), tablesKeys.poços, 'Poço', 'nome'));
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.capSuperf), tablesKeys.capSuperf, 'Cap. Superf.', 'nome'));
@@ -322,5 +326,10 @@ function search(input){
 		removeResults();
 	}
 }
+
+elements.cleanSearchBox.addEventListener('click', ()=>{
+	removeResults();
+	elements.searchInput.value = '';
+})
 
 elements.searchInput.addEventListener('input', search);

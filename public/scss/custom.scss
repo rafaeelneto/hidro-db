@@ -36,6 +36,16 @@ body {
     overflow-x: hidden;
 }
 
+.contato{
+    font-size: 10pt;
+    font-style: italic;
+    font-weight: 400;
+    color: $lightMiddle;
+    a{
+        color: $yellowLight;
+    }
+}
+
 h6{
     font-family: $roboto;
     font-weight: 700;
@@ -251,6 +261,28 @@ h6{
     height: 100%;
     width: 100%;
     transition: margin-left 0.3s;
+}
+
+#button-search, #button-close-search{
+    color: $primary;
+    border: none;
+    &:hover{
+        color: $primaryMiddleLght;
+    }
+    &:hover, &:focus, &:active{
+        outline: none !important;
+        border: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+}
+
+#button-close-search{
+    display: none;
+    margin-right: 10px;
+    &.active{
+        display: flex;
+    }
 }
 
 .omnibox {
@@ -519,7 +551,7 @@ $infoBarBorder: 10px;
         width: $infoBarMapPhone;
         padding: $infoBarBorder  0 0 $infoBarBorder*5;
     }
-    .info-group{
+    .infobar-section{
         border-top: 2px solid $primaryMiddleDrk;
     }
     #close-infoside-btn{
@@ -866,6 +898,23 @@ info panel
     }
 }
 .info-form-group{
+    h6{
+        color: $dark;
+        font-weight: 700;
+        text-transform: none;
+        font-size: 14px;
+    }
+    a{
+        padding-left: 0;
+        background: none;
+        margin: 1px 0 1px 0;
+        color: $dark;
+        font-weight: 700;
+        letter-spacing: .2em;
+        font-size: 14px;
+        display: block;
+        white-space: nowrap;
+    }
     li{
         background: $light;
         padding: 2px;
@@ -876,20 +925,10 @@ info panel
     .join-list{
         li{
             background: none;
-            a{
-                padding-left: 0;
-                background: none;
-                margin: 1px 0 1px 0;
-                color: $dark;
-                font-weight: 700;
-                letter-spacing: .2em;
-                font-size: 14px;
-                display: block;
-                white-space: nowrap;
-            }
         }
     }
     input, select{
+        width: 100%;
         padding: 0px;
         background: $light;
         border: none;

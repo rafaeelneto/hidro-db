@@ -34,6 +34,8 @@ function getColor(s) {
 			return '#F67280';
 		case 'Em construção':
 			return '#C23AE8';
+		case 'A construir':
+			return '#ad7a0d';
 		default:
 			return '#4e4e4e';
 	}
@@ -51,6 +53,7 @@ function getIcon(s){
 		case 'Em construção':
 			url = './../../images/simbology/triangulos-03.png';
 			break;
+		//Adicionar icone para pontos a construir
 		default:
 			url = './../../images/simbology/triangulos-04.png';
 			break;

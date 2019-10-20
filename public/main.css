@@ -6440,6 +6440,14 @@ html,
 body {
   overflow-x: hidden; }
 
+.contato {
+  font-size: 10pt;
+  font-style: italic;
+  font-weight: 400;
+  color: #e8e8e8; }
+  .contato a {
+    color: #F0D675; }
+
 h6 {
   font-family: "Roboto", sans-serif;
   font-weight: 700;
@@ -6625,6 +6633,23 @@ h6 {
   height: 100%;
   width: 100%;
   transition: margin-left 0.3s; }
+
+#button-search, #button-close-search {
+  color: #043852;
+  border: none; }
+  #button-search:hover, #button-close-search:hover {
+    color: #42919A; }
+  #button-search:hover, #button-search:focus, #button-search:active, #button-close-search:hover, #button-close-search:focus, #button-close-search:active {
+    outline: none !important;
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important; }
+
+#button-close-search {
+  display: none;
+  margin-right: 10px; }
+  #button-close-search.active {
+    display: flex; }
 
 .omnibox {
   margin: 10px;
@@ -6846,7 +6871,7 @@ info-side
     display: block;
     width: 100vw;
     padding: 10px 0 0 50px; }
-  .info-sidebar .info-group {
+  .info-sidebar .infobar-section {
     border-top: 2px solid #024454; }
   .info-sidebar #close-infoside-btn {
     margin-top: 60px;
@@ -7120,6 +7145,23 @@ info panel
   height: 35px;
   width: 35px; }
 
+.info-form-group h6 {
+  color: #4e4e4e;
+  font-weight: 700;
+  text-transform: none;
+  font-size: 14px; }
+
+.info-form-group a {
+  padding-left: 0;
+  background: none;
+  margin: 1px 0 1px 0;
+  color: #4e4e4e;
+  font-weight: 700;
+  letter-spacing: .2em;
+  font-size: 14px;
+  display: block;
+  white-space: nowrap; }
+
 .info-form-group li {
   background: #F2F2F2;
   padding: 2px;
@@ -7129,18 +7171,9 @@ info panel
 
 .info-form-group .join-list li {
   background: none; }
-  .info-form-group .join-list li a {
-    padding-left: 0;
-    background: none;
-    margin: 1px 0 1px 0;
-    color: #4e4e4e;
-    font-weight: 700;
-    letter-spacing: .2em;
-    font-size: 14px;
-    display: block;
-    white-space: nowrap; }
 
 .info-form-group input, .info-form-group select {
+  width: 100%;
   padding: 0px;
   background: #F2F2F2;
   border: none;

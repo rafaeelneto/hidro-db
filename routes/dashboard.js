@@ -106,7 +106,7 @@ async function getInfo(type, id){
         case 'notif_id':
             tableName = tables.tableNames.notificaçoes;
             columns = tables.notificaçaoInfoColumns;
-            joinsQueries = [tables.superfProcessoJoinInfo, tables.superfProcessoJoinInfo];
+            joinsQueries = [];
             break;
         default:
             break;

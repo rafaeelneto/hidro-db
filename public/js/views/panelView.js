@@ -41,8 +41,8 @@ function clearList(){
 }
 
 function removePanel(){
-    clearInfoForm(elements.panelForm);
     clearList();
+    clearInfoForm(elements.panelForm);
     elements.panel.classList.remove('active');
     elements.aboutPanel.classList.remove('active');
 }
