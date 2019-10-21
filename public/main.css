@@ -7050,7 +7050,7 @@ table-panel
           width: 50%; }
           .table-panel.active .group-panel .group-sections section .info-group, .about-panel.active .group-panel .group-sections section .info-group {
             padding-left: 2%; }
-          .table-panel.active .group-panel .group-sections section .info-form, .about-panel.active .group-panel .group-sections section .info-form {
+          .table-panel.active .group-panel .group-sections section #info-form, .about-panel.active .group-panel .group-sections section #info-form {
             width: 100%; }
       .table-panel.active .group-panel .panel-header, .about-panel.active .group-panel .panel-header {
         border-bottom: 3px solid #024454; }

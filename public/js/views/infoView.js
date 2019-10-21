@@ -11,7 +11,7 @@ function linkVerifier(link){
     if(link !== '-'){
         return `
         <a href="${link}" target="_blank">
-            Link do relatório
+            Link do arquivo
         </a>
         `;
     }else{
@@ -112,7 +112,35 @@ function composeMMJoinList(keys, tableName, keyColumn, propertyColumn){
         </ul>
     `;
 }
-function compose1MJoinList(key, tableName, keyColumn, propertyColumn){
+
+function composeM1JoinList(key, tableName, keyColumn, propertyColumn){
+    const table = tableData.tables[tableName];
+
+    if(table === undefined){
+        return `
+            <ul class="list-unstyled join-list">
+            </ul>
+        `;
+    }
+
+    let link = ''
+    
+    for (let i = 0; i < table.length; i++) {
+        let id = table[i][keyColumn];
+        let value = table[i][propertyColumn];
+        console.log(value);
+        if(id == key){
+            link = `
+            <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${key}">
+                ${value}
+            </a>`;
+        }
+    }
+    
+    return link;
+}
+
+function compose1MJoinList(key, tableName, keyColumn, propertyColumn, fKeyColumn){
     const table = tableData.tables[tableName];
 
     if(table === undefined){
@@ -125,11 +153,12 @@ function compose1MJoinList(key, tableName, keyColumn, propertyColumn){
     let listItems = '';
     for (let i = 0; i < table.length; i++) {
         let id = table[i][keyColumn];
+        let fId = table[i][fKeyColumn];
         let value = table[i][propertyColumn];
-        if(id == key){
+        if(fId == key){
             const newItem = `
             <li>
-                <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${key}">
+                <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${id}">
                     ${value}
                 </a>
             </li>`;
@@ -301,6 +330,7 @@ function loadPoçoView(info, tableDat){
     `;
     return poçoInfoHTML;
 }
+
 function loadSuperfView(info, tableDat){
     const tables = tableDat.tables;
     let keys = info.keys;
@@ -406,6 +436,7 @@ function loadSuperfView(info, tableDat){
     `;
     return superfInfoHTML;
 }
+
 function loadOutorView(info, tableDat){
     const tables = tableDat.tables;
     let keys = info.keys;
@@ -436,13 +467,6 @@ function loadOutorView(info, tableDat){
             </li>
             <li>
                 <div class="form-group">
-                    <span class="label">PONTOS OUTORGADOS</span>
-                    ${composeMMJoinList(info.joins[0], tablesKeys.capSuperf, 'super_id', 'nome')}
-                    ${composeMMJoinList(info.joins[1], tablesKeys.poços, 'poço_id', 'nome')}
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
                     <span class="label">RESPONSÁVEL</span>
                     <input class="form-control" type="text" name="${keys[5]}" value="${s[keys[5]]}" disabled required/>
                 </div>
@@ -467,27 +491,39 @@ function loadOutorView(info, tableDat){
             </li>
             <li>
                 <div class="form-group">
-                    <span class="label">TIPO DE CAPTAÇÃO</span>
-                    <input class="form-control" type="text" name="${keys[9]}" value="${s[keys[9]]}" disabled required/>
-                </div>
-            </li>
-
-            <li>
-                <div class="form-group">
                     <span class="label">OBSERVAÇÃO</span>
-                    <textarea class="form-control" name="${keys[10]}">${s[keys[10]]}</textarea>
+                    <textarea class="form-control" name="${keys[9]}">${s[keys[9]]}</textarea>
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">UNID. DE NEGÓCIOS</span>
-                    ${composeDropDownList(keys[11], tables[tablesKeys.uns], s[keys[11]])}
+                    ${composeDropDownList(keys[10], tables[tablesKeys.uns], s[keys[10]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">MUNICÍPIO</span>
-                    ${composeDropDownList(keys[12], tables[tablesKeys.municipios], s[keys[12]])}
+                    ${composeDropDownList(keys[11], tables[tablesKeys.municipios], s[keys[11]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PONTOS OUTORGADOS</span>
+                    ${composeMMJoinList(info.joins[0], tablesKeys.capSuperf, 'super_id', 'nome')}
+                    ${composeMMJoinList(info.joins[1], tablesKeys.poços, 'poço_id', 'nome')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PROCESSOS</span>
+                    ${compose1MJoinList(s[keys[0]], tablesKeys.notificaçoes, 'processo_id', 'num_processo', 'outorga_id')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">LICENÇAS</span>
+                    ${composeM1JoinList(s[keys[12]], tablesKeys.processos, 'licen_id', 'num_licen')}
                 </div>
             </li>
         </ul>
@@ -525,13 +561,6 @@ function loadProcessoView(info, tableDat){
             </li>
             <li>
                 <div class="form-group">
-                    <span class="label">PONTOS SOB PROCESSO</span>
-                    ${composeMMJoinList(info.joins[0], tablesKeys.capSuperf, 'super_id', 'nome')}
-                    ${composeMMJoinList(info.joins[1], tablesKeys.poços, 'poço_id', 'nome')}
-                </div>
-            </li>
-            <li>
-                <div class="form-group">
                     <span class="label">UNID. DE NEGÓCIOS</span>
                     ${composeDropDownList(keys[5], tables[tablesKeys.uns], s[keys[5]])}
                 </div>
@@ -544,22 +573,33 @@ function loadProcessoView(info, tableDat){
             </li>
             <li>
                 <div class="form-group">
+                    <span class="label">PONTOS SOB PROCESSO</span>
+                    ${composeMMJoinList(info.joins[0], tablesKeys.capSuperf, 'super_id', 'nome')}
+                    ${composeMMJoinList(info.joins[1], tablesKeys.poços, 'poço_id', 'nome')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">NOTIFICAÇÕES</span>
+                    ${compose1MJoinList(s[keys[0]], tablesKeys.notificaçoes, 'notif_id', 'num_notif', 'processo_id')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
                     <span class="label">OUTORGAS</span>
-                    ${compose1MJoinList(keys[7], tablesKeys.outorgas, 'outorga_id', 'num_outorga')}
+                    ${composeM1JoinList(keys[7], tablesKeys.outorgas, 'outorga_id', 'num_outorga')}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">LICENÇAS</span>
-                    ${compose1MJoinList(keys[8], tablesKeys.licenças, 'licen_id', 'num_licen')}
+                    ${composeM1JoinList(keys[8], tablesKeys.licenças, 'licen_id', 'num_licen')}
                 </div>
             </li>
         </ul>
     `;
     return processoInfoHTML;
 }
-
-//'notif_id, num_notif, tipo_nota, prazo::DATE, data_emissao, data_recebim, data_resp, via_receb, condns, situaçao_notif, oficio_id, obs_notif, processo_id, orgao_id, licen_id, setor_id, municipio_id, un_id'
 
 function loadNotifView(info, tableDat){
     const tables = tableDat.tables;
@@ -635,7 +675,7 @@ function loadNotifView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">PROCESSOS</span>
-                    ${compose1MJoinList(s[keys[12]], tablesKeys.processos, 'processo_id', 'num_processo')}
+                    ${composeM1JoinList(s[keys[12]], tablesKeys.processos, 'processo_id', 'num_processo')}
                 </div>
             </li>
             <li>
@@ -647,13 +687,13 @@ function loadNotifView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">LICENÇAS</span>
-                    ${compose1MJoinList(s[keys[14]], tablesKeys.licenças, 'licen_id', 'num_licen')}
+                    ${composeM1JoinList(s[keys[14]], tablesKeys.licenças, 'licen_id', 'num_licen')}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">SETOR</span>
-                    ${loadSetores(s[keys[15]], tables[tablesKeys.setoresSedes])}
+                    ${composeM1JoinList(s[keys[15]], tablesKeys.setoresSedes, 'setor_id', 'nome')}
                 </div>
             </li>
             <li>
@@ -666,6 +706,77 @@ function loadNotifView(info, tableDat){
                 <div class="form-group">
                     <span class="label">MUNICÍPIO</span>
                     ${composeDropDownList(keys[17], tables[tablesKeys.municipios], s[keys[17]])}
+                </div>
+            </li>
+        </ul>
+    `;
+    return processoInfoHTML;
+}
+
+function loadLicenView(info, tableDat){
+    const tables = tableDat.tables;
+    tableData = tableDat;
+
+    let keys = info.keys;
+    console.log(keys);
+    let s = info.s;
+    let processoInfoHTML = `
+        <ul class="list-unstyled components info-list">
+            <li>
+                <input class="form-control" type="text" id="nomeField" name="${keys[1]}" value="${s[keys[1]]}" disabled required/>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">TIPOLOGIA</span>
+                    <input class="form-control" type="text" name="${keys[2]}" value="${s[keys[2]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">DATA DE ENTRADA</span>
+                    <input class="form-control" type="text" name="${keys[3]}" value="${formatData(s[keys[3]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">VALIDADE</span>
+                    <input class="form-control" type="text" name="${keys[4]}" value="${formatData(s[keys[4]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">ATIVIDADE</span>
+                    <input class="form-control" type="text" name="${keys[5]}" value="${s[keys[5]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">ARQUIVO DA LICENÇA</span>
+                    ${linkVerifier(s[keys[6]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">ORGÃO</span>
+                    ${composeDropDownList(keys[7], tables[tablesKeys.orgaos], s[keys[7]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">NOTIFICAÇÕES</span>
+                    ${compose1MJoinList(s[keys[0]], tablesKeys.notificaçoes, 'notif_id', 'num_notif', 'licen_id')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">OUTORGAS</span>
+                    ${compose1MJoinList(s[keys[0]], tablesKeys.outorgas, 'outorga_id', 'num_outorga', 'licen_id')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PROCESSOS</span>
+                    ${compose1MJoinList(s[keys[0]], tablesKeys.processos, 'processo_id', 'num_processo', 'licen_id')}
                 </div>
             </li>
         </ul>
@@ -708,6 +819,7 @@ export {
     loadPoçoView,
     loadSuperfView,
     loadOutorView,
+    loadLicenView,
     loadProcessoView,
     loadNotifView,
     clearInfoForm,

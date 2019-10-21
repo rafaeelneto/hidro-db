@@ -8,7 +8,7 @@ import {getKeyValues, tablesKeys} from './models/Data';
 import Info from './models/Info';
 
 import * as mapView from './views/mapView';
-import {loadPoçoView, loadSuperfView, loadOutorView, loadInfoForm, clearInfoForm, loadProcessoView, loadNotifView} from './views/infoView';
+import {loadPoçoView, loadSuperfView, loadOutorView, loadLicenView, loadInfoForm, clearInfoForm, loadProcessoView, loadNotifView} from './views/infoView';
 
 import TableData from './models/TableData';
 import * as requests from './requests';
@@ -86,8 +86,6 @@ async function loadInfo(parent, type, id){
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
 	info = new Info(infoRes.table, infoRes.joinTables);
 
-	console.log(infoRes);
-
 	let htmlList;
 	let identif = '';
 	switch (infoRes.type){
@@ -111,6 +109,12 @@ async function loadInfo(parent, type, id){
 			break;
 		case 'notif_id':
 			htmlList = loadNotifView(info, tableData);
+			break;
+		case 'licen_id':
+			htmlList = loadLicenView(info, tableData);
+			break;
+		case 'autoifr_id':
+			htmlList = loadLicenView(info, tableData);
 			break;
 		default:
 			break;
@@ -316,7 +320,7 @@ function search(input){
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.setoresSedes), tablesKeys.setoresSedes, 'Setor', 'nome'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.outorgas], tablesKeys.outorgas, 'Outorga', 'num_outorga'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'num_processo'));
-	list.push(...tableData.search(query, tableData.tables[tablesKeys.licenças], tablesKeys.outorgas, 'Licença', 'num_licen'));
+	list.push(...tableData.search(query, tableData.tables[tablesKeys.licenças], tablesKeys.licenças, 'Licença', 'num_licen'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.autosInfraçao], tablesKeys.autosInfraçao, 'Auto de Infração', 'num_infra'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.notificaçoes], tablesKeys.notificaçoes, 'Notificação', 'num_notif'));
 

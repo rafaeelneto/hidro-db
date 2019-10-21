@@ -40,11 +40,11 @@ router.get('/all', async (req, res) => {
     const uns = await tables.getTableGeneric(tables.tableNames.uns, 'un_id, nome');
     const regionais = await tables.getTableGeneric(tables.tableNames.regionais, 'region_id, nome');
     const municipios = await tables.getTableGeneric(tables.tableNames.municipios, 'municipio_id, nome');
-    const outorgas = await tables.getTableGeneric(tables.tableNames.outorgas, 'outorga_id, num_outorga, validade');
-    const processos = await tables.getTableGeneric(tables.tableNames.processos, 'processo_id, num_processo, situaçao');
+    const outorgas = await tables.getTableGeneric(tables.tableNames.outorgas, 'outorga_id, num_outorga, validade, licen_id');
+    const processos = await tables.getTableGeneric(tables.tableNames.processos, 'processo_id, num_processo, outorga_id, licen_id');
     const licenças = await tables.getTableGeneric(tables.tableNames.licenças, 'licen_id, num_licen');
     const autosInfraçao = await tables.getTableGeneric(tables.tableNames.autosInfra, 'autoifr_id, num_infra, situaçao_auto');
-    const notificaçoes = await tables.getTableGeneric(tables.tableNames.notificaçoes, 'notif_id, num_notif, situaçao_notif');
+    const notificaçoes = await tables.getTableGeneric(tables.tableNames.notificaçoes, 'notif_id, num_notif, processo_id, licen_id');
     const analisesFQB = await tables.getTableGeneric(tables.tableNames.analises, 'analise_id, numafq, numab, potabilidade');
     const oficios = await tables.getTableGeneric(tables.tableNames.oficios, 'oficio_id, num_oficio');
     const orgaos = await tables.getTableGeneric(tables.tableNames.orgaos, 'orgao_id, nome');
@@ -106,6 +106,16 @@ async function getInfo(type, id){
         case 'notif_id':
             tableName = tables.tableNames.notificaçoes;
             columns = tables.notificaçaoInfoColumns;
+            joinsQueries = [];
+            break;
+        case 'licen_id':
+            tableName = tables.tableNames.licenças;
+            columns = tables.licençaInfoColumns;
+            joinsQueries = [];
+            break;
+        case 'autoifr_id':
+            tableName = tables.tableNames.autosInfra;
+            columns = tables.autoInfraçaoInfoColumns;
             joinsQueries = [];
             break;
         default:

@@ -4,7 +4,7 @@ const db = require('../database/db');
 //Columns to use
 const poçoInfoColumns = 'poço_id, nome, usr_modif, data_modif, setor_id, un_id, municipio_id, latitude, longitude, situaçao, profun,  ne, nd, revest, vazao_max, data_op::DATE, data_perf::DATE, bomba, horas_bomb, relatorio, licenc_situ, obspoco';
 const superfInfoColumns = 'super_id, nome, usr_modif, data_modif, setor_id, un_id, municipio_id, latitude, longitude, corpo_hidrc, situaçao, vazao_max, data_op::DATE, bomba, horas_bomb, relatorio, licenc_situ, obs_s';
-const outorgaInfoColumns = 'outorga_id, num_outorga, tipo, data_entrada::DATE, validade::DATE, responsavel, tipo_captacao, outorga_arq, orgao_id, licen_id, obsoutorga, un_id, municipio_id, obsoutorga';
+const outorgaInfoColumns = 'outorga_id, num_outorga, tipo, data_entrada::DATE, validade::DATE, responsavel, tipo_captacao, outorga_arq, orgao_id, obsoutorga, un_id, municipio_id, licen_id';
 const processoInfoColumns = 'processo_id, num_processo, data_entrada::DATE, orgao_id, situaçao, un_id, municipio_id, outorga_id, licen_id';
 const notificaçaoInfoColumns = 'notif_id, num_notif, tipo_nota, prazo::DATE, data_emissao, data_recebim, data_resp, via_receb, condns, situaçao_notif, oficio_id, obs_notif, processo_id, orgao_id, licen_id, setor_id, municipio_id, un_id';
 const licençaInfoColumns = 'licen_id, num_licen, tipo, data_entrada::DATE, validade::DATE, atividade, licen_arq, orgao_id';
