@@ -1,0 +1,3 @@
+### Pre requisitos
+- postgis
+

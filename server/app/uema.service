@@ -1,0 +1,19 @@
+/etc/systemd/system/uema.service
+[Unit]
+Description=UEMA DB
+After=network-online.target
+Wants=network-online.target
+
+
+[Service]
+Environment="UEMA_HOST=localhost"
+Environment="UEMA_PORT=8081"
+Type=simple
+User=tomcat
+WorkingDirectory=/var/www/uema
+#ExecStart=/usr/bin/node app.js
+ExecStart=/usr/bin/node /var/www/uema/app.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
