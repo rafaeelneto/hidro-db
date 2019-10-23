@@ -6436,10 +6436,6 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6; } }
 
-html,
-body {
-  overflow-x: hidden; }
-
 .contato {
   font-size: 10pt;
   font-style: italic;
@@ -6518,11 +6514,9 @@ h6 {
   background-repeat: no-repeat; }
 
 .limiter {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   padding: 20px 30px 20px 30px; }
-  .limiter .align-items-center {
-    margin: 5%; }
 
 .login-box {
   width: 500px;
@@ -6612,13 +6606,24 @@ h6 {
       transition: all 0.4s; }
 
 .info-div {
-  width: 500px;
   padding: 0 25px 0 25px; }
   .info-div p {
     font-family: "Open Sans", sans-serif;
     font-size: 14px; }
   .info-div .btn {
     width: 70%; }
+  .info-div #visitante {
+    width: 200px; }
+
+footer img {
+  height: 50px;
+  margin: 10px; }
+
+@media screen and (max-width: 993px) {
+  .limiter {
+    padding: 20px 0 20px 0; }
+  .info-div {
+    width: auto; } }
 
 .wrapper {
   width: 100%;

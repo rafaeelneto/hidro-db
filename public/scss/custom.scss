@@ -31,11 +31,6 @@ $phone_break: "screen and (max-width: 993px)";
 
 // Add SASS theme customizations here..
 
-html, 
-body {
-    overflow-x: hidden;
-}
-
 .contato{
     font-size: 10pt;
     font-style: italic;
@@ -127,12 +122,10 @@ h6{
 }
 
 .limiter{
-    height: 100vh;
+    height: 100%;
     width: 100%;
     padding: 20px 30px 20px 30px;
-    .align-items-center{
-        margin: 5%;
-    }
+    
 }
 
 .login-box{
@@ -236,7 +229,6 @@ h6{
 }
 
 .info-div{
-    width: 500px;
     padding: 0 25px 0 25px;
     p{
         font-family: $open-sans;
@@ -244,6 +236,25 @@ h6{
     }
     .btn{
         width: 70%;
+    }
+    #visitante{
+        width: 200px;
+    }
+}
+
+footer{
+    img{
+        height: 50px;
+        margin: 10px;
+    }
+}
+
+@media #{$phone_break}{
+    .limiter{
+        padding: 20px 0 20px 0;
+    }
+    .info-div{
+        width: auto;
     }
 }
 
