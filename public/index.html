@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UEMA-db</title>
+    <link rel="shortcut icon" type="image/png" href="./images/favicon.png"/>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div class="limiter">
+        <div class="container-fluid">
+            <div class="row justify-content-center align-items-center">
+                    <div class="info-div col-sm d-flex flex-column justify-content-around align-items-center">
+                        <img src="images/uema_db_home.png">
+                        <p class="font-weight-bold text-center">Obtenha informações atualizadas  sobre nossos pontos de captação e tudo mais em nosso banco de dados</p>
+                        <button class="btn btn-yellow" id="visitante">ENTRAR</button>
+                    </div>
+                    <div class="d-flex col-sm justify-content-around align-items-center">
+                            <div class="d-flex shadow justify-content-center align-items-center login-box input-group">
+                                    <button class= "btn btn-circle" id="add-user-btn"><i class="material-icons">person_add</i></button>
+                                    <form id="login-form" action="/" method="POST">
+                                        <span class="form-title">
+                                            Entrar como editor
+                                        </span>
+                                        <div class="form-group usradmin hide">
+                                            <input class="form-control" type="text" name="usernameAdmin" id="admin_user"/>
+                                            <span class="label">USUÁRIO ADMINSTRADOR</span>
+                                        </div>
+                                        <div class="form-group pswadmin hide">
+                                                <input class="form-control" type="password" name="passwordAdmin" id="admin_psw"/>
+                                                <span class="label">SENHA ADMINISTRADOR</span>
+                                            </div>
+                                        <div class="form-group usr">
+                                            <input class="form-control" type="text" name="username" id="user" required/>
+                                            <span class="label">USUÁRIO</span>
+                                        </div>
+                                        <div class="form-group psw">
+                                            <input class="form-control" type="password" name="password" id="psw" required/>
+                                            <span class="label">SENHA</span>
+                                        </div>
+                                        <button class="btn btn-blue" id="login-btn">
+                                            ENTRAR
+                                        </button>
+                                        <div class="d-flex justify-content-center">
+                                            <div class="spinner-grow" style="position: absolute; margin: 10px; width: 3rem; height: 3rem;" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </form>
+                            </div>          
+                        </div>
+                    <footer>
+                        <div class="logos-div">
+                            <img src="/images/logo_pará.png" alt="Logo do estado do Pará">
+                            <img src="/images/cosanpa_logo.png" alt="Logo da COSANPA">
+                        </div>
+                        <div>
+                            <h4>Companhia de Saneamento do Pará</h4>
+                            <h5>Diretoria de Expansão e Tecnologia - DET</h5>
+                            <h5>Unidade Executiva de Meio Ambiente e Tecnologia - UEMA</h5>
+                        </div>
+                        
+                    </footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var form = document.getElementById('login-form');
+
+        var userAdminGroup = document.querySelector('.usradmin');
+        var pswAdminGroup = document.querySelector('.pswadmin');
+        
+        var userAdmin = document.getElementById('admin_user');
+        var pswAdmin = document.getElementById('admin_psw');
+        var user = document.getElementById('user');
+        var psw = document.getElementById('psw');
+
+        changeSpiner('none');
+
+        document.querySelector('#visitante').addEventListener('click', function(){
+            user.value = 'visitante';
+            psw.value = '';
+            newUser = false;
+            form.submit();
+        });
+
+        var newUser = false;
+
+        
+        document.querySelector('#add-user-btn').addEventListener('click', function(){
+            var formTitle = document.querySelector('.form-title');
+            userAdminGroup.classList.toggle('hide');
+            pswAdminGroup.classList.toggle('hide');
+            if(newUser){
+                formTitle.textContent = 'Entrar como editor';
+                newUser = false;
+            }else{
+                formTitle.textContent = 'Cadastrar novo editor';
+                newUser = true;
+            }
+        });
+        
+        function errMsg(){
+            document.querySelector('.usr .label').style.color = '#F67280';
+            document.querySelector('.psw .label').style.color = '#F67280';
+            document.querySelector('.usradmin .label').style.color = '#F67280';
+            document.querySelector('.pswadmin .label').style.color = '#F67280';
+        }
+
+        function changeSpiner(state){
+            document.querySelector('.spinner-grow').style.display = state;
+        }
+
+        function submitUser(e){
+            var newUserNotNull;
+
+            var path = '/';
+
+            if(newUser){
+                newUserNotNull = userAdmin.value !== undefined && pswAdmin !== undefined;
+                path = 'usr/create'
+            }
+
+            if (e.preventDefault){
+                e.preventDefault();
+                console.log("aqui");
+            }
+            if(true){
+                let formData = new FormData(form)
+                
+                changeSpiner('inline');
+                
+                fetch(path, {
+                    method: "POST",
+                    redirect: 'follow',
+                    body: new URLSearchParams(formData)
+                })
+                .then(function (response) {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    }else{
+                        changeSpiner('none');
+                        errMsg();
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            }else{
+                errMsg();
+            }
+            return false;
+        }
+
+        if (form.attachEvent) {
+            form.attachEvent("submit", submitUser);
+        } else {
+            form.addEventListener("submit", submitUser);
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+</body>
+</html>
