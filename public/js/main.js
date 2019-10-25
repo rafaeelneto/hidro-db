@@ -8,7 +8,7 @@ import {getKeyValues, tablesKeys} from './models/Data';
 import Info from './models/Info';
 
 import * as mapView from './views/mapView';
-import {loadPoçoView, loadSuperfView, loadOutorView, loadLicenView, loadInfoForm, clearInfoForm, loadProcessoView, loadNotifView} from './views/infoView';
+import {loadPoçoView, loadSuperfView, loadOutorView, loadLicenView, loadAutoView, loadInfoForm, clearInfoForm, loadProcessoView, loadNotifView} from './views/infoView';
 
 import TableData from './models/TableData';
 import * as requests from './requests';
@@ -114,7 +114,7 @@ async function loadInfo(parent, type, id){
 			htmlList = loadLicenView(info, tableData);
 			break;
 		case 'autoifr_id':
-			htmlList = loadLicenView(info, tableData);
+			htmlList = loadAutoView(info, tableData);
 			break;
 		default:
 			break;

@@ -813,7 +813,16 @@ table-panel
     }
 }
 
-.about-panel.active {
+.about-panel.active, footer{
+    h4, h5{
+        color: $dark;
+        font-family: $roboto;
+        line-height: 1.0;
+        font-weight: 700;
+    }
+}
+
+.about-panel.active{
     padding: 10% 0 10% 0;
     .group-panel{
         width: 80vw;
@@ -834,12 +843,7 @@ table-panel
         border-top: 2px solid $primaryMiddleDrk;
         padding: 10px 0px 10px 0px;
     }
-    h4, h5{
-        color: $dark;
-        font-family: $roboto;
-        line-height: 1.0;
-        font-weight: 700;
-    }
+    
     h4{
         font-size: 12pt;
     }

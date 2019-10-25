@@ -114,6 +114,7 @@ function composeMMJoinList(keys, tableName, keyColumn, propertyColumn){
 }
 
 function composeM1JoinList(key, tableName, keyColumn, propertyColumn){
+    console.log(key);
     const table = tableData.tables[tableName];
 
     if(table === undefined){
@@ -128,7 +129,6 @@ function composeM1JoinList(key, tableName, keyColumn, propertyColumn){
     for (let i = 0; i < table.length; i++) {
         let id = table[i][keyColumn];
         let value = table[i][propertyColumn];
-        console.log(value);
         if(id == key){
             link = `
             <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${key}">
@@ -692,6 +692,12 @@ function loadNotifView(info, tableDat){
             </li>
             <li>
                 <div class="form-group">
+                    <span class="label">AUTOS DE INFRAÇÃO</span>
+                    ${compose1MJoinList(s[keys[0]], tablesKeys.autosInfraçao, 'autoifr_id', 'num_infra', 'processo_id')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
                     <span class="label">SETOR</span>
                     ${composeM1JoinList(s[keys[15]], tablesKeys.setoresSedes, 'setor_id', 'nome')}
                 </div>
@@ -779,6 +785,113 @@ function loadLicenView(info, tableDat){
                     ${compose1MJoinList(s[keys[0]], tablesKeys.processos, 'processo_id', 'num_processo', 'licen_id')}
                 </div>
             </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">AUTOS DE INFRAÇÃO</span>
+                    ${compose1MJoinList(s[keys[0]], tablesKeys.autosInfraçao, 'autoifr_id', 'num_infra', 'licen_id')}
+                </div>
+            </li>
+        </ul>
+    `;
+    return processoInfoHTML;
+}
+
+function loadAutoView(info, tableDat){
+    const tables = tableDat.tables;
+    tableData = tableDat;
+
+    let keys = info.keys;
+    console.log(keys);
+    let s = info.s;
+    let processoInfoHTML = `
+        <ul class="list-unstyled components info-list">
+            <li>
+                <input class="form-control" type="text" id="nomeField" name="${keys[1]}" value="${s[keys[1]]}" disabled required/>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">OBJETO AUTOADO</span>
+                    <input class="form-control" type="text" name="${keys[2]}" value="${s[keys[2]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PROCESSO</span>
+                    ${composeM1JoinList(s[keys[3]], tablesKeys.processos, 'processo_id', 'num_processo')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">NOTIFICAÇÕES</span>
+                    ${composeM1JoinList(s[keys[4]], tablesKeys.notificaçoes, 'notif_id', 'num_notif')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">SITUAÇÃO</span>
+                    ${composeDropDownList(keys[5], tables[tablesKeys.situaçoes], s[keys[9]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">DATA DE EMISSÃO</span>
+                    <input class="form-control" type="text" name="${keys[6]}" value="${formatData(s[keys[6]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">DATA DE DEFESA</span>
+                    <input class="form-control" type="text" name="${keys[7]}" value="${formatData(s[keys[7]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">PRAZO</span>
+                    <input class="form-control" type="text" name="${keys[8]}" value="${formatData(s[keys[8]])}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">ORGÃO</span>
+                    ${composeDropDownList(keys[9], tables[tablesKeys.orgaos], s[keys[9]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">SETOR RESPONSÁVEL</span>
+                    <input class="form-control" type="text" name="${keys[10]}" value="${s[keys[10]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">OFÍCIOS</span>
+                    ${composeM1JoinList(s[keys[11]], tablesKeys.oficios, 'oficio_id', 'num_oficio')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">LICENÇAS</span>
+                    ${composeM1JoinList(s[keys[12]], tablesKeys.licenças, 'licen_id', 'num_licen')}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">MUNICÍPIO</span>
+                    ${composeDropDownList(keys[13], tables[tablesKeys.municipios], s[keys[6]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">UNID. DE NEGÓCIOS</span>
+                    ${composeDropDownList(keys[14], tables[tablesKeys.uns], s[keys[5]])}
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">SETOR</span>
+                    ${loadSetores(s[keys[15]], tables[tablesKeys.setoresSedes])}
+                </div>
+            </li>
         </ul>
     `;
     return processoInfoHTML;
@@ -820,6 +933,7 @@ export {
     loadSuperfView,
     loadOutorView,
     loadLicenView,
+    loadAutoView,
     loadProcessoView,
     loadNotifView,
     clearInfoForm,

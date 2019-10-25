@@ -1,5 +1,5 @@
 # UEMA-db (COSANPA-db)
-Desenvolvimento de uma interface acessível para o banco de dados contendo os pontos de captação de água da COSANPA
+Desenvolvimento de uma interface acessível para o banco de dados contendo os pontos de captação de água da COSANPA.
 
 ## Banco de dados
 Instância em servidor PostgresSQL v9+ com extensão PostGIS instalada

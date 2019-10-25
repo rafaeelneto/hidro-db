@@ -7085,6 +7085,12 @@ table-panel
         background: #022133;
         color: #F2F2F2; }
 
+.about-panel.active h4, .about-panel.active h5, footer h4, footer h5 {
+  color: #4e4e4e;
+  font-family: "Roboto", sans-serif;
+  line-height: 1.0;
+  font-weight: 700; }
+
 .about-panel.active {
   padding: 10% 0 10% 0; }
   .about-panel.active .group-panel {
@@ -7101,11 +7107,6 @@ table-panel
   .about-panel.active .company-credits {
     border-top: 2px solid #024454;
     padding: 10px 0px 10px 0px; }
-  .about-panel.active h4, .about-panel.active h5 {
-    color: #4e4e4e;
-    font-family: "Roboto", sans-serif;
-    line-height: 1.0;
-    font-weight: 700; }
   .about-panel.active h4 {
     font-size: 12pt; }
   .about-panel.active h5 {
