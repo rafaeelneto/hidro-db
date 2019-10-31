@@ -1,10 +1,19 @@
 const express = require("express");
+const cors = require('cors');
 const router = express.Router();
 const users = require('../models/Users');
 const tables = require('../models/Tables');
-const db = require('../database/db')
+const db = require('../database/db');
 
 resolve = require('path').resolve;
+
+router.get('/apikeys', cors(), function (req, res, next) {
+    res.json({
+        mapbox: process.env.MAPBOX_URL,
+        googlemaps: process.env.GOOGLEMAPS_URL
+    
+    })
+})
 
 function validate (req, res) {
     if (req.session.user && req.cookies.user_sid) {
@@ -24,6 +33,7 @@ router.get('/usr', (req, res) => {
         valid: users.isAuthorize
     }));
 });
+
 
 router.get('/apis', (req, res) => {
     res.send(JSON.stringify({

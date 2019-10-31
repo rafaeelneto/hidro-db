@@ -22,9 +22,19 @@ async function loadInfoQuery(base, url, query){
   }
 }
 
+async function getAPIKeys(){
+  try {
+    const response = await axios.get(dashboardBase + '/apikeys');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
     makeSimpleGetRequest,
     loadInfoQuery,
     dashboardBase,
+    getAPIKeys,
     infoURL
 }

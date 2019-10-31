@@ -176,17 +176,19 @@ function compose1MJoinList(key, tableName, keyColumn, propertyColumn, fKeyColumn
 
 function composeVazoesList(tableVazoes){
     let listItems = '';
-    for (let i = 0; i < tableVazoes.length; i++) {
-        const vazao = tableVazoes[i];
-
-        const newItem = `
-        <li>
-            <h6 class="d-flex justify-content-start align-items-center">
-                ${vazao['vazao']} m³/h em ${(formatData(vazao['data_medida']))}
-            </h6>
-        </li>`;
-
-        listItems = listItems + newItem;
+    if (tableVazoes.length !== 0){
+        for (let i = tableVazoes.length - 1; i > (tableVazoes.length - 6); i--) {
+            const vazao = tableVazoes[i];
+    
+            const newItem = `
+            <li>
+                <h6 class="d-flex justify-content-start align-items-center">
+                    ${vazao['vazao']} m³/h em ${(formatData(vazao['data_medida']))}
+                </h6>
+            </li>`;
+    
+            listItems = listItems + newItem;
+        }
     }
     return `
         <ul class="list-unstyled join-list">
@@ -829,7 +831,7 @@ function loadAutoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">SITUAÇÃO</span>
-                    ${composeDropDownList(keys[5], tables[tablesKeys.situaçoes], s[keys[9]])}
+                    <input class="form-control" type="text" name="${keys[5]}" value="${s[keys[5]]}" disabled required/>
                 </div>
             </li>
             <li>

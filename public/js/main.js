@@ -16,6 +16,7 @@ import * as requests from './requests';
 import {showPanel, removePanel} from './views/panelView';
 
 import {showResults, removeResults} from './views/searchView';
+import {getAPIKeys} from './requests';
 
 /**
  * ------------------------

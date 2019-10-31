@@ -1,5 +1,8 @@
 import {tablesKeys} from './../models/Data';
 import {elements} from './Base';
+import {getAPIKeys} from './../requests';
+
+
 
 let map;
 let layerControl;
@@ -11,11 +14,18 @@ const baseMaps = {
 };
 
 //FIX THE API KEYS TO THE ROUTE
-const schemathic = L.tileLayer('https://api.mapbox.com/styles/v1/rafaeel/cjz8tael002on1dqclsqt84ik/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicmFmYWVlbCIsImEiOiJjano4dDh1OHMwM2xtM2JwbG9jcWFmaXhzIn0.SihsXFXEW54INSxYcZ6_BQ', {
-	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-	maxZoom: 30,
-	id: 'mapbox.streets',
-	});
+let apiMapBox;
+let schemathic;
+
+(async () => {
+	const apiKeys = await getAPIKeys();
+	apiMapBox = apiKeys.mapbox;
+	schemathic = L.tileLayer(apiMapBox, {
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		maxZoom: 30,
+		id: 'mapbox.streets',
+		});
+})();
 
 //Google Mutante API used || valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
 const satellite = L.gridLayer.googleMutant({
