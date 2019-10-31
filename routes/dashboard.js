@@ -131,7 +131,6 @@ async function getInfo(type, id){
     }
 
     let joinTables = [];
-    console.log(columns);
 
     for (let i = 0; i < joinsQueries.length; i++) {
         let result = await db.query(joinsQueries[i](type, id), []);

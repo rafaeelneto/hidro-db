@@ -114,7 +114,6 @@ function composeMMJoinList(keys, tableName, keyColumn, propertyColumn){
 }
 
 function composeM1JoinList(key, tableName, keyColumn, propertyColumn){
-    console.log(key);
     const table = tableData.tables[tableName];
 
     if(table === undefined){
@@ -726,7 +725,6 @@ function loadLicenView(info, tableDat){
     tableData = tableDat;
 
     let keys = info.keys;
-    console.log(keys);
     let s = info.s;
     let processoInfoHTML = `
         <ul class="list-unstyled components info-list">
@@ -879,13 +877,13 @@ function loadAutoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">MUNICÍPIO</span>
-                    ${composeDropDownList(keys[13], tables[tablesKeys.municipios], s[keys[6]])}
+                    ${composeDropDownList(keys[13], tables[tablesKeys.municipios], s[keys[13]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">UNID. DE NEGÓCIOS</span>
-                    ${composeDropDownList(keys[14], tables[tablesKeys.uns], s[keys[5]])}
+                    ${composeDropDownList(keys[14], tables[tablesKeys.uns], s[keys[14]])}
                 </div>
             </li>
             <li>

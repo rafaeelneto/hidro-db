@@ -87,6 +87,8 @@ async function loadInfo(parent, type, id){
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
 	info = new Info(infoRes.table, infoRes.joinTables);
 
+	console.log(infoRes.table);
+
 	let htmlList;
 	let identif = '';
 	switch (infoRes.type){
@@ -292,7 +294,6 @@ function tableController(){
 
 function submitInfo(){
 	for (let i = 1; i < info.keys.length; i++) {
-		console.log(info.keys[i]);
 		if(!((info.keys[i] === 'usr_modif') || (info.keys[i] === 'data_modif') || (info.keys[i] === 'latitude') || (info.keys[i] === 'longitude'))){
 			const value = formActive.elements[info.keys[i]].value;
 		}
