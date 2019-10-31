@@ -1,6 +1,9 @@
 const { Pool } = require('pg');
 
-const pool = new Pool();
+const connectionString = `postgres://uema_publico:uemapublico@10.20.100.30:5432/uema`
+const pool = new Pool({
+    connectionString: connectionString
+});
 
 const querySelect = function(queryText, param){
     //pool.query(queryText, param)
