@@ -87,7 +87,7 @@ async function loadInfo(parent, type, id){
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
 	info = new Info(infoRes.table, infoRes.joinTables);
 
-	console.log(infoRes.table);
+	console.log(info.keys);
 
 	let htmlList;
 	let identif = '';

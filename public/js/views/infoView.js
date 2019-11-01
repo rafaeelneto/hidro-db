@@ -664,7 +664,7 @@ function loadNotifView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">OFÍCIO</span>
-                    ${composeDropDownList(keys[10], tables[tablesKeys.oficios], s[keys[10]])}
+                    ${composeM1JoinList(s[keys[10]], tablesKeys.oficios, 'oficio_id', 'num_oficio')}
                 </div>
             </li>
             <li>
@@ -694,7 +694,7 @@ function loadNotifView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">AUTOS DE INFRAÇÃO</span>
-                    ${compose1MJoinList(s[keys[0]], tablesKeys.autosInfraçao, 'autoifr_id', 'num_infra', 'processo_id')}
+                    ${compose1MJoinList(s[keys[0]], tablesKeys.autosInfraçao, 'autoifr_id', 'num_infra', 'notificaçao_id')}
                 </div>
             </li>
             <li>
@@ -705,14 +705,14 @@ function loadNotifView(info, tableDat){
             </li>
             <li>
                 <div class="form-group">
-                    <span class="label">UNID. DE NEGÓCIOS</span>
-                    ${composeDropDownList(keys[16], tables[tablesKeys.uns], s[keys[16]])}
+                    <span class="label">MUNICÍPIO</span>
+                    ${composeDropDownList(keys[16], tables[tablesKeys.municipios], s[keys[16]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
-                    <span class="label">MUNICÍPIO</span>
-                    ${composeDropDownList(keys[17], tables[tablesKeys.municipios], s[keys[17]])}
+                    <span class="label">UNID. DE NEGÓCIOS</span>
+                    ${composeDropDownList(keys[17], tables[tablesKeys.uns], s[keys[17]])}
                 </div>
             </li>
         </ul>
