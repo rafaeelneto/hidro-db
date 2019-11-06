@@ -6481,7 +6481,7 @@ h6 {
 
 .btn {
   margin: 15px 25% 0 25%;
-  color: #fff;
+  color: #043852;
   font-size: 12px;
   font-weight: 700;
   font-family: Roboto;
@@ -6620,7 +6620,10 @@ h6 {
   .info-div .btn {
     width: 70%; }
   .info-div #visitante {
+    border: 3px solid #043852;
     width: 200px; }
+    .info-div #visitante:hover, .info-div #visitante:focus {
+      border: 3px solid #fff; }
 
 footer {
   border-top: 1px solid #4e4e4e;

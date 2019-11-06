@@ -109,7 +109,7 @@ async function getInfo(type, id){
         case 'processo_id':
             tableName = tables.tableNames.processos;
             columns = tables.processoInfoColumns;
-            joinsQueries = [tables.superfProcessoJoinInfo, tables.superfProcessoJoinInfo];
+            joinsQueries = [tables.superfProcessoJoinInfo, tables.poçoProcessoJoinInfo];
             break;
         case 'notif_id':
             tableName = tables.tableNames.notificaçoes;

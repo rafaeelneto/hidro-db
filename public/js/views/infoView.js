@@ -2,7 +2,7 @@ import {elementSelectors, nullVeryfier, elements, formatData} from './Base';
 import Info from './../models/Info';
 import {tablesKeys, getKeyValues} from './../models/Data';
 
-const situaçoesValues = ['Ativo', 'Inativo', 'Em construção'];
+const situaçoesValues = ['Ativo', 'Inativo', 'Em construção', 'A construir'];
 const licenciamentoValues = ['Outorgado', 'Em processo', 'Sem outorga'];
 
 let tableData;
@@ -187,6 +187,9 @@ function composeVazoesList(tableVazoes){
             </li>`;
     
             listItems = listItems + newItem;
+            if(i === 0){
+                break;
+            }
         }
     }
     return `
@@ -544,32 +547,44 @@ function loadProcessoView(info, tableDat){
             </li>
             <li>
                 <div class="form-group">
+                    <span class="label">OBJETO DO PROCESSO</span>
+                    <input class="form-control" type="text" name="${keys[2]}" value="${s[keys[2]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
+                    <span class="label">DESCRIÇÃO</span>
+                    <input class="form-control" type="text" name="${keys[3]}" value="${s[keys[3]]}" disabled required/>
+                </div>
+            </li>
+            <li>
+                <div class="form-group">
                     <span class="label">DATA DE ENTRADA</span>
-                    <input class="form-control" type="text" name="${keys[2]}" value="${formatData(s[keys[2]])}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[4]}" value="${formatData(s[keys[4]])}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">ORGÃO</span>
-                    ${composeDropDownList(keys[3], tables[tablesKeys.orgaos], s[keys[3]])}
+                    ${composeDropDownList(keys[5], tables[tablesKeys.orgaos], s[keys[5]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">SITUAÇÃO</span>
-                    <input class="form-control" type="text" name="${keys[4]}" value="${s[keys[4]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[6]}" value="${s[keys[6]]}" disabled required/>
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">UNID. DE NEGÓCIOS</span>
-                    ${composeDropDownList(keys[5], tables[tablesKeys.uns], s[keys[5]])}
+                    ${composeDropDownList(keys[7], tables[tablesKeys.uns], s[keys[7]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">MUNICÍPIO</span>
-                    ${composeDropDownList(keys[6], tables[tablesKeys.municipios], s[keys[6]])}
+                    ${composeDropDownList(keys[8], tables[tablesKeys.municipios], s[keys[8]])}
                 </div>
             </li>
             <li>
@@ -588,13 +603,13 @@ function loadProcessoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">OUTORGAS</span>
-                    ${composeM1JoinList(keys[7], tablesKeys.outorgas, 'outorga_id', 'num_outorga')}
+                    ${composeM1JoinList(keys[9], tablesKeys.outorgas, 'outorga_id', 'num_outorga')}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">LICENÇAS</span>
-                    ${composeM1JoinList(keys[8], tablesKeys.licenças, 'licen_id', 'num_licen')}
+                    ${composeM1JoinList(keys[10], tablesKeys.licenças, 'licen_id', 'num_licen')}
                 </div>
             </li>
         </ul>
