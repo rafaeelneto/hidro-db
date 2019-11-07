@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "webpack": "webpack --watch --mode development",
+    "webpack-production": "webpack --mode production",
     "devStart": "nodemon app.js"
   },
   "nodemonConfig": {

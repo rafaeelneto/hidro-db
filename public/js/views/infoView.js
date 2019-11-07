@@ -8,7 +8,6 @@ const licenciamentoValues = ['Outorgado', 'Em processo', 'Sem outorga'];
 let tableData;
 
 function dataLoader(key, date){
-    console.log(date);
     if (date == '-' || date === null || date === undefined){
         return `<input class="form-control" type="text" name="${key}" value="-" disabled required/>`
     }else{
