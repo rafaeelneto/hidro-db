@@ -235,6 +235,7 @@ h6{
     padding: 20% 25px 20% 25px;
     img{
         height: 370px;
+        flex-shrink: 0;
     }
     p{
         font-family: $open-sans;
@@ -960,17 +961,19 @@ info panel
     }
     input, select{
         width: 100%;
-        padding: 0px;
-        background: $light;
+        padding-left: 10px;
+        background: #fff;
         border: none;
-        border-bottom: 2px solid $primaryMiddleLght;
         outline: none;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 3px 0 rgba(0, 0, 0, 0.19);
         &:disabled{
             background: $light;
             border: none;
+            box-shadow: none;
         }
     }
     #nomeField{
+        padding-left: 0px;
         font-family: $roboto;
         font-weight: 700;
         font-size: 30px;

@@ -6612,7 +6612,8 @@ h6 {
   height: 100vh;
   padding: 20% 25px 20% 25px; }
   .info-div img {
-    height: 370px; }
+    height: 370px;
+    flex-shrink: 0; }
   .info-div p {
     font-family: "Open Sans", sans-serif;
     font-size: 14px;
@@ -7195,16 +7196,18 @@ info panel
 
 .info-form-group input, .info-form-group select {
   width: 100%;
-  padding: 0px;
-  background: #F2F2F2;
+  padding-left: 10px;
+  background: #fff;
   border: none;
-  border-bottom: 2px solid #42919A;
-  outline: none; }
+  outline: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 3px 0 rgba(0, 0, 0, 0.19); }
   .info-form-group input:disabled, .info-form-group select:disabled {
     background: #F2F2F2;
-    border: none; }
+    border: none;
+    box-shadow: none; }
 
 .info-form-group #nomeField {
+  padding-left: 0px;
   font-family: "Roboto", sans-serif;
   font-weight: 700;
   font-size: 30px; }

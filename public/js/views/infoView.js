@@ -1,4 +1,4 @@
-import {elementSelectors, nullVeryfier, elements, formatData} from './Base';
+import {elementSelectors, nullVeryfier, elements, formatData2Form, formatDateText, formatDate} from './Base';
 import Info from './../models/Info';
 import {tablesKeys, getKeyValues} from './../models/Data';
 
@@ -7,7 +7,16 @@ const licenciamentoValues = ['Outorgado', 'Em processo', 'Sem outorga'];
 
 let tableData;
 
-function linkVerifier(link){
+function dataLoader(key, date){
+    console.log(date);
+    if (date == '-' || date === null || date === undefined){
+        return `<input class="form-control" type="text" name="${key}" value="-" disabled required/>`
+    }else{
+        return `<input class="form-control" type="date" name="${key}" value="${formatDate(date)}" disabled required/>`
+    }
+}
+
+function linkLoader(link){
     if(link !== '-'){
         return `
         <a href="${link}" target="_blank">
@@ -70,7 +79,7 @@ function composeDropDownList (type, features, selectID){
     }
 
     let dropList = `
-    <select class = "browser-default custom-select" name="${type} disabled">
+    <select class = "browser-default custom-select" name="${type}" disabled>
         ${optionsList}
     </select>
     `;
@@ -182,7 +191,7 @@ function composeVazoesList(tableVazoes){
             const newItem = `
             <li>
                 <h6 class="d-flex justify-content-start align-items-center">
-                    ${vazao['vazao']} m³/h em ${(formatData(vazao['data_medida']))}
+                    ${vazao['vazao']} m³/h em ${(formatDateText(vazao['data_medida']))}
                 </h6>
             </li>`;
     
@@ -279,13 +288,13 @@ function loadPoçoView(info, tableDat){
             <li>
                 <div class=form-groupt">
                     <span class="label">DATA OPERAÇÃO</span>
-                    <input class="form-control" type="text" name="${keys[15]}" value="${formatData(s[keys[15]])}" disabled required/>
+                    ${dataLoader(keys[15], s[keys[15]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">DATA PERFURAÇÃO</span>
-                    <input class="form-control" type="text" name="${keys[16]}" value="${formatData(s[keys[16]])}" disabled required/>
+                    ${dataLoader(keys[16], s[keys[16]])}
                 </div>
             </li>
             <li>
@@ -303,7 +312,7 @@ function loadPoçoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">RELATÓRIO</span>
-                    ${linkVerifier(s[keys[19]])}
+                    ${linkLoader(s[keys[19]])}
                 </div>
             </li>
             <li>
@@ -327,7 +336,7 @@ function loadPoçoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">OBS</span>
-                    <textarea class="form-control" name="${keys[21]}">${s[keys[21]]}</textarea>
+                    <textarea class="form-control" name="${keys[21]}" disabled>${s[keys[21]]}</textarea>
                 </div>
             </li>
         </ul>
@@ -391,7 +400,7 @@ function loadSuperfView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">DATA OPERAÇÃO</span>
-                    <input class="form-control" type="date" name="${keys[12]}" value="${formatData(s[keys[12]])}" disabled required/>
+                    ${dataLoader(keys[12], s[keys[12]])}
                 </div>
             </li>
             <li>
@@ -409,7 +418,7 @@ function loadSuperfView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">RELATÓRIO</span>
-                    ${linkVerifier(s[keys[15]])}
+                    ${linkLoader(s[keys[15]])}
                 </div>
             </li>
             <li>
@@ -460,13 +469,13 @@ function loadOutorView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">DATA DE ENTRADA</span>
-                    <input class="form-control" type="text" name="${keys[3]}" value="${formatData(s[keys[3]])}" disabled required/>
+                    ${dataLoader(keys[3], s[keys[3]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">VALIDADE</span>
-                    <input class="form-control" type="text" name="${keys[4]}" value="${formatData(s[keys[4]])}" disabled required/>
+                    ${dataLoader(keys[4], s[keys[4]])}
                 </div>
             </li>
             <li>
@@ -484,7 +493,7 @@ function loadOutorView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">LINK DA OUTORGA</span>
-                    ${linkVerifier(s[keys[7]])}
+                    ${linkLoader(s[keys[7]])}
                 </div>
             </li>
             <li>
@@ -496,7 +505,7 @@ function loadOutorView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">OBSERVAÇÃO</span>
-                    <textarea class="form-control" name="${keys[9]}">${s[keys[9]]}</textarea>
+                    <textarea class="form-control" name="${keys[9]}" disabled>${s[keys[9]]}</textarea>
                 </div>
             </li>
             <li>
@@ -560,7 +569,7 @@ function loadProcessoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">DATA DE ENTRADA</span>
-                    <input class="form-control" type="text" name="${keys[4]}" value="${formatData(s[keys[4]])}" disabled required/>
+                    ${dataLoader(keys[4], s[keys[4]])}
                 </div>
             </li>
             <li>
@@ -637,25 +646,25 @@ function loadNotifView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">PRAZO</span>
-                    <input class="form-control" type="text" name="${keys[3]}" value="${formatData(s[keys[3]])}" disabled required/>
+                    ${dataLoader(keys[3], s[keys[3]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">DATA DE EMISSÃO</span>
-                    <input class="form-control" type="text" name="${keys[4]}" value="${formatData(s[keys[4]])}" disabled required/>
+                    ${dataLoader(keys[4], s[keys[4]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">DATA DE RECEBIMENTO</span>
-                    <input class="form-control" type="text" name="${keys[5]}" value="${formatData(s[keys[5]])}" disabled required/>
+                    ${dataLoader(keys[5], s[keys[5]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">DATA DA RESPOSTA</span>
-                    <input class="form-control" type="text" name="${keys[6]}" value="${formatData(s[keys[6]])}" disabled required/>
+                    ${dataLoader(keys[6], s[keys[6]])}
                 </div>
             </li>
             <li>
@@ -685,7 +694,7 @@ function loadNotifView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">OBSERVAÇÕES</span>
-                    <textarea class="form-control" name="${keys[11]}">${s[keys[11]]}</textarea>
+                    <textarea class="form-control" name="${keys[11]}" disabled>${s[keys[11]]}</textarea>
                 </div>
             </li>
             <li>
@@ -755,13 +764,13 @@ function loadLicenView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">DATA DE ENTRADA</span>
-                    <input class="form-control" type="text" name="${keys[3]}" value="${formatData(s[keys[3]])}" disabled required/>
+                    ${dataLoader(keys[3], s[keys[3]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">VALIDADE</span>
-                    <input class="form-control" type="text" name="${keys[4]}" value="${formatData(s[keys[4]])}" disabled required/>
+                    ${dataLoader(keys[4], s[keys[4]])}
                 </div>
             </li>
             <li>
@@ -773,7 +782,7 @@ function loadLicenView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">ARQUIVO DA LICENÇA</span>
-                    ${linkVerifier(s[keys[6]])}
+                    ${linkLoader(s[keys[6]])}
                 </div>
             </li>
             <li>
@@ -844,25 +853,25 @@ function loadAutoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">SITUAÇÃO</span>
-                    <input class="form-control" type="text" name="${keys[5]}" value="${s[keys[5]]}" disabled required/>
+                    ${dataLoader(keys[5], s[keys[5]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">DATA DE EMISSÃO</span>
-                    <input class="form-control" type="text" name="${keys[6]}" value="${formatData(s[keys[6]])}" disabled required/>
+                    ${dataLoader(keys[6], s[keys[6]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">DATA DE DEFESA</span>
-                    <input class="form-control" type="text" name="${keys[7]}" value="${formatData(s[keys[7]])}" disabled required/>
+                    ${dataLoader(keys[7], s[keys[7]])}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">PRAZO</span>
-                    <input class="form-control" type="text" name="${keys[8]}" value="${formatData(s[keys[8]])}" disabled required/>
+                    ${dataLoader(keys[8], s[keys[8]])}
                 </div>
             </li>
             <li>

@@ -65,7 +65,13 @@ export const nullReplace = (v)=> {
     }
 }
 
-export const formatData = (date) => {
+export const formatDate = (date) => {
+    function pad(s) { return (s < 10) ? '0' + s : s; }
+    var d = new Date(date)
+    return [d.getFullYear(), pad(d.getMonth()+1), pad(d.getDate())].join('-')
+}
+
+export const formatDateText = (date) => {
     function pad(s) { return (s < 10) ? '0' + s : s; }
     var d = new Date(date)
     return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
