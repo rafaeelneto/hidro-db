@@ -529,7 +529,7 @@ function loadOutorView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">PROCESSOS</span>
-                    ${compose1MJoinList(s[keys[0]], tablesKeys.notificaçoes, 'processo_id', 'num_processo', 'outorga_id')}
+                    ${compose1MJoinList(s[keys[0]], tablesKeys.processos, 'processo_id', 'num_processo', 'outorga_id')}
                 </div>
             </li>
             <li>
@@ -611,13 +611,13 @@ function loadProcessoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">OUTORGAS</span>
-                    ${composeM1JoinList(keys[9], tablesKeys.outorgas, 'outorga_id', 'num_outorga')}
+                    ${composeM1JoinList(s[keys[9]], tablesKeys.outorgas, 'outorga_id', 'num_outorga')}
                 </div>
             </li>
             <li>
                 <div class="form-group">
                     <span class="label">LICENÇAS</span>
-                    ${composeM1JoinList(keys[10], tablesKeys.licenças, 'licen_id', 'num_licen')}
+                    ${composeM1JoinList(s[keys[10]], tablesKeys.licenças, 'licen_id', 'num_licen')}
                 </div>
             </li>
         </ul>
