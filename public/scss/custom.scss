@@ -143,7 +143,9 @@ h6{
         margin: 10px 10px 0 0;
     }
     .btn-blue{
+        color: #fff;
         background: $dark;
+        border: 2px solid #fff;
         &:hover{
             color: #fff;
             background: $primary;
@@ -256,10 +258,17 @@ h6{
 
 footer{
     border-top: 1px solid $dark;
-    padding-top: 15px;
+    padding: 15px;
     .logos-div{
         float: left;
     }
+    .credits{
+        h4, h5{
+            font-weight: 600;
+        }
+        text-align: right;
+    }
+
     img{
         height: 50px;
         margin: 10px;

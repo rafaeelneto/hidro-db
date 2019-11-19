@@ -6533,7 +6533,9 @@ h6 {
     height: 40px;
     margin: 10px 10px 0 0; }
   .login-box .btn-blue {
-    background: #4e4e4e; }
+    color: #fff;
+    background: #4e4e4e;
+    border: 2px solid #fff; }
     .login-box .btn-blue:hover {
       color: #fff;
       background: #043852;
@@ -6628,9 +6630,13 @@ h6 {
 
 footer {
   border-top: 1px solid #4e4e4e;
-  padding-top: 15px; }
+  padding: 15px; }
   footer .logos-div {
     float: left; }
+  footer .credits {
+    text-align: right; }
+    footer .credits h4, footer .credits h5 {
+      font-weight: 600; }
   footer img {
     height: 50px;
     margin: 10px; }
