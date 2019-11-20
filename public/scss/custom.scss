@@ -901,7 +901,7 @@ table-panel
         font-weight: 700;
         color: $orange;
     }
-    li:hover{
+    li.active, li:hover{
         background: $lightMiddle;
     }
 }

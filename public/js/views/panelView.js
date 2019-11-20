@@ -10,10 +10,10 @@ function showPanel(tableTitle, values, identifHash, id){
         const element = values[i];
         let classIdentf = '';
         if(id == element[0]){
-            classIdentf = `class="active"`;
+            classIdentf = `active`;
         }
         const newItem = `
-        <li ${classIdentf}>
+        <li class="panel-item i${i} ${classIdentf}">
             <a href="#${identifHash}=${element[0]}">${element[1]}</a>
         </li>`;
 

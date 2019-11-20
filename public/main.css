@@ -7149,7 +7149,7 @@ table-panel
   font-weight: 700;
   color: #E3A84F; }
 
-.list-reg li:hover, .result-list li:hover, .credits li:hover {
+.list-reg li.active, .list-reg li:hover, .result-list li.active, .result-list li:hover, .credits li.active, .credits li:hover {
   background: #e8e8e8; }
 
 .credits li {

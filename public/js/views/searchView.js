@@ -9,7 +9,7 @@ function showResults(list){
     for (let i = 0; i < list.length; i++) {
         const element = list[i];
         const newItem = `
-        <li>
+        <li class = 'result-item i${i}'>
             <a class="d-flex justify-content-between align-items-center" href="#${element.tableName}=${element.id}">
                 ${element.label}
                 <small>${element.tableLabel}</small>

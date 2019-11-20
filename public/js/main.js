@@ -203,6 +203,9 @@ for (const i in elements.closePanelBtn) {
 window.addEventListener('hashchange', tableController);
 
 function tableController(){
+
+	removeResults();
+
 	const hash = window.location.hash.replace('#', '').replace('%C3%A7', 'ç');
 	const id = hash.split('=')[1];
 
@@ -283,7 +286,10 @@ function tableController(){
 		identifHash = hash;
 	}
 
+	
 	showPanel(tableTitle, objArrays.values, identifHash, id);
+
+	document.querySelector('.panel-item.active').scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
 }
 
 /**
@@ -312,7 +318,7 @@ for (let i = 0; i < elements.uploadButton.length; i++) {
  * ------------------------
 */
 
-function search(input){
+function search(){
 	let list = [];
 	const query = elements.searchInput.value;
 	elements.cleanSearchBox.classList.add('active');
@@ -332,6 +338,47 @@ function search(input){
 		removeResults();
 	}
 }
+
+document.addEventListener('keydown', e => {
+	if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+		let columnMenuItems = document.querySelectorAll('.result-item');
+		let index;
+		for (let i = 0; i < columnMenuItems.length; i++) {
+			if (columnMenuItems[i].classList.contains('active') === true) {
+				index = i;
+			}
+		}
+
+		if(index !== undefined){
+			document.querySelector(`.result-item.i${index}`).classList.remove('active');
+			let item;
+			if (e.key === 'ArrowDown'){
+				item = document.querySelector(`.result-item.i${index+1}`);
+			}else if (e.key === 'ArrowUp'){
+				item = document.querySelector(`.result-item.i${index-1}`);
+			}
+			item.classList.add('active');
+		}else{
+			let item;
+			if (e.key === 'ArrowDown'){
+				item = document.querySelector(`.result-item.i0`);
+			}else if (e.key === 'ArrowUp'){
+				item = document.querySelector(`.result-item.i${columnMenuItems.length-1}`);
+			}
+			item.classList.add('active');
+		}
+
+		document.querySelector('.result-item.active').scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+	}
+});
+
+document.addEventListener('keypress', e => {
+	if (event.which == 13 || event.keyCode == 13){
+		console.log(document.querySelector('.result-item.active a'));
+		document.querySelector('.result-item.active a').click();
+	}
+});
+
 
 elements.cleanSearchBox.addEventListener('click', ()=>{
 	removeResults();
