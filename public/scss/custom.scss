@@ -1006,18 +1006,125 @@ info panel
 }
 
 @media print{
-    .coord-box{
-        display: none;
-    }
     @page {
-        size: landscape
+        size: portrait;
     }
-    .omnibox, .search_box, .results-search{
+
+    body{
+        margin: 0;
+        color: #000;
+        background-color: #fff;
+    }
+
+
+    
+    .wrapper, #map, .map-view.show{
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: block;
+    }
+    
+    .info-sidebar {
+        overflow-y: auto;
+        width: 0; //MUDAR
+        position: fixed; 
+        z-index: 2;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        &.active{
+            padding: 0.5cm;
+            display: block;
+            width: 10cm;
+        }
+        .infobar-section{
+            border-top: 2px solid $primaryMiddleDrk;
+        }
+        #close-infoside-btn{
+            display: none;
+        }
+    }
+    
+    .content.info-active{
+        margin-right: 0;
+        margin-left: 10cm;
+    }
+
+    .omnibox, .search_box, .results-search, .coord-box{
         display: none;
     }
     .leaflet-touch {
         .leaflet-control-layers, .leaflet-control-zoom.leaflet-bar{
-            display: none
+            display: none;
+        }
+    }
+
+    .label{
+        page-break-before: always;
+    }
+
+    a[href^="http"]::after {
+        content: " (" attr(href) ")";
+    }
+
+    .info-form-group{
+        display: block;
+        h6, a{
+            font-size: 14pt;
+        }
+        li, .form-group{
+            margin-bottom: 0;
+            padding: 0;
+            font-size: 16pt;
+            input{
+                page-break-before: auto;
+            }
+            #nomeField{
+                font-size: 18pt;
+            }
+        }
+    }
+
+    .table-panel{
+        display: none;
+        &.active{
+            display: flex;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: rgba(88, 88, 88, 0.445);
+            .group-panel{
+                height: 100%;
+                background: $light;
+                .group-sections{
+                    height: 100%;
+                    >*{
+                        flex-direction: column;
+                        flex: 0 0 auto;			
+                        overflow-y: scroll;
+                    }
+                    .list-group{
+                        display: none;
+                    }
+                    section{
+                        width: 100%;
+                        .info-group{
+                            padding-left: 2%;
+                        }
+                        #info-form{
+                            width: 100%;
+                        }
+                    }
+                }
+                .panel-header{
+                    border-bottom: 3px solid $primaryMiddleDrk;
+                }
+            }
+            .close-panel-btn{
+                display: none;
+            }
         }
     }
 }

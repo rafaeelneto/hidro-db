@@ -69,7 +69,7 @@ const tableData = new TableData();
 	const name = await user.getUser();
 	elements.userNameID.innerHTML = name;
 	if(name === 'visitante'){
-		elements.logoutBtnID.innerHTML = 'Entrar';
+		//elements.logoutBtnID.innerHTML = 'Sair';
 	}
 	await tableData.loadAll();
 	loadMap();
@@ -382,7 +382,6 @@ document.addEventListener('keypress', e => {
 
 elements.cleanSearchBox.addEventListener('click', ()=>{
 	removeResults();
-	elements.searchInput.value = '';
 })
 
 elements.searchInput.addEventListener('input', search);

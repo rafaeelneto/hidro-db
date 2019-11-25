@@ -138,9 +138,41 @@ function composeM1JoinList(key, tableName, keyColumn, propertyColumn){
         let value = table[i][propertyColumn];
         if(id == key){
             link = `
-            <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${key}">
+            <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${id}">
                 ${value}
             </a>`;
+        }
+    }
+    
+    return link;
+}
+
+function loadDirectLink(key, tableName, keyColumn, propertyColumn, linkColumn){
+    const table = tableData.tables[tableName];
+
+    if(table === undefined){
+        return '';
+    }
+
+    let link = ''
+    
+    for (let i = 0; i < table.length; i++) {
+        let id = table[i][keyColumn];
+        if(id == key){
+            let value = table[i][propertyColumn];
+            let linkAndress = table[i][linkColumn];
+            console.log(linkAndress);
+            if (linkAndress === undefined){
+                link = `
+                <h6 class="d-flex justify-content-between align-items-center">
+                    ${value}
+                </h6>`;
+            }else{
+                link = `
+                <a class="d-flex justify-content-between align-items-center" target="_blank" href="${linkAndress}">
+                    ${value}
+                </a>`;
+            }
         }
     }
     
@@ -393,7 +425,7 @@ function loadSuperfView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">VAZÃO MÁXIMA (m³/h)</span>
-                    <input class="form-control" type="date" name="${keys[11]}" value="${s[keys[11]]}" disabled required/>
+                    <input class="form-control" type="text" name="${keys[11]}" value="${s[keys[11]]}" disabled required/>
                 </div>
             </li>
             <li>
@@ -675,7 +707,7 @@ function loadNotifView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">CONDICIONANTES</span>
-                    <textarea class="form-control" name="${keys[8]}">${s[keys[8]]}</textarea>
+                    <textarea class="form-control" name="${keys[8]}" disabled>${s[keys[8]]}</textarea>
                 </div>
             </li>
             <li>
@@ -852,7 +884,7 @@ function loadAutoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">SITUAÇÃO</span>
-                    ${dataLoader(keys[5], s[keys[5]])}
+                    <input class="form-control" type="text" name="${keys[5]}" value="${s[keys[5]]}" disabled required/>
                 </div>
             </li>
             <li>
@@ -888,7 +920,7 @@ function loadAutoView(info, tableDat){
             <li>
                 <div class="form-group">
                     <span class="label">OFÍCIOS</span>
-                    ${composeM1JoinList(s[keys[11]], tablesKeys.oficios, 'oficio_id', 'num_oficio')}
+                    ${loadDirectLink(s[keys[11]], tablesKeys.oficios, 'oficio_id', 'num_oficio', 'link_oficio')}
                 </div>
             </li>
             <li>
