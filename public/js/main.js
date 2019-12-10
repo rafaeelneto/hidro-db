@@ -10,12 +10,14 @@ import Info from './models/Info';
 import * as mapView from './views/mapView';
 import {loadPoçoView, loadSuperfView, loadOutorView, loadLicenView, loadAutoView, loadInfoForm, clearInfoForm, loadProcessoView, loadNotifView} from './views/infoView';
 
+
 import TableData from './models/TableData';
 import * as requests from './requests';
 
 import {showPanel, removePanel} from './views/panelView';
 
 import {showResults, removeResults} from './views/searchView';
+
 import {getAPIKeys} from './requests';
 
 /**
@@ -86,8 +88,6 @@ const tableData = new TableData();
 async function loadInfo(parent, type, id){
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
 	info = new Info(infoRes.table, infoRes.joinTables);
-
-	console.log(info.s);
 
 	let htmlList;
 	let identif = '';
@@ -203,9 +203,7 @@ for (const i in elements.closePanelBtn) {
 window.addEventListener('hashchange', tableController);
 
 function tableController(){
-
 	removeResults();
-
 	const hash = window.location.hash.replace('#', '').replace('%C3%A7', 'ç');
 	const id = hash.split('=')[1];
 
@@ -286,7 +284,6 @@ function tableController(){
 		identifHash = hash;
 	}
 
-	
 	showPanel(tableTitle, objArrays.values, identifHash, id);
 
 	document.querySelector('.panel-item.active').scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});

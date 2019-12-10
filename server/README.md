@@ -9,9 +9,3 @@ systemctl enable uema
 ### Nginx configuration
 
 Arquivo: uema.conf
-
-
-
-### Pre requisitos
-- nodejs 
-- build-essential

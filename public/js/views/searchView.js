@@ -68,7 +68,10 @@ function clearList(){
 function removeResults(){
      elements.resultDiv.classList.remove('active');
      elements.cleanSearchBox.classList.remove('active');
+<<<<<<< HEAD
      elements.searchInput.value = '';
+=======
+>>>>>>> development
 }
 
 export {

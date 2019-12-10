@@ -10,8 +10,6 @@ const session = require('express-session');
 
 const db = require('./database/db');
 
-
-
 const users = require('./models/Users');
 
 const dashboard = require('./routes/dashboard');
@@ -25,7 +23,6 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "localhost");
   
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
     next();
 });
 
