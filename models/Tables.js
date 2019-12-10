@@ -52,9 +52,22 @@ async function getGIS(table, columns, conditions, param){
     return result.rows[0];
 }
 
-async function getTableGeneric(table, columns){
-    const result = await db.query(`SELECT ${columns} FROM ${table}`, []);
-    return result.rows;
+async function getTable(table, columns){
+    try{
+        const result = await db.query(`SELECT ${columns} FROM ${table}`, []);
+        return result.rows;
+    }catch(error){
+        console.log(error);
+    }
+}
+
+async function getTableCondit(table, columns, conditions){
+    try{
+        const result = await db.query(`SELECT ${columns} FROM ${table} WHERE ${conditions}`, []);
+        return result.rows;
+    }catch(error){
+        console.log(error);
+    }
 }
 
 async function getInfo(table, columns, options, conditions, param){
@@ -85,7 +98,8 @@ const tableNames = {
 //function
 exports.getGIS = getGIS;
 exports.getInfo = getInfo;
-exports.getTableGeneric = getTableGeneric;
+exports.getTable = getTable;
+exports.getTableCondit = getTableCondit;
 
 exports.tableNames = tableNames;
 

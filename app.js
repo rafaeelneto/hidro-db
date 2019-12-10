@@ -8,6 +8,10 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
+const db = require('./database/db');
+
+
+
 const users = require('./models/Users');
 
 const dashboard = require('./routes/dashboard');
@@ -15,13 +19,13 @@ const dashboard = require('./routes/dashboard');
 //Configure the express extension
 const app = express();
 
- //app.use(cors());
+//app.use(cors());
 app.use(function(req, res, next) {
 
     res.header("Access-Control-Allow-Origin", "localhost");
   
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  
+
     next();
 });
 
@@ -46,7 +50,7 @@ app.use((req, res, next) => {
 });
 
 //Check for logged users
-var sessionChecker = (req, res, next) => {
+const sessionChecker = (req, res, next) => {
     if (req.session.user && req.cookies.user_sid) {
         res.redirect('/dashboard');
     } else {
@@ -59,9 +63,19 @@ const passTo = (req, res, username) => {
     res.redirect('/dashboard');
 }
 
+app.route('/test').get(async (req, res, next) => {
+    try{
+        const resultQuery = await db.query('SELECT * FROM processos', []);
+        console.log('requisição ao servidor');
+        res.json(resultQuery);
+    } catch(error){
+        res.send(error);
+    }
+});
+
 //The index and login acess
 app.route('/')
-.get(sessionChecker, (reg, res) => {
+.get(sessionChecker, (req, res, next) => {
     res.sendFile(__dirname + '/public/index.html');
 })
 .post(sessionChecker, async (req, res) => {
@@ -72,7 +86,9 @@ app.route('/')
     if(username == users.visitante){
         password = username;
     }
+
     const isValid = await users.autheticateUser(username, password);
+    
     if (isValid) {
         passTo(req, res, username);
     }else{
@@ -81,7 +97,7 @@ app.route('/')
 });
 
 app.route('/usr/create')
-.post(sessionChecker, async (req, res) => {
+.post(async (req, res) => {
 
     let usernameAdmin = req.body.usernameAdmin;
     let passwordAdmin = req.body.passwordAdmin;
@@ -105,7 +121,7 @@ app.route('/usr/create')
 //Server the static files of the public folder
 app.use('/', express.static('./public/'));
 
-//Acess to the dashboard
+//Access to the dashboard
 app.use('/dashboard', dashboard);
 
 //Logout
@@ -119,5 +135,5 @@ app.get('/logout', (req, res) => {
 
 //Initialize the server on the enviroment port
 app.listen(process.env.PORT || 3000, ()=>{
-    console.log(`Listening on port ${process.env.PORT}`)
+    console.log(`Listening on port ${process.env.PORT}`);
 });

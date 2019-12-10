@@ -161,7 +161,6 @@ function loadDirectLink(key, tableName, keyColumn, propertyColumn, linkColumn){
         if(id == key){
             let value = table[i][propertyColumn];
             let linkAndress = table[i][linkColumn];
-            console.log(linkAndress);
             if (linkAndress === undefined){
                 link = `
                 <h6 class="d-flex justify-content-between align-items-center">
@@ -856,7 +855,6 @@ function loadAutoView(info, tableDat){
     tableData = tableDat;
 
     let keys = info.keys;
-    console.log(keys);
     let s = info.s;
     let processoInfoHTML = `
         <ul class="list-unstyled components info-list">

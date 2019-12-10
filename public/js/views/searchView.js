@@ -1,5 +1,5 @@
 import {loadPoçoView, loadSuperfView, loadOutorView, loadInfoForm, clearInfoForm} from './../views/infoView';
-import {elements, elementSelectors} from './../views/Base';
+import {elements, elementSelectors, breakLineOnSpace} from './../views/Base';
 
 function showResults(list){
     clearList();
@@ -8,10 +8,29 @@ function showResults(list){
     let listItems = '';
     for (let i = 0; i < list.length; i++) {
         const element = list[i];
+        
+        element.label = breakLineOnSpace(element.label, 25);
+        
+        let label = `
+        <div class="d-block">
+            ${element.label}
+        </div>
+        `;
+
+        if (element.auxLabel !== undefined || element.auxLabel == ''){
+            element.auxLabel = breakLineOnSpace(element.auxLabel, 30);
+            label = `
+            <div class="d-block">
+                ${element.label}
+                <div class="aux-label">${element.auxLabel}</div>
+            </div>
+            `
+        }
+
         const newItem = `
         <li class = 'result-item i${i}'>
             <a class="d-flex justify-content-between align-items-center" href="#${element.tableName}=${element.id}">
-                ${element.label}
+                ${label}
                 <small>${element.tableLabel}</small>
             </a>
         </li>`;

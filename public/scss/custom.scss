@@ -364,8 +364,19 @@ footer{
         border-radius: 10px;
         margin-bottom: 0;
         transition: all 0.4s;
-        a{
-            font-size: 15px;
+        max-width:100%;
+        a{  
+            display: block;
+            font-size: 14px;
+            div{
+                max-width: 70%;
+            }
+            .aux-label{
+                font-size: 11px;
+                color: $primaryMiddleDrk;
+                max-width: 100%;
+                word-wrap:break-word;
+            }
             small{
                 background: $orange;
                 border-radius: 20px;
@@ -572,7 +583,6 @@ $infoBarTable: 50vh;
 $infoBarBorder: 10px;
 
 .info-sidebar {
-    overflow-y: auto;
     transition: all 0.3s;
     width: 0; //MUDAR
     max-width: $infoBarMapPhone;
@@ -588,11 +598,14 @@ $infoBarBorder: 10px;
         width: $infoBarMapPhone;
         padding: $infoBarBorder  0 0 $infoBarBorder*5;
     }
+    
     .infobar-section{
+        overflow-y: auto;
+        height: 100%;
         border-top: 2px solid $primaryMiddleDrk;
     }
     #close-infoside-btn{
-        margin-top: 60px;
+        margin-top: 10px;
         margin-left: $infoBarBorder;
         position: absolute;
         z-index: 1;
@@ -783,6 +796,18 @@ table-panel
         height: 100%;
         width: 100%;
         background: rgba(88, 88, 88, 0.445);
+        #filterInput{
+            position: sticky;
+            top: 5px;
+            margin: 5px 5px 5px 0;
+            padding-left: 10px;
+            border: 2px solid #fff;
+            border-radius: 50px;
+            outline: none;
+            &:focus{
+                border: 2px solid $primaryMiddleLght;
+            }
+        }
         .group-panel{
             height: 80vh;
             background: $light;
@@ -1102,7 +1127,7 @@ info panel
                     height: 100%;
                     >*{
                         flex-direction: column;
-                        flex: 0 0 auto;			
+                        flex: 0 0 auto;
                         overflow-y: scroll;
                     }
                     .list-group{

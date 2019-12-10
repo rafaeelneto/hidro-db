@@ -69,7 +69,7 @@ const tableData = new TableData();
 	const name = await user.getUser();
 	elements.userNameID.innerHTML = name;
 	if(name === 'visitante'){
-		//elements.logoutBtnID.innerHTML = 'Sair';
+		elements.logoutBtnID.innerHTML = 'Entrar';
 	}
 	await tableData.loadAll();
 	loadMap();
@@ -290,6 +290,8 @@ function tableController(){
 	showPanel(tableTitle, objArrays.values, identifHash, id);
 
 	document.querySelector('.panel-item.active').scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
+
+	document.getElementById('myInput').addEventListener('input', filterList);
 }
 
 /**
@@ -327,7 +329,8 @@ function search(){
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.capSuperf), tablesKeys.capSuperf, 'Cap. Superf.', 'nome'));
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.setoresSedes), tablesKeys.setoresSedes, 'Setor', 'nome'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.outorgas], tablesKeys.outorgas, 'Outorga', 'num_outorga'));
-	list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'num_processo'));
+	list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'num_processo', 'obj_processo'));
+	list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'obj_processo', 'num_processo'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.licenças], tablesKeys.licenças, 'Licença', 'num_licen'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.autosInfraçao], tablesKeys.autosInfraçao, 'Auto de Infração', 'num_infra'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.notificaçoes], tablesKeys.notificaçoes, 'Notificação', 'num_notif'));
@@ -374,7 +377,6 @@ document.addEventListener('keydown', e => {
 
 document.addEventListener('keypress', e => {
 	if (event.which == 13 || event.keyCode == 13){
-		console.log(document.querySelector('.result-item.active a'));
 		document.querySelector('.result-item.active a').click();
 	}
 });

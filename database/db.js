@@ -1,6 +1,8 @@
 const { Pool } = require('pg');
 
-const connectionString = `postgres://uema_publico:uemapublico@10.20.100.30:5432/uema`
+//const connectionString = `postgres://uema_publico:uemapublico@10.20.100.30:5432/uema`
+
+const connectionString = `postgres://uema_user:uema2611@10.20.100.30:5432/uema`
 const pool = new Pool({
     connectionString: connectionString
 });

@@ -47,7 +47,9 @@ export const elements = {
 export const elementSelectors = {
     infoGroup: '.info-group',
     listRegisters: '.list-reg',
-    listResults: '.result-list'
+    listResults: '.result-list',
+    panelListItem: '.panel-item',
+    filterInput: 'filterInput'
 }
 
 export const nullVeryfier = (v)=> {
@@ -63,6 +65,23 @@ export const nullReplace = (v)=> {
     }else{
         return v;
     }
+}
+
+export const breakLineOnSpace = (text, maxChar) =>{
+    const textArray = text.split(" ");
+
+    let textBreaked = '';
+
+    for (let i = 0; i < textArray.length; i++) {
+        const element = textArray[i];
+        const lines = textBreaked.split("<br>");
+        if(((lines[lines.length-1]).length + element.length) > maxChar){
+            textBreaked = textBreaked + '<br>' + element;
+        }else{
+            textBreaked = textBreaked + ' ' + element;
+        }
+    }
+    return textBreaked;
 }
 
 export const formatDate = (date) => {

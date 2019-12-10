@@ -20,6 +20,8 @@ function showPanel(tableTitle, values, identifHash, id){
         listItems = listItems + newItem;
     }
 
+    const formFilter = `<input type="text" id="filterInput" placeholder="Filtrar resultados">`
+
     const list = `
     <ul class="list-unstyled list-reg">
         ${listItems}
@@ -30,14 +32,43 @@ function showPanel(tableTitle, values, identifHash, id){
 
     elements.panel.classList.add('active');
     
+    elements.sectionContainer.insertAdjacentHTML('beforebegin', formFilter);
     elements.sectionContainer.insertAdjacentHTML('afterbegin', list);
+
+    document.getElementById(elementSelectors.filterInput).addEventListener('input', filterList);
 }
 
 function clearList(){
     const list = document.querySelector(elementSelectors.listRegisters);
+    const filterInput = document.getElementById(elementSelectors.filterInput);
     if (list){
         (elements.sectionContainer).removeChild(list);
+        (elements.sectionContainer).parentElement.removeChild(filterInput);
     }
+}
+
+//FILTER FUNCTION
+
+function filterList() {
+	// Declare variables
+	const filter = document.getElementById(elementSelectors.filterInput).value.toLowerCase();
+	
+	let a, i, txtValue;
+
+	const ul = document.querySelector(elementSelectors.listRegisters);
+
+	const li = ul.querySelectorAll(elementSelectors.panelListItem);
+  
+	// Loop through all list items, and hide those who don't match the search query
+	for (i = 0; i < li.length; i++) {
+	  a = li[i].getElementsByTagName("a")[0];
+	  txtValue = a.textContent || a.innerText;
+	  if (txtValue.toLowerCase().indexOf(filter) > -1) {
+		li[i].style.display = "";
+	  } else {
+		li[i].style.display = "none";
+	  }
+	}
 }
 
 function removePanel(){
@@ -49,5 +80,6 @@ function removePanel(){
 
 export {
     showPanel,
-    removePanel
+    removePanel,
+    filterList
 }

@@ -48,8 +48,6 @@ export default class TableData {
         }
       }
 
-      console.log(latLng);
-
       return {
         latLng: latLng,
         key: key,
@@ -57,7 +55,7 @@ export default class TableData {
       }
     }
 
-    search(query, table, tableNameQuery, tableLabelQuery, labelColumn){
+    search(query, table, tableNameQuery, tableLabelQuery, labelColumn, auxColumn){
         //MAKE THE QUERY IN ALL THE TABLES AND RETURN THE VALUES OF KEYS AND NAMES
         let queryLower = query.toLowerCase();
         
@@ -79,12 +77,15 @@ export default class TableData {
         //RETURN THE LI ELEMENTS
         let elements = [];
         for (let i = 0; i < match.length; i++) {
-          let val = getKeyValues(match[i]).values;
+          const id = (getKeyValues(match[i]).values)[0];
+          const label = match[i][labelColumn];
+          const auxLabel = match[i][auxColumn];
           elements.push({
             tableName: tableNameQuery,
             tableLabel: tableLabelQuery,
-            id: val[0],
-            label: val[1]
+            id: id,
+            label: label,
+            auxLabel: auxLabel
           });
         }
         return elements;
