@@ -6505,7 +6505,7 @@ h6 {
   outline: none; }
   .btn-circle:hover, .btn-circle:focus {
     background: #022133;
-    color: #F2F2F2; }
+    color: #fff; }
 
 .btn-yellow {
   background: #FAD070;
@@ -6689,7 +6689,7 @@ footer {
   left: 0;
   z-index: 99;
   transition: all 0.3s;
-  background: #ffffff00; }
+  background: #ffffff; }
   .omnibox .btn {
     margin: 0;
     padding: 0; }
@@ -6707,7 +6707,7 @@ footer {
   width: 80%;
   max-height: 70vh;
   border-radius: 10px;
-  background: #F2F2F2;
+  background: #fff;
   padding: 5px;
   overflow: hidden;
   overflow-y: auto;
@@ -6781,7 +6781,7 @@ Sidebar
   .usr-container h4, .usr-container p {
     font-family: "Open Sans", sans-serif;
     font-weight: 700;
-    color: #F2F2F2;
+    color: #fff;
     margin-bottom: 0; }
   .usr-container div {
     width: 70%;
@@ -6903,7 +6903,7 @@ info-side
   right: 0;
   padding: 0;
   height: 100vh;
-  background: #F2F2F2; }
+  background: #fff; }
   .info-sidebar.active {
     display: block;
     width: 100vw;
@@ -6921,7 +6921,7 @@ info-side
     left: 0; }
     .info-sidebar #close-infoside-btn:hover {
       background: #022133;
-      color: #F2F2F2; }
+      color: #fff; }
 
 .content.info-active {
   margin-right: 100vw; }
@@ -6955,7 +6955,7 @@ Map
 .leaflet-tooltip.labels {
   font-family: "Roboto", sans-serif;
   font-weight: 600;
-  color: #F2F2F2;
+  color: #fff;
   padding: 0 10px;
   background-color: #043852;
   box-shadow: none;
@@ -6968,7 +6968,7 @@ Map
   font-weight: 600;
   color: #4e4e4e;
   padding: 0 10px;
-  background-color: #F2F2F2;
+  background-color: #fff;
   border-radius: 25px;
   transition: all 0.3; }
 
@@ -7017,7 +7017,7 @@ Map
   background: #024454;
   border-radius: 20px; }
   .leaflet-touch .leaflet-control-layers.leaflet-control-layers-expanded {
-    background: #F2F2F2;
+    background: #fff;
     border-radius: 10px;
     width: auto;
     height: auto;
@@ -7032,7 +7032,7 @@ Map
   background: url("/images/icons/baseline_icon.png") 95% 50% no-repeat;
   background-size: auto 80%; }
   .leaflet-touch .leaflet-control-layers-toggle h6 {
-    color: #F2F2F2;
+    color: #fff;
     margin: 0 30px 0 10px; }
 
 .leaflet-touch .leaflet-control-zoom.leaflet-bar .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom.leaflet-bar .leaflet-control-zoom-out, .leaflet-touch .leaflet-control-zoom.leaflet-bar .leaflet-control-home, .leaflet-touch .leaflet-control-zoom.leaflet-bar .leaflet-control-label {
@@ -7041,7 +7041,7 @@ Map
   align-items: center;
   width: 36px;
   height: 36px;
-  color: #F2F2F2;
+  color: #fff;
   border: 2px solid #F2F2F2;
   background: #024454;
   border-radius: 20px; }
@@ -7086,7 +7086,7 @@ table-panel
         border: 2px solid #42919A; }
     .table-panel.active .group-panel, .about-panel.active .group-panel {
       height: 80vh;
-      background: #F2F2F2;
+      background: #fff;
       border-radius: 15px;
       padding: 20px; }
       .table-panel.active .group-panel .group-sections, .about-panel.active .group-panel .group-sections {
@@ -7108,14 +7108,14 @@ table-panel
       margin-left: 2%;
       width: 100px;
       border-radius: 10px;
-      background: #F2F2F2;
+      background: #fff;
       position: absolute;
       z-index: 1;
       top: 0;
       left: 0; }
       .table-panel.active .close-panel-btn:hover, .table-panel.active .close-panel-btn:focus, .about-panel.active .close-panel-btn:hover, .about-panel.active .close-panel-btn:focus {
         background: #022133;
-        color: #F2F2F2; }
+        color: #fff; }
 
 .about-panel.active h4, .about-panel.active h5, footer h4, footer h5 {
   color: #4e4e4e;
@@ -7213,7 +7213,7 @@ info panel
   white-space: nowrap; }
 
 .info-form-group li {
-  background: #F2F2F2;
+  background: #fff;
   padding: 2px;
   margin-bottom: 10px;
   vertical-align: top;
@@ -7230,7 +7230,7 @@ info panel
   outline: none;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 3px 0 rgba(0, 0, 0, 0.19); }
   .info-form-group input:disabled, .info-form-group select:disabled {
-    background: #F2F2F2;
+    background: #fff;
     border: none;
     box-shadow: none; }
 
@@ -7316,7 +7316,7 @@ info panel
       background: rgba(88, 88, 88, 0.445); }
       .table-panel.active .group-panel {
         height: 100%;
-        background: #F2F2F2; }
+        background: #fff; }
         .table-panel.active .group-panel .group-sections {
           height: 100%; }
           .table-panel.active .group-panel .group-sections > * {

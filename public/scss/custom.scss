@@ -110,7 +110,7 @@ h6{
     outline: none;
     &:hover, &:focus{
         background: $primaryDark;
-        color: $light;
+        color: #fff;
     }
 }
 
@@ -329,7 +329,7 @@ footer{
     left: 0;
     z-index: 99;
     transition: all 0.3s;
-    background: #ffffff00;
+    background: #ffffff;
     .btn {
         margin: 0;
         padding: 0;
@@ -353,7 +353,7 @@ footer{
     width: 80%;
     max-height: 70vh;
     border-radius: 10px;
-    background: $light;
+    background: #fff;
     padding: 5px;
     overflow: hidden;
     overflow-y: auto;
@@ -439,7 +439,7 @@ $sidebarSizeDesktop: 280px;
     h4, p{
         font-family: $open-sans;
         font-weight: 700;
-        color: $light;
+        color: #fff;
         margin-bottom: 0;
     }
     div{
@@ -590,7 +590,7 @@ $infoBarBorder: 10px;
     right: 0;
     padding: 0;
     height: 100vh;
-    background: $light;
+    background: #fff;
     &.active{
         display: block;
         width: $infoBarMapPhone;
@@ -611,7 +611,7 @@ $infoBarBorder: 10px;
         left: 0;
         &:hover{
             background: $primaryDark;
-            color: $light;
+            color: #fff;
         }
     }
 }
@@ -657,7 +657,7 @@ Map
 .leaflet-tooltip.labels {
     font-family: $roboto;
     font-weight: 600;
-    color: $light;
+    color: #fff;
     padding: 0 10px;
     background-color: $primary;
     box-shadow: none;
@@ -670,7 +670,7 @@ Map
     font-weight: 600;
     color: $dark;
     padding: 0 10px;
-    background-color: $light;
+    background-color: #fff;
     border-radius: 25px;
     transition: all 0.3;
 }
@@ -728,7 +728,7 @@ Map
         background: $primaryMiddleDrk;
         border-radius: 20px;
         &.leaflet-control-layers-expanded{
-            background: $light;
+            background: #fff;
             border-radius: 10px;
             width: auto;
             height: auto;
@@ -744,7 +744,7 @@ Map
         background: url('/images/icons/baseline_icon.png') 95% 50% no-repeat;
         background-size: auto 80%;
         h6{
-            color: $light;
+            color: #fff;
             margin: 0 30px 0 10px;
         }
     }
@@ -755,7 +755,7 @@ Map
             align-items: center;
             width: 36px;
             height: 36px;
-            color: $light;
+            color: #fff;
             border: 2px solid $light;
             background: $primaryMiddleDrk;
             border-radius: 20px;
@@ -808,7 +808,7 @@ table-panel
         }
         .group-panel{
             height: 80vh;
-            background: $light;
+            background: #fff;
             border-radius: 15px;
             padding: 20px;
             .group-sections{
@@ -837,14 +837,14 @@ table-panel
             margin-left: 2%;
             width: 100px;
             border-radius: 10px;
-            background: $light;
+            background: #fff;
             position: absolute;
             z-index: 1;
             top: 0;
             left: 0;
             &:hover, &:focus{
                 background: $primaryDark;
-                color: $light;
+                color: #fff;
             }
         }
     }
@@ -980,7 +980,7 @@ info panel
         white-space: nowrap;
     }
     li{
-        background: $light;
+        background: #fff;
         padding: 2px;
         margin-bottom: 10px;
         vertical-align: top;
@@ -1001,7 +1001,7 @@ info panel
         outline: none;
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 3px 0 rgba(0, 0, 0, 0.19);
         &:disabled{
-            background: $light;
+            background: #fff;
             border: none;
             box-shadow: none;
         }
@@ -1120,7 +1120,7 @@ info panel
             background: rgba(88, 88, 88, 0.445);
             .group-panel{
                 height: 100%;
-                background: $light;
+                background: #fff;
                 .group-sections{
                     height: 100%;
                     >*{
