@@ -116,9 +116,12 @@ h6{
 
 .btn-yellow {
     background: $yellow;
-    background-image: linear-gradient(90deg, $yellowLight, $orange);
-    background-size: contain;
-    background-repeat: no-repeat;
+    background: linear-gradient(90deg, $yellowLight, $orange);
+    background-size: cover;
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-clip: padding-box;
 }
 
 .limiter{
@@ -145,13 +148,12 @@ h6{
     .btn-blue{
         color: #fff;
         background: $dark;
-        border: 2px solid #fff;
         &:hover{
             color: #fff;
             background: $primary;
-            background-image: linear-gradient(90deg, $primaryMiddleLght, $primary);
+            background: linear-gradient(90deg, $primaryMiddleLght, $primary);
             background-size: cover;
-            background-repeat: no-repeat;
+            background-clip: padding-box;
         }
     }
 
@@ -248,11 +250,7 @@ h6{
         width: 70%;
     }
     #visitante{
-        border: 3px solid $primary;
         width: 200px;
-        &:hover, &:focus{
-            border: 3px solid #fff;
-        }
     }
 }
 
