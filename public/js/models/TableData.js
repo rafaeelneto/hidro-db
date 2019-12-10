@@ -57,6 +57,9 @@ export default class TableData {
 
     search(query, table, tableNameQuery, tableLabelQuery, labelColumn, auxColumn){
         //MAKE THE QUERY IN ALL THE TABLES AND RETURN THE VALUES OF KEYS AND NAMES
+
+        console.log(table);
+
         let queryLower = query.toLowerCase();
         
         //FILTER VALUES TO THE MATCH ARRAY
@@ -65,7 +68,11 @@ export default class TableData {
             return false;
           }
 
-          const valueLower = value[labelColumn].toLowerCase();
+          let valueLower = '';
+
+          if(value[labelColumn] !== null){
+            valueLower = value[labelColumn].toLowerCase();
+          }
           
           if(valueLower.includes(queryLower)){
             return value;

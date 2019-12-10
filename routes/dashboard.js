@@ -47,7 +47,7 @@ router.get('/all', sessionChecker, async (req, res) => {
         const uns = await tables.getTable(tables.tableNames.uns, 'un_id, nome');
         const regionais = await tables.getTable(tables.tableNames.regionais, 'region_id, nome');
         const municipios = await tables.getTable(tables.tableNames.municipios, 'municipio_id, nome');
-        const outorgas = await tables.getTable(tables.tableNames.outorgas, 'outorga_id, num_outorga, validade, licen_id');
+        const outorgas = await tables.getTable(tables.tableNames.outorgas, 'outorga_id, num_outorga, obj_outor, licen_id');
         
         const licenças = await tables.getTable(tables.tableNames.licenças, 'licen_id, num_licen');
         const autosInfraçao = await tables.getTable(tables.tableNames.autosInfra, 'autoifr_id, num_infra, situaçao_auto, licen_id, processo_id, notificaçao_id');

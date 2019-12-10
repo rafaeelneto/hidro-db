@@ -329,6 +329,8 @@ function search(){
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.capSuperf), tablesKeys.capSuperf, 'Cap. Superf.', 'nome'));
 	list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.setoresSedes), tablesKeys.setoresSedes, 'Setor', 'nome'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.outorgas], tablesKeys.outorgas, 'Outorga', 'num_outorga'));
+	list.push(...tableData.search(query, tableData.tables[tablesKeys.outorgas], tablesKeys.outorgas, 'Outorga', 'obj_outor', 'num_outorga'));
+
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'num_processo', 'obj_processo'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'obj_processo', 'num_processo'));
 	list.push(...tableData.search(query, tableData.tables[tablesKeys.licenças], tablesKeys.licenças, 'Licença', 'num_licen'));
