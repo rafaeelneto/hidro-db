@@ -9,6 +9,8 @@ export const elements = {
     userNameID: document.querySelector('#user-name'),
     logoutBtnID: document.querySelector('#btn-logout'),
 
+    toolDiv: document.querySelector('.tools-buttons'),
+
     //Sidebar info
     closeInfobarID: document.querySelector('#close-infoside-btn'),
     infoSideClass: document.querySelector('.info-sidebar'),
@@ -40,7 +42,9 @@ export const elements = {
     searchInput: document.getElementById('search-input'),
     resultDiv: document.querySelector('.results-search'),
 
-    aboutPanel: document.querySelector('.about-panel')
+    aboutPanel: document.querySelector('.about-panel'),
+
+    manutençãoBtn: document.getElementById('poço-manutençao-btn')
 }
 
 //Selectors used by the clean list functions
@@ -49,7 +53,10 @@ export const elementSelectors = {
     listRegisters: '.list-reg',
     listResults: '.result-list',
     panelListItem: '.panel-item',
-    filterInput: 'filterInput'
+    filterInput: 'filterInput',
+    manutençaoPanel: '.manutençao-poços',
+    manutençaoList: '.list-manutençao',
+    manutençaoInfo: 'manutençaoInfo'
 }
 
 export const nullVeryfier = (v)=> {
@@ -93,5 +100,9 @@ export const formatDate = (date) => {
 export const formatDateText = (date) => {
     function pad(s) { return (s < 10) ? '0' + s : s; }
     var d = new Date(date)
-    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
+    if(date){
+        return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
+    }else{
+        return '-'
+    }
 }

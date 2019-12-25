@@ -1,4 +1,4 @@
-import {tablesKeys} from './../models/Data';
+import {tablesKeys, getKeyValues} from './../models/Data';
 import {elements} from './Base';
 import {getAPIKeys} from './../requests';
 
@@ -39,19 +39,19 @@ const hybrid = L.gridLayer.googleMutant({
 function getColor(s) {
 	switch (s) {
 		case 'Ativo':
-			return '#0ead63';
+			return '#23d366';
 		case 'Inativo':
-			return '#F67280';
+			return '#f13547';
 		case 'Em construção':
 			return '#C23AE8';
 		case 'A construir':
-			return '#ad7a0d';
+			return '#E3A84F';
 		default:
 			return '#4e4e4e';
 	}
 }
 
-function getIcon(s){
+function getIcon(s, size){
 	let url = '';
 	switch (s) {
 		case 'Ativo':
@@ -63,6 +63,9 @@ function getIcon(s){
 		case 'Em construção':
 			url = './../../images/simbology/triangulos-03.png';
 			break;
+		case 'A construir':
+			url = './../../images/simbology/triangulos-05.png';
+			break;
 		//Adicionar icone para pontos a construir
 		default:
 			url = './../../images/simbology/triangulos-04.png';
@@ -70,7 +73,7 @@ function getIcon(s){
 	}
 	const myIcon = L.icon({
 		iconUrl: url,
-		iconSize: [20, 20]
+		iconSize: [size, size]
 	});	
 	return myIcon;
 }
@@ -97,11 +100,75 @@ function styleSetores(){
 	};
 };
 
+function highlight (layer) {
+	const keysArrays = getKeyValues(layer.feature.properties);
+	  switch (keysArrays.keys[0]){
+		case 'poço_id':
+			layer.setStyle({
+				radius: 10
+			});
+			break;
+		case 'super_id':
+			layer.setIcon(getIcon(layer.feature.properties.situaçao, 30));
+			break;
+		case 'setor_id':
+			layer.setStyle({
+				radius: 7
+			});
+			break;
+		default:
+			break;
+	}
+}
+
+function dehighlight (layer) {
+  if (selected === null || selected._leaflet_id !== layer._leaflet_id) {
+	  const keysArrays = getKeyValues(layer.feature.properties);
+	  switch (keysArrays.keys[0]){
+		case 'poço_id':
+			layer.setStyle({
+				radius: 7
+			});
+			break;
+		case 'super_id':
+			layer.setIcon(getIcon(layer.feature.properties.situaçao, 20));
+			break;
+		case 'setor_id':
+			layer.setStyle({
+				radius: 3
+			});
+			break;
+		default:
+			break;
+	}
+  }
+}
+
+function select (layer) {
+	let previous;
+	if (selected !== null) {
+		previous = selected;
+	}
+	selected = layer;
+	if (previous) {
+	  dehighlight(previous);
+	}
+}
+
+let selected = null;
+
 function initMap(tables, clickPointListerner, hoverListerner) {
+
+	const corner1 = L.latLng(-90, -200)
+	const corner2 = L.latLng(90, 200)
+	const bounds = L.latLngBounds(corner1, corner2)
 	map = L.map('map', {
 		zoomControl: false,
 		center: [-4.0, -52.0],
-		zoom: 6
+		zoom: 6,
+		minZoom: 2,
+		maxBounds: bounds,
+		maxBoundsViscosity: 1.0
 	});
 
 	map.addEventListener('mousemove', hoverListerner);
@@ -140,7 +207,7 @@ function initMap(tables, clickPointListerner, hoverListerner) {
 	const superfLayer = L.geoJSON(null, {
 		pointToLayer: (feature, latlng) => {
 			let label = String(feature.properties.nome);
-			return new L.Marker(latlng, {icon: getIcon(feature.properties.situaçao)}).bindTooltip(label, {permanent: false, opacity: 0.9, className: "labels"}).openTooltip();
+			return new L.Marker(latlng, {icon: getIcon(feature.properties.situaçao, 20)}).bindTooltip(label, {permanent: false, opacity: 0.9, className: "labels"}).openTooltip();
 		},
 		style: stylePoços,
 		onEachFeature: clickPointListerner
@@ -230,5 +297,9 @@ export {
 	map,
 	initMap,
 	stylePoços,
-	toogleLabels
+	styleSetores,
+	toogleLabels,
+	highlight,
+	dehighlight,
+	select
 }; 

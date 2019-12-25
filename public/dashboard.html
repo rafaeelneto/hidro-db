@@ -160,11 +160,52 @@
         </div>
         
         <div class="info-sidebar shadow">
-            <button class= "btn btn-circle" id="close-infoside-btn"><i class="material-icons">close</i></button>
             <!--separate this from the rest of container to add dinamiclly-->
-            <div class="editing-tools d-flex justify-content-end align-items-center">
+            <div class="tools-buttons d-flex justify-content-start align-items-center">
                 <!--only for demonstration must be inside buttons-->
+                <button class= "btn btn-circle" id="close-infoside-btn"><i class="material-icons">close</i></button>
+                <button class= "btn" id="poço-manutençao-btn" title="Manutenção">
+                    <svg id="poço-manutençao-icon" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        	 viewBox="0 0 303.477 303.477" style="enable-background:new 0 0 303.477 303.477;" xml:space="preserve">
+                        <path d="M298.604,64.209l-49.978,49.979L204.907,98.57L189.29,54.852l49.979-49.979c-32.791-10.97-70.418-3.42-96.529,22.692
+                        	c-25.629,25.629-33.373,62.349-23.281,94.704c-1.359,1.07-2.676,2.222-3.93,3.476L12.884,228.389
+                        	c-17.178,17.177-17.178,45.027,0,62.205c17.178,17.178,45.029,17.178,62.207,0l102.645-102.645c1.254-1.254,2.404-2.57,3.475-3.929
+                        	c32.355,10.092,69.074,2.347,94.703-23.282C302.024,134.626,309.575,97.001,298.604,64.209z"/>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                        <g>
+                        </g>
+                    </svg>
+                    Manutenção
+                </button>
             </div>
+
             <section class="infobar-section">
                 <!--
                     <div class="info-group">
@@ -176,6 +217,44 @@
                 -->
             </section>
         </div>
+        <!--
+
+            <div class="manutençao-poços shadow">
+                <h5>Cronograma de manutenção</h5>
+                <ul class="list-unstyled list-manutençao">
+                    <li class="futuro">
+                        <h6>Filmagem</h6>
+                        <small>Agendado</small>
+                        <p>Previsto para: 20/06/2020</p>
+                        <p>Realizado: 20/06/2020</p>
+                    </li>
+                    <li class="atrasado">
+                        <h6>Troca de bomba</h6>
+                        <small>Atrasado</small>
+                        <p>Previsto para: 20/06/2019</p>
+                        <p>Realizado: 20/06/2020</p>
+                    </li>
+                    <li class="realizado">
+                        <h6>Limpeza do poço</h6>
+                        <small>Realizado</small>
+                        <p>Previsto para: 10/12/2017</p>
+                        <p>Realizado: 20/12/2018</p>
+                    </li>
+                    <li class="realizado">
+                        <h6>Limpeza do poço</h6>
+                        <small>Realizado</small>
+                        <p>Previsto para: 10/12/2017</p>
+                        <p>Realizado: 20/12/2018</p>
+                    </li>
+                    <li class="realizado">
+                        <h6>Limpeza do poço</h6>
+                        <small>Realizado</small>
+                        <p>Previsto para: 10/12/2017</p>
+                        <p>Realizado: 20/12/2018</p>
+                    </li>
+                </ul>
+            </div>
+        -->
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -190,7 +269,6 @@
 
     <script src="bundle.js"></script>
 
-    <!--FIX THE API KEY TO THE SERVER SIDE-->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAqjmZFHaNlO4uREygiucDkrWsMOMfJ-s"></script>
     
 </body>

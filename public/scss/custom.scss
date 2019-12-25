@@ -14,10 +14,16 @@ $secondary:#9bafbb;
 $orange: #E3A84F;
 $yellow: #FAD070;
 $yellowLight: #F0D675;
-$success:#0ead63;
-$danger:#F67280;
+$successLight:#6dc89e;
+$success:#23d366;
+$successDark:#105736;
+$dangerLight: #F67280;
+$danger:rgb(241, 53, 71);
+$dangerDark:rgb(105, 24, 32);
 $info:#A2D5F2;
-$warning:#f2c260;
+$warningLight:#f2c260;
+$warning:#f5b129;
+$warningDark:#79580d;
 $light:#F2F2F2;
 $lightMiddle:#e8e8e8;
 $dark:#4e4e4e;
@@ -89,6 +95,7 @@ h6{
     font-weight: 700;
     font-family: $font-family-base;
     letter-spacing: .3em;
+    text-transform: uppercase;
     padding: 10px 0;
     border-radius: 10px;
     &:hover, &:focus{
@@ -591,27 +598,161 @@ $infoBarBorder: 10px;
     padding: 0;
     height: 100vh;
     background: #fff;
+
+    .tools-buttons{
+        position: sticky;
+        z-index: 1;
+        #close-infoside-btn{
+            margin: 5px;
+            color: $primaryDark;
+            &:hover{
+                background: $primaryDark;
+                color: #fff;
+            }
+        }
+        #poço-manutençao-btn{
+            display: none;
+            margin: 0;
+            border: 2px solid $orange;
+            border-radius: 50px;
+            color: $orange;
+            height: 30px;
+            padding: 5px 5px;
+            text-transform: uppercase;
+
+            &.active{
+                display: flex;
+                align-items: center;
+            }
+
+            &:hover{
+                border-color: $yellow;
+                background: none;
+                color: $yellow;
+                #poço-manutençao-icon{
+                    fill: $yellow;
+                }
+            }
+    
+            &:focus{
+                background: none;
+                outline: none;
+                box-shadow: none;
+            }
+
+            &.pressed{
+                background: $orange;
+                color: #fff;
+                #poço-manutençao-icon{
+                    fill: #fff;
+                }
+            }
+    
+            #poço-manutençao-icon{
+                margin-right: 5px;
+                height: 80%;
+                fill: $orange;
+            }
+        }
+    }
+
+    #poço-manutençao-btn{
+        display: none;
+    }
     &.active{
         display: block;
         width: $infoBarMapPhone;
-        padding: $infoBarBorder  0 0 $infoBarBorder*5;
+        padding: $infoBarBorder  0 0 0;
     }
-    
     .infobar-section{
         overflow-y: auto;
         height: 100%;
         border-top: 2px solid $primaryMiddleDrk;
+        margin-left: $infoBarBorder*4;
     }
-    #close-infoside-btn{
-        margin-top: 10px;
-        margin-left: $infoBarBorder;
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        &:hover{
-            background: $primaryDark;
-            color: #fff;
+}
+
+.manutençao-poços{
+    display: none;
+    position: absolute;
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px 30px 20px 30px;
+    width: 300px;
+    min-height: 50vh;
+    height: 70vh;
+    top: 100px;
+    right: $infoBarMapDesktop + 2vw;
+    z-index: 999;
+
+
+    &.active{
+        display: block;
+    }
+
+    h5{
+        font-family: $roboto;
+        font-weight: 700;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: .3em;
+        line-height: 1.5;
+        color: $primaryMiddleLght;
+    }
+    h6{
+        color: #fff;
+        margin-bottom: 0px;
+    }
+    p{
+        margin-bottom: 0;
+        font-size: 12px;
+        color: $dark;
+        a{
+            color: $primaryMiddleLght;
+        }
+    }
+    .list-manutençao{
+        max-height: 85%;
+        overflow-y: auto;
+        li{
+            padding: 10px;
+            border-bottom: 1px solid $dark;
+            -webkit-transition: all .9s ease;
+            -moz-transition: all .9s ease;
+            transition: all .9s ease;
+            h6{
+                color: #464646;
+            }
+            small{
+                padding: 2px 5px 2px 5px;
+                background: $danger;
+                border-radius: 20px;
+                font-size: 11px;
+                color: #fff;
+                font-weight: 600;
+            }
+            &.previsto{
+                small{
+                    background: $warning;
+                }
+            }
+            &.finalizado{
+                small{
+                    background: $success;
+                }
+            }
+            &.atrasado{
+                small{
+                    background: $danger;
+                }
+            }
+            &:hover{
+                background: $lightMiddle;
+            }
+            
+        }
+        :last-child{
+            border-bottom: none;
         }
     }
 }
@@ -797,6 +938,7 @@ table-panel
         #filterInput{
             position: sticky;
             top: 5px;
+            background: #fff;
             margin: 5px 5px 5px 0;
             padding-left: 10px;
             border: 2px solid #fff;
@@ -948,19 +1090,6 @@ info panel
 ===============
 */
 
-.editing-tools{
-    i{
-        margin: 0 10px 5px 10px;
-        border: none;
-        color: $orange;
-
-        //FADE THE EDITING ICONS
-        //color: rgba(223, 182, 122, 0.809);
-
-        height: 35px;
-        width: 35px;
-    }
-}
 .info-form-group{
     h6{
         color: $dark;

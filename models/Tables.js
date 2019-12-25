@@ -10,6 +10,7 @@ const notificaçaoInfoColumns = 'notif_id, num_notif, tipo_nota, prazo, data_emi
 const licençaInfoColumns = 'licen_id, num_licen, tipo, data_entrada, validade, atividade, licen_arq, orgao_id';
 const autoInfraçaoInfoColumns = 'autoifr_id, num_infra, obj_autuado, processo_id, notificaçao_id, situaçao_auto, data_emissao, data_defesa, prazo_defesa, orgao_id, setor_respon, oficio_id, licen_id, municipio_id, un_id, setor_id';
 const analisesInfoColumns = 'analise_id, numafq, numab, data_coleta, data_coletabac, data_exame, data_examebac coletor, fonte, tratamento, potabilidade, diretorio, poço_id, super_id, un_id, obs';
+const manutençaoColumns = 'manuten_id, data_previsao, data_realizada, serviço_realiz, obs, link, executor, orçamento';
 
 const outorgaPoçoJoinInfo = (type, id) => {return `SELECT outorga_id FROM outorga_poço_link WHERE ${type}=${id}`};
 const outorgaSuperfJoinInfo = (type, id) => {return `SELECT outorga_id FROM outorga_superf_link WHERE ${type}=${id}`};
@@ -70,9 +71,22 @@ async function getTableCondit(table, columns, conditions){
     }
 }
 
+async function getTableFull(table, columns, conditions, options, param){
+    try{
+        const result = await db.query(`SELECT ${columns} FROM ${table} ${conditions} ${options}`, param);
+        return result.rows;
+    }catch(error){
+        console.log(error);
+    }
+}
+
 async function getInfo(table, columns, options, conditions, param){
-    const result = await db.query(`SELECT ${columns} FROM ${table} ${options} ${conditions}`, param);
-    return result.rows[0];
+    try{
+        const result = await db.query(`SELECT ${columns} FROM ${table} ${conditions}  ${options}`, param);
+        return result.rows[0];
+    }catch(error){
+        console.log(error);
+    }
 }
 
 const tableNames = {
@@ -93,6 +107,7 @@ const tableNames = {
     situaçoes: "situaçao_notif",
     vazoesPoços: "vazoes_poços",
     vazoesSuperf: "vazoes_superf",
+    manutençaoPoço: "manutençao_poço"
 }
 
 //function
@@ -100,6 +115,7 @@ exports.getGIS = getGIS;
 exports.getInfo = getInfo;
 exports.getTable = getTable;
 exports.getTableCondit = getTableCondit;
+exports.getTableFull = getTableFull;
 
 exports.tableNames = tableNames;
 
@@ -111,6 +127,7 @@ exports.notificaçaoInfoColumns = notificaçaoInfoColumns;
 exports.licençaInfoColumns = licençaInfoColumns;
 exports.autoInfraçaoInfoColumns = autoInfraçaoInfoColumns;
 exports.analisesInfoColumns = analisesInfoColumns;
+exports.manutençaoColumns = manutençaoColumns;
 
 exports.outorgaPoçoJoinInfo = outorgaPoçoJoinInfo;
 exports.outorgaSuperfJoinInfo = outorgaSuperfJoinInfo;

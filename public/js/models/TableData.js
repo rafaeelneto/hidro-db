@@ -10,6 +10,12 @@ export default class TableData {
         const tables = await requests.makeSimpleGetRequest(requests.dashboardBase, `/all` );
         this.tables = tables;
     }
+    
+    async loadManutençaoPoço(poço_id){
+        const manutençaoList = await requests.loadInfoQuery(requests.dashboardBase, requests.manutençaoURL, `?id=${poço_id}`);
+
+        this.manutençaoList = manutençaoList;
+    }
 
     async update(){
         //UPDATE A FEATURE AND RELOAD INFOS
@@ -58,8 +64,6 @@ export default class TableData {
     search(query, table, tableNameQuery, tableLabelQuery, labelColumn, auxColumn){
         //MAKE THE QUERY IN ALL THE TABLES AND RETURN THE VALUES OF KEYS AND NAMES
 
-        console.log(table);
-
         let queryLower = query.toLowerCase();
         
         //FILTER VALUES TO THE MATCH ARRAY
@@ -99,7 +103,7 @@ export default class TableData {
     }
 
     //console.log(tableData.searchByID(tablesKeys.uns, 'un_id', 2, 'nome'));
-    searchByID(table, key, queryID, property){
+    searchByID(table, key, queryID){
         let s = this.tables[table];
         if(s.features){
             s = this.getFeaturesProperties(table);
@@ -107,7 +111,7 @@ export default class TableData {
         for(let i in s) {
             let id = s[i][key];
             if (id == queryID){
-                return s[i][property];
+                return s[i];
             }
         }
     }
