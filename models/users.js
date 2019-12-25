@@ -26,7 +26,7 @@ async function insertNewUser (userAdmin, passAdmin, userNew, passNew) {
     if(isValidAdminUsr && userAdmin !==visitante && userNew !== visitante){
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(passNew, salt);
-        await db.queryAuth('INSERT INTO editores (editor_id, username, pass) VALUES (DEFAULT, $1, $2)', [userNew, hash]);
+        const results = await db.queryAuth('INSERT INTO editores (editor_id, username, pass) VALUES (DEFAULT, $1, $2)', [userNew, hash]);
         return true;
     }else{
         console.log('Invalid administration user');
@@ -35,7 +35,7 @@ async function insertNewUser (userAdmin, passAdmin, userNew, passNew) {
 }
 
 function closeDB (){
-    db.closeDB();
+    db.closeDB()
 }
 
 exports.visitante = visitante;
