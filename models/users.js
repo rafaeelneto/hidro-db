@@ -1,7 +1,8 @@
 const db = require('../database/db');
 const bcrypt = require('bcryptjs');
 
-const visitante = 'visitante'
+const visitante = 'visitante';
+
 
 async function autheticateUser(username, password){
     const resultQuery = await db.query('SELECT pass FROM editores WHERE username=$1', [username]);
