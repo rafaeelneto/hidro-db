@@ -16,6 +16,7 @@ import * as requests from './requests';
 import {showPanel, removePanel} from './views/panelView';
 
 import {showResults, removeResults} from './views/searchView';
+import {showCronograma, removeCronogramaPanel} from './views/manutençaoView';
 import {getAPIKeys} from './requests';
 
 /**
@@ -24,7 +25,7 @@ import {getAPIKeys} from './requests';
  * ------------------------
 */
 
-let formActive, oldFormActive, tableName, selectedID, info;
+let formActive, oldFormActive, tableNameActive, selectedID, info;
 
 /**
  * ------------------------
@@ -45,21 +46,23 @@ function toggleSidebar(){
 elements.sidebarBtnID.addEventListener('click', toggleSidebar);
 
 //Set Side infobar to show
-function toggleInfobar(active){
+function toggleMapInfobar(active){
 	if (active){
 		elements.infoSideClass.classList.add('active');
 		elements.contentClass.classList.add('info-active');
 	}else{
 		elements.infoSideClass.classList.remove('active');
 		elements.contentClass.classList.remove('info-active');
+		elements.manutençãoBtn.classList.remove('active');
 	}
 	mapView.map.invalidateSize();
 }
 
 //Set event listener to the close button on side infobar
 elements.closeInfobarID.addEventListener('click', () => {
-	toggleInfobar(false);
+	toggleMapInfobar(false);
 	clearInfoForm(elements.infobarSection, '-spatial');
+	removeCronogramaPanel();
 });
 
 //Initialize the user, load tables and init map
@@ -87,19 +90,23 @@ async function loadInfo(parent, type, id){
 	let infoRes = await requests.loadInfoQuery(requests.dashboardBase, requests.infoURL, `?id=${id}&type=${type}`);
 	info = new Info(infoRes.table, infoRes.joinTables);
 
-	console.log(info.s);
+	elements.manutençãoBtn.classList.remove('active');
 
 	let htmlList;
 	let identif = '';
 	switch (infoRes.type){
 		case 'poço_id':
-			tableName = tablesKeys.poços;
+			tableNameActive = tablesKeys.poços;
 			selectedID = id;
 			htmlList = loadPoçoView(info, tableData);
 			identif = '-spatial';
+			elements.manutençãoBtn.classList.add('active');
+			if(cronogramaAtivo){
+				loadCronograma();
+			}
 			break;
 		case 'super_id':
-			tableName = tablesKeys.capSuperf;
+			tableNameActive = tablesKeys.capSuperf;
 			selectedID = id;
 			htmlList = loadSuperfView(info, tableData);
 			identif = '-spatial';
@@ -123,9 +130,9 @@ async function loadInfo(parent, type, id){
 			break;
 	}
 	
-	loadInfoForm(identif, parent, htmlList, tableName, selectedID);
+	loadInfoForm(identif, parent, htmlList, tableNameActive, selectedID);
 
-	formActive = document.getElementById(`info-form-${tableName}-${selectedID}`);
+	formActive = document.getElementById(`info-form-${tableNameActive}-${selectedID}`);
 }
 
 /**
@@ -140,7 +147,14 @@ function clickPointListener (feature, layer) {
 			const latLngs = [e.target.getLatLng()];
 			const keysArrays = getKeyValues(feature.properties);
 			spatialInfo(keysArrays.keys[0], keysArrays.values[0], latLngs);
-		}
+			mapView.select(e.target);
+		},
+        'mouseover': function (e) {
+            mapView.highlight(e.target);
+        },
+        'mouseout': function (e) {
+            mapView.dehighlight(e.target);
+        }
 	});
 }
 
@@ -148,7 +162,7 @@ function spatialInfo(key, valueID, latLngs){
 	const markerBounds = L.latLngBounds(latLngs);
 	mapView.map.fitBounds(markerBounds, {maxZoom: 18});
 
-	toggleInfobar(true);
+	toggleMapInfobar(true);
 
 	loadInfo(elements.infobarSection, key, valueID);
 }
@@ -183,13 +197,11 @@ function loadMap(){
 	mapView.initMap(tableData.tables, clickPointListener, hoverListenner);
 }
 
-/**
- * ------------------------
+/*
+ * ---------------------------
  * SET THE SHOW TABLE LISTENER
- * ------------------------
-*/
-
-
+ * ---------------------------
+**/
 
 for (const i in elements.closePanelBtn) {
 	if (elements.closePanelBtn.hasOwnProperty(i)) {
@@ -215,21 +227,21 @@ function tableController(){
 	switch (true) {
 		case hash.includes(tablesKeys.poços):
 			const poço = tableData.getSpatialProperties(tablesKeys.poços, id);
-			tableName = tablesKeys.poços;
+			tableNameActive = tablesKeys.poços;
 			selectedID = id;
 			spatialInfo(poço.key, poço.valueID, poço.latLng);
 			removePanel();
 			return null;
 		case hash.includes(tablesKeys.capSuperf):
 			const cap = tableData.getSpatialProperties(tablesKeys.capSuperf, id);
-			tableName = tablesKeys.capSuperf;
+			tableNameActive = tablesKeys.capSuperf;
 			selectedID = id;
 			spatialInfo(cap.key, cap.valueID, cap.latLng);
 			removePanel();
 			return null;
 		case hash.includes(tablesKeys.setoresSedes):
 			const setor = tableData.getSpatialProperties(tablesKeys.setoresSedes, id);
-			tableName = tablesKeys.setoresSedes;
+			tableNameActive = tablesKeys.setoresSedes;
 			selectedID = id;
 			spatialInfo(setor.key, setor.valueID, setor.latLng);
 			removePanel();
@@ -237,27 +249,27 @@ function tableController(){
 		case hash.includes(tablesKeys.processos):
 			tableTitle = 'Processos';
 			s = tableData.tables[tablesKeys.processos];
-			tableName = tablesKeys.processos;
+			tableNameActive = tablesKeys.processos;
 			break;
 		case hash.includes(tablesKeys.outorgas):
 			tableTitle = 'Outorgas';
 			s = tableData.tables[tablesKeys.outorgas];
-			tableName = tablesKeys.outorgas;
+			tableNameActive = tablesKeys.outorgas;
 			break;
 		case hash.includes(tablesKeys.licenças):
 			tableTitle = 'Licenças';
 			s = tableData.tables[tablesKeys.licenças];
-			tableName = tablesKeys.licenças;
+			tableNameActive = tablesKeys.licenças;
 			break;
 		case hash.includes(tablesKeys.autosInfraçao):
 			tableTitle = 'Autos de infração';
 			s = tableData.tables[tablesKeys.autosInfraçao];
-			tableName = tablesKeys.autosInfraçao;
+			tableNameActive = tablesKeys.autosInfraçao;
 			break;
 		case hash.includes(tablesKeys.notificaçoes):
 			tableTitle = 'Notificações';
 			s = tableData.tables[tablesKeys.notificaçoes];
-			tableName = tablesKeys.notificaçoes;
+			tableNameActive = tablesKeys.notificaçoes;
 			break;
 		case hash.includes('sobre'):
 			elements.aboutPanel.classList.add('active');
@@ -286,7 +298,6 @@ function tableController(){
 		identifHash = hash;
 	}
 
-	
 	showPanel(tableTitle, objArrays.values, identifHash, id);
 
 	document.querySelector('.panel-item.active').scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
@@ -323,28 +334,29 @@ for (let i = 0; i < elements.uploadButton.length; i++) {
 function search(){
 	let list = [];
 	const query = elements.searchInput.value;
-
+	
 	if(query === ''){
 		removeResults();
 	}else{
 		elements.cleanSearchBox.classList.add('active');
-	
+
 		list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.poços), tablesKeys.poços, 'Poço', 'nome'));
 		list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.capSuperf), tablesKeys.capSuperf, 'Cap. Superf.', 'nome'));
 		list.push(...tableData.search(query, tableData.getFeaturesProperties(tablesKeys.setoresSedes), tablesKeys.setoresSedes, 'Setor', 'nome'));
 		list.push(...tableData.search(query, tableData.tables[tablesKeys.outorgas], tablesKeys.outorgas, 'Outorga', 'num_outorga'));
 		list.push(...tableData.search(query, tableData.tables[tablesKeys.outorgas], tablesKeys.outorgas, 'Outorga', 'obj_outor', 'num_outorga'));
-	
+
 		list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'num_processo', 'obj_processo'));
 		list.push(...tableData.search(query, tableData.tables[tablesKeys.processos], tablesKeys.processos, 'Processo', 'obj_processo', 'num_processo'));
 		list.push(...tableData.search(query, tableData.tables[tablesKeys.licenças], tablesKeys.licenças, 'Licença', 'num_licen'));
 		list.push(...tableData.search(query, tableData.tables[tablesKeys.autosInfraçao], tablesKeys.autosInfraçao, 'Auto de Infração', 'num_infra'));
 		list.push(...tableData.search(query, tableData.tables[tablesKeys.notificaçoes], tablesKeys.notificaçoes, 'Notificação', 'num_notif'));
-	
+
 		showResults(list);
 	}
 }
 
+//Let the user user arrow keys to navigate in results of the search
 document.addEventListener('keydown', e => {
 	if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
 		let columnMenuItems = document.querySelectorAll('.result-item');
@@ -378,15 +390,41 @@ document.addEventListener('keydown', e => {
 	}
 });
 
+//Key down enter to results
 document.addEventListener('keypress', e => {
 	if (event.which == 13 || event.keyCode == 13){
 		document.querySelector('.result-item.active a').click();
 	}
 });
 
-
+//Button of clean search and results listener
 elements.cleanSearchBox.addEventListener('click', ()=>{
 	removeResults();
 })
 
 elements.searchInput.addEventListener('input', search);
+
+/**
+ * ------------------------
+ * SHOW MAINTANCE SCHEDULE
+ * ------------------------
+*/
+
+let cronogramaAtivo = false;
+
+elements.manutençãoBtn.addEventListener('click', async () => {
+	if(cronogramaAtivo){
+		removeCronogramaPanel();
+		cronogramaAtivo = false;
+	}else{
+		await loadCronograma();
+	}
+});
+
+async function loadCronograma(){
+	if(tableNameActive === tablesKeys.poços){
+		await tableData.loadManutençaoPoço(selectedID);
+		showCronograma(tableData.manutençaoList);
+		cronogramaAtivo = true;
+	}
+}

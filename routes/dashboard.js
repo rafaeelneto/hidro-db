@@ -47,10 +47,10 @@ router.get('/all', sessionChecker, async (req, res) => {
         const uns = await tables.getTable(tables.tableNames.uns, 'un_id, nome');
         const regionais = await tables.getTable(tables.tableNames.regionais, 'region_id, nome');
         const municipios = await tables.getTable(tables.tableNames.municipios, 'municipio_id, nome');
-        const outorgas = await tables.getTable(tables.tableNames.outorgas, 'outorga_id, num_outorga, obj_outor, licen_id');
+        const outorgas = await tables.getTableFull(tables.tableNames.outorgas, 'outorga_id, num_outorga, obj_outor, licen_id', '', 'ORDER BY data_entrada DESC', []);
         
-        const licenças = await tables.getTable(tables.tableNames.licenças, 'licen_id, num_licen');
-        const autosInfraçao = await tables.getTable(tables.tableNames.autosInfra, 'autoifr_id, num_infra, situaçao_auto, licen_id, processo_id, notificaçao_id');
+        const licenças = await tables.getTableFull(tables.tableNames.licenças, 'licen_id, num_licen', '', 'ORDER BY data_entrada DESC', []);
+        const autosInfraçao = await tables.getTableFull(tables.tableNames.autosInfra, 'autoifr_id, num_infra, situaçao_auto, licen_id, processo_id, notificaçao_id', '', 'ORDER BY data_emissao DESC', []);
         const notificaçoes = await tables.getTable(tables.tableNames.notificaçoes, 'notif_id, num_notif, processo_id, licen_id');
         const analisesFQB = await tables.getTable(tables.tableNames.analises, 'analise_id, numafq, numab, potabilidade');
         const oficios = await tables.getTable(tables.tableNames.oficios, 'oficio_id, num_oficio, link_oficio');
@@ -60,9 +60,9 @@ router.get('/all', sessionChecker, async (req, res) => {
         let processos;
 
         if(users.isValid()){
-            processos = await tables.getTable(tables.tableNames.processos, 'processo_id, num_processo, obj_processo, descriçao, outorga_id, licen_id');
+            processos = await tables.getTableFull(tables.tableNames.processos, 'processo_id, num_processo, obj_processo, descriçao, outorga_id, licen_id', '', 'ORDER BY data_entrada DESC', []);
         }else{
-            processos = await tables.getTableCondit(tables.tableNames.processos, 'processo_id, num_processo, obj_processo, descriçao, outorga_id, licen_id', `LOWER(situaçao) <> LOWER('arquivado') AND LOWER(situaçao) <> LOWER('indeferido')`);
+            processos = await tables.getTableFull(tables.tableNames.processos, 'processo_id, num_processo, obj_processo, descriçao, outorga_id, licen_id', `WHERE LOWER(situaçao) <> LOWER('arquivado') AND LOWER(situaçao) <> LOWER('indeferido')`, 'ORDER BY (CASE WHEN data_entrada IS NULL THEN 0 ELSE 1 END) DESC, data_entrada DESC', []);
         }
 
         const response = {
@@ -96,6 +96,21 @@ router.get('/info', sessionChecker, async (req, res) => {
         res.send('error');
     }
 });
+
+router.get('/maintenance-list', sessionChecker, async (req, res) => {
+    if(req.query.id){
+        const cronograma = await getManutenCronograma(req.query.id);
+        res.json(cronograma);
+    }else{
+        res.send('error');
+    }
+});
+
+async function getManutenCronograma(poço_id){
+    const result = await tables.getTableFull(tables.tableNames.manutençaoPoço, tables.manutençaoColumns, `WHERE poço_id = ${poço_id}`, 'ORDER BY data_previsao', []);
+    
+    return result;
+}
 
 async function getInfo(type, id){
     let tableName;

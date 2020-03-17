@@ -52,6 +52,8 @@ systemctl enable uema
 Arquivo: uema.conf
 
 
+### Reiniciar o service
+> sudo systemctl restart uema.service
 
 ### Pre requisitos
 - nodejs 

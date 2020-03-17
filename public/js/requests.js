@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const dashboardBase = '/dashboard';
-const infoURL = '/info'
+const infoURL = '/info';
+const manutençaoURL = '/maintenance-list'
 
 async function makeSimpleGetRequest(base, url) {
     try {
@@ -14,7 +15,6 @@ async function makeSimpleGetRequest(base, url) {
 
 async function loadInfoQuery(base, url, query){
   try {
-    
     const response = await axios.get(base + url + query);
     return response.data;
   } catch (error) {
@@ -36,5 +36,6 @@ export {
     loadInfoQuery,
     dashboardBase,
     getAPIKeys,
-    infoURL
+    infoURL,
+    manutençaoURL
 }

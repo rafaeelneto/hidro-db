@@ -8,7 +8,7 @@ const licenciamentoValues = ['Outorgado', 'Em processo', 'Sem outorga'];
 let tableData;
 
 function dataLoader(key, date){
-    if (date == '-' || date === null || date === undefined){
+    if (date == '-' || date == null || date === undefined){
         return `<input class="form-control" type="text" name="${key}" value="-" disabled required/>`
     }else{
         return `<input class="form-control" type="date" name="${key}" value="${formatDate(date)}" disabled required/>`
@@ -16,6 +16,12 @@ function dataLoader(key, date){
 }
 
 function linkLoader(link){
+    if(link == null){
+        return `
+            Não disponível
+        `;
+    }
+    
     if(link !== '-'){
         return `
         <a href="${link}" target="_blank">
@@ -95,7 +101,7 @@ function composeMMJoinList(keys, tableName, keyColumn, propertyColumn){
         const newItem = `
         <li>
             <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${key}">
-                ${tableData.searchByID(tableName, keyColumn, key, propertyColumn)}
+                ${tableData.searchByID(tableName, keyColumn, key).nome}
             </a>
         </li>`;
 
@@ -992,4 +998,5 @@ export {
     clearInfoForm,
     loadInfoForm,
     loadSetores,
+    linkLoader
 }

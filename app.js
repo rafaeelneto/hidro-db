@@ -23,6 +23,7 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "localhost");
   
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
     next();
 });
 
@@ -59,16 +60,6 @@ const passTo = (req, res, username) => {
     req.session.user = [username];
     res.redirect('/dashboard');
 }
-
-app.route('/test').get(async (req, res, next) => {
-    try{
-        const resultQuery = await db.query('SELECT * FROM processos', []);
-        console.log('requisição ao servidor');
-        res.json(resultQuery);
-    } catch(error){
-        res.send(error);
-    }
-});
 
 //The index and login acess
 app.route('/')
@@ -131,6 +122,6 @@ app.get('/logout', (req, res) => {
 });
 
 //Initialize the server on the enviroment port
-app.listen(process.env.PORT || 3000, ()=>{
+app.listen(process.env.PORT || 8081, ()=>{
     console.log(`Listening on port ${process.env.PORT}`);
 });
