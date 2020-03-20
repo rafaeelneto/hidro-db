@@ -1,4 +1,4 @@
-# UEMA-db (COSANPA-db)
+# COSANPA-db
 Desenvolvimento de uma interface acessível para o banco de dados contendo os pontos de captação de água da COSANPA.
 
 ## Banco de dados
