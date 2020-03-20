@@ -1,8 +1,7 @@
 const db = require('../database/db');
 const bcrypt = require('bcryptjs');
 
-const visitante = 'visitante';
-
+const visitante = 'visitante'
 
 async function autheticateUser(username, password){
     const resultQuery = await db.query('SELECT pass FROM editores WHERE username=$1', [username]);
@@ -24,7 +23,7 @@ async function autheticateUser(username, password){
 
 async function insertNewUser (userAdmin, passAdmin, userNew, passNew) {
     const isValidAdminUsr = await autheticateUser(userAdmin, passAdmin);
-    if(isValidAdminUsr && userAdmin !==visitante && userNew !== visitante){
+    if(isValidAdminUsr && userAdmin !== visitante && userNew !== visitante){
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(passNew, salt);
         await db.queryAuth('INSERT INTO editores (editor_id, username, pass) VALUES (DEFAULT, $1, $2)', [userNew, hash]);

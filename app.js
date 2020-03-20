@@ -95,14 +95,14 @@ app.route('/usr/create')
     const isValid = await users.autheticateUser(usernameAdmin, passwordAdmin);
     if(isValid){
         const sucess = await users.insertNewUser(usernameAdmin, passwordAdmin, username, password);
-        if(sucess){
+        if(sucess === true){
             const isValid = await users.autheticateUser(username, password);
             passTo(req, res, username);
         }else{
-            res.send(false);
+            res.send('Usuário já existente');
         }
     }else{
-        res.send(false);
+        res.send('Administrador inválido');
     }
 });
 

@@ -111,6 +111,8 @@ async function loadInfo(parent, type, id){
 			htmlList = loadSuperfView(info, tableData);
 			identif = '-spatial';
 			break;
+		case 'setor_id':
+			break;
 		case 'outorga_id':
 			htmlList = loadOutorView(info, tableData);
 			break;
@@ -162,7 +164,7 @@ function spatialInfo(key, valueID, latLngs){
 	const markerBounds = L.latLngBounds(latLngs);
 	mapView.map.fitBounds(markerBounds, {maxZoom: 18});
 
-	toggleMapInfobar(true);
+	toggleMapInfobar((key != 'setor_id'));
 
 	loadInfo(elements.infobarSection, key, valueID);
 }
@@ -182,12 +184,12 @@ function convertDMS(lat, lng) {
 	const LatSec = ((latMinDecimal-LatMin) * 60).toFixed(2);
 	const LatCardinal = ((lat > 0) ? "N" : "S");
 
-	var convertLng = Math.abs(lng);
-	var LngDeg = Math.floor(convertLng);
-	var lngMinDecimal = ((convertLng - LngDeg) * 60);
-	var LngMin = Math.floor(lngMinDecimal);
+	let convertLng = Math.abs(lng);
+	let LngDeg = Math.floor(convertLng);
+	let lngMinDecimal = ((convertLng - LngDeg) * 60);
+	let LngMin = Math.floor(lngMinDecimal);
 	const LngSec = ((lngMinDecimal-LngMin) * 60).toFixed(2);
-	var LngCardinal = ((lng > 0) ? "E" : "W");
+	let LngCardinal = ((lng > 0) ? "E" : "W");
 
 	return LatDeg + '° ' + LatMin + '\' ' + LatSec  + '\" ' + LatCardinal + " | " + LngDeg + '° ' + LngMin + '\' ' + LngSec  + '\" ' + LngCardinal
 }

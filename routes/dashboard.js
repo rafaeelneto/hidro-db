@@ -77,7 +77,6 @@ router.get('/all', sessionChecker, async (req, res) => {
             processos: processos,
             autosInfraçao: autosInfraçao,
             notificaçoes: notificaçoes,
-            analisesFQB: analisesFQB,
             oficios: oficios,
             orgaos: orgaos,
             situaçoes: situaçoes
@@ -107,7 +106,7 @@ router.get('/maintenance-list', sessionChecker, async (req, res) => {
 });
 
 async function getManutenCronograma(poço_id){
-    const result = await tables.getTableFull(tables.tableNames.manutençaoPoço, tables.manutençaoColumns, `WHERE poço_id = ${poço_id}`, 'ORDER BY data_previsao', []);
+    const result = await tables.getTableFull(tables.tableNames.manutençaoPoço, tables.manutençaoColumns, `WHERE poço_id = $1`, 'ORDER BY data_previsao', [poço_id]);
     
     return result;
 }
@@ -159,12 +158,13 @@ async function getInfo(type, id){
     let joinTables = [];
 
     for (let i = 0; i < joinsQueries.length; i++) {
-        let result = await db.query(joinsQueries[i](type, id), []);
+        let result = await db.query(joinsQueries[i](type), [id]);
 
         joinTables.push(result.rows);
     }
     
-    const result = await tables.getInfo(tableName, columns, '', `WHERE ${type} = ${id}`, []);
+    const result = await tables.getInfo(tableName, columns, '', `WHERE ${type} = $1`, [id]);
+    console.log(result);
 
     return {
         type: type,

@@ -101,7 +101,7 @@ function composeMMJoinList(keys, tableName, keyColumn, propertyColumn){
         const newItem = `
         <li>
             <a class="d-flex justify-content-between align-items-center" href="#${tableName}=${key}">
-                ${tableData.searchByID(tableName, keyColumn, key).nome}
+                ${tableData.searchByID(tableName, keyColumn, key)[propertyColumn]}
             </a>
         </li>`;
 

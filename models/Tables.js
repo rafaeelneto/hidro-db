@@ -12,18 +12,18 @@ const autoInfraçaoInfoColumns = 'autoifr_id, num_infra, obj_autuado, processo_i
 const analisesInfoColumns = 'analise_id, numafq, numab, data_coleta, data_coletabac, data_exame, data_examebac coletor, fonte, tratamento, potabilidade, diretorio, poço_id, super_id, un_id, obs';
 const manutençaoColumns = 'manuten_id, data_previsao, data_realizada, serviço_realiz, obs, link, executor, orçamento';
 
-const outorgaPoçoJoinInfo = (type, id) => {return `SELECT outorga_id FROM outorga_poço_link WHERE ${type}=${id}`};
-const outorgaSuperfJoinInfo = (type, id) => {return `SELECT outorga_id FROM outorga_superf_link WHERE ${type}=${id}`};
-const processoPoçoJoinInfo = (type, id) => {return `SELECT processo_id FROM processo_poço_link WHERE ${type}=${id}`};
-const processoSuperfJoinInfo = (type, id) => {return `SELECT processo_id FROM processo_superf_link WHERE ${type}=${id}`};
+const outorgaPoçoJoinInfo = (type) => {return `SELECT outorga_id FROM outorga_poço_link WHERE ${type}=$1`};
+const outorgaSuperfJoinInfo = (type) => {return `SELECT outorga_id FROM outorga_superf_link WHERE ${type}=$1`};
+const processoPoçoJoinInfo = (type) => {return `SELECT processo_id FROM processo_poço_link WHERE ${type}=$1`};
+const processoSuperfJoinInfo = (type) => {return `SELECT processo_id FROM processo_superf_link WHERE ${type}=$1`};
 
-const poçoOutorgaJoinInfo = (type, id) => {return `SELECT poço_id FROM outorga_poço_link WHERE ${type}=${id}`};
-const superfOutorgaJoinInfo = (type, id) => {return `SELECT super_id FROM outorga_superf_link WHERE ${type}=${id}`};
-const poçoProcessoJoinInfo = (type, id) => {return `SELECT poço_id FROM processo_poço_link WHERE ${type}=${id}`};
-const superfProcessoJoinInfo = (type, id) => {return `SELECT super_id FROM processo_superf_link WHERE ${type}=${id}`};
+const poçoOutorgaJoinInfo = (type) => {return `SELECT poço_id FROM outorga_poço_link WHERE ${type}=$1`};
+const superfOutorgaJoinInfo = (type) => {return `SELECT super_id FROM outorga_superf_link WHERE ${type}=$1`};
+const poçoProcessoJoinInfo = (type) => {return `SELECT poço_id FROM processo_poço_link WHERE ${type}=$1`};
+const superfProcessoJoinInfo = (type) => {return `SELECT super_id FROM processo_superf_link WHERE ${type}=$1`};
 
-const vazoesPoçoJoin = (type, id) => {return `SELECT vazao, nd, data_medida FROM vazoes_poços WHERE ${type}=${id}`};
-const vazoesSuperfJoin = (type, id) => {return `SELECT vazao, data_medida FROM vazoes_superf WHERE ${type}=${id}`};
+const vazoesPoçoJoin = (type) => {return `SELECT vazao, nd, data_medida FROM vazoes_poços WHERE ${type}=$1`};
+const vazoesSuperfJoin = (type) => {return `SELECT vazao, data_medida FROM vazoes_superf WHERE ${type}=$1`};
 
 async function getGIS(table, columns, conditions, param){
     const result = await db.query(
@@ -82,7 +82,7 @@ async function getTableFull(table, columns, conditions, options, param){
 
 async function getInfo(table, columns, options, conditions, param){
     try{
-        const result = await db.query(`SELECT ${columns} FROM ${table} ${conditions}  ${options}`, param);
+        const result = await db.query(`SELECT ${columns} FROM ${table} ${conditions} ${options}`, param);
         return result.rows[0];
     }catch(error){
         console.log(error);
