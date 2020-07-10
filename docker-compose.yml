@@ -1,6 +1,18 @@
-version: 2.0
+version: "3.8"
 
 services:
   nodejs-server:
-    image:
+    image: node_js_image
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    working_dir: /usr/src/app
+    command: "nodemon server.js"
+    restart: always
     ports:
+      - "80:8081"
+    volumes:
+      - ./server:/usr/src/app
+      - ./usr/src/app/node_modules
+    environment:
+      PORT: "8081"
