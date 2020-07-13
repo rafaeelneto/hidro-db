@@ -16,3 +16,40 @@ services:
       - ./usr/src/app/node_modules
     environment:
       PORT: "8081"
+    depends_on:
+      - "graphql-engine"
+
+  #CLIENT SERVER
+
+  #react_client:
+  #  build: ./client
+  #  working_dir: /usr/src/app
+  #  command: "npm run start"
+  #  restart: always
+  #  ports:
+  #    - "80:8085"
+  #  volumes:
+  #    - ./client/src:/usr/src/app/src
+  #    - ./client/public:/usr/src/app/public
+  #    - ./usr/src/app/node_modules
+  #  environment:
+  #    -REACT_APP_PORT: "8085"
+  #  links:
+  #    - nodejs-server
+
+  graphql-engine:
+    image: hasura/graphql-engine:latest
+    restart: always
+    volumes:
+      - ./hasura:/hasura
+    ports:
+      - "3000:8080"
+      - "9693:9693"
+      - "9695:9695"
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:26119499@docker.for.win.localhost:5432/uema
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup # http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_SERVER_PORT: 8080
+      #HASURA_GRAPHQL_ADMIN_SECRET: "myadminsecretkey"   # not needed for dev env
+      #HASURA_GRAPHQL_JWT_SECRET: ""                     # see hasura/notes.md

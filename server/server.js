@@ -1,15 +1,9 @@
-const express = require("express");
+const dotenv = require("dotenv");
+dotenv.config();
 
-const app = express();
-
-app.get("/", (req, res, next) => {
-  res.status(200).json({
-    msg: "teu cu",
-    msg2: "no teu pau",
-  });
-});
+const server = require("./app");
 
 //Initialize the server on the enviroment port
-app.listen(process.env.PORT || 8081, () => {
+server.listen(process.env.PORT || 8081, () => {
   console.log(`Listening on port ${process.env.PORT}`);
 });
