@@ -1,7 +1,7 @@
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 dotenv.config();
 
-const server = require("./app");
+const server = require('./app');
 
 //Initialize the server on the enviroment port
 server.listen(process.env.PORT || 8081, () => {

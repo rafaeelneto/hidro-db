@@ -1,51 +1,96 @@
-const db = require('../database/db');
-const bcrypt = require('bcryptjs');
+//const bcrypt = require('bcryptjs');
+const gql = require('graphql-tag');
 
-const visitante = 'visitante'
+const gqlClient = require('../graph-client/client');
 
-async function autheticateUser(username, password){
-    const resultQuery = await db.query('SELECT pass FROM editores WHERE username=$1', [username]);
-    const rows = resultQuery.rows;
-    let isVisitante = username === visitante;
-    let authen;
-    if (!isVisitante){
-        authen = bcrypt.compareSync(password, rows[0].pass);
+const fragments = {
+  userId: gql`
+    fragment userId on users {
+      id
     }
-    if ((authen && rows.length >= 1) || isVisitante) {
-        db.setUsr(username, password);
-        this.userName = username;
-        this.isAuthorize = !isVisitante;
-        return true;
-    } else {
-        return false;
-    }
-}
-
-async function insertNewUser (userAdmin, passAdmin, userNew, passNew) {
-    const isValidAdminUsr = await autheticateUser(userAdmin, passAdmin);
-    if(isValidAdminUsr && userAdmin !== visitante && userNew !== visitante){
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(passNew, salt);
-        await db.queryAuth('INSERT INTO editores (editor_id, username, pass) VALUES (DEFAULT, $1, $2)', [userNew, hash]);
-        return true;
-    }else{
-        console.log('Invalid administration user');
-        return false;
-    }
-}
-
-function closeDB (){
-    db.closeDB();
-}
-
-exports.visitante = visitante;
-exports.autheticateUser = autheticateUser;
-exports.insertNewUser = insertNewUser;
-exports.closeDB = closeDB;
-exports.isValid = () => {
-    return this.isAuthorize;
-};
-exports.getUser = () => {
-    return this.userName;
+  `,
 };
 
+const getQueriesOperations = {
+  userIDByLogin: (login_name) => ({
+    query: gql`
+      query($login_name: String) {
+        users(where: { login_name: { _eq: $login_name } }) {
+          ...userId
+        }
+      }
+      ${fragments.userId}
+    `,
+    variables: {
+      login_name,
+    },
+  }),
+  userIdByEmail: (email) => ({
+    query: gql`
+      query($email: String) {
+        users(where: { email: { _eq: $email } }) {
+          ...userId
+        }
+      }
+      ${fragments.userId}
+    `,
+    variables: {
+      email,
+    },
+  }),
+  userIdByDrt: (email) => ({
+    query: gql`
+      query($drt: String) {
+        users(where: { drt: { _eq: $drt } }) {
+          ...userId
+        }
+      }
+      ${fragments.userId}
+    `,
+    variables: {
+      drt,
+    },
+  }),
+};
+
+exports.getUserIDBy = async (login_name, email, drt) => {
+  let operation;
+
+  if (login_name) {
+    operation = getQueriesOperations.userIDByLogin(login_name);
+  } else if (email) {
+    operation = getQueriesOperations.userIdByEmail(email);
+  } else if (drt) {
+    operation = getQueriesOperations.userIdByEmail(drt);
+  }
+
+  const data = await gqlClient.query(operation);
+  if (!data.users[0]) {
+    return null;
+  }
+
+  return data.users[0].id;
+};
+
+exports.verifyPassword = async (id, password) => {
+  const operation = {
+    query: gql`
+      query($id: uuid) {
+        users(where: { id: { _eq: $id } }) {
+          psw
+        }
+      }
+    `,
+    variables: {
+      id,
+    },
+  };
+
+  const data = await gqlClient.query(operation);
+
+  if (!data.users[0]) {
+    return null;
+  }
+
+  return password === data.users[0].psw;
+};
