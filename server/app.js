@@ -1,6 +1,10 @@
 const express = require('express');
 const gql = require('graphql-tag');
 
+const AppError = require('./utils/appError');
+
+const errorHandler = require('./controllers/errorHandler');
+
 const userRoutes = require('./routes/userRoutes');
 const gqlClient = require('./graph-client/client');
 
@@ -29,5 +33,13 @@ app.get('/', async (req, res, next) => {
 });
 
 app.use('/v1/api/user', userRoutes);
+
+app.all('*', (req, res, next) => {
+  next(
+    new AppError(`Can't find the route ${req.originalUrl} on the server`, 404)
+  );
+});
+
+app.use(errorHandler);
 
 module.exports = app;
