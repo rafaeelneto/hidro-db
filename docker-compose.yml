@@ -16,6 +16,8 @@ services:
       - ./usr/src/app/node_modules
     environment:
       PORT: "8081"
+      NODE_ENV: "development" #can be production || development
+      JWT_SECRET: "3EK6FD+o0+c7tzBNVfjpMkNDi2yARAAKzQlk8O2IKoxQu4nF7EdAh8s3TwpHwrdWT6R"
     depends_on:
       - "graphql-engine"
     networks:
@@ -51,10 +53,10 @@ services:
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:26119499@docker.for.win.localhost:5432/uema
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
-      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup # http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log # http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_SERVER_PORT: 3000
-      #HASURA_GRAPHQL_ADMIN_SECRET: "myadminsecretkey"   # not needed for dev env
-      #HASURA_GRAPHQL_JWT_SECRET: ""                     # see hasura/notes.md
+      HASURA_GRAPHQL_ADMIN_SECRET: "myadminsecretkey" # not needed for dev env
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256", "key": "3EK6FD+o0+c7tzBNVfjpMkNDi2yARAAKzQlk8O2IKoxQu4nF7EdAh8s3TwpHwrdWT6R"}' # see hasura/notes.md
     networks:
       - cosanpa_db_net
 networks:
