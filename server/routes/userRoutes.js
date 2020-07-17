@@ -1,12 +1,13 @@
 const express = require('express');
 
 const authController = require('../controllers/authController');
+const usersController = require('../controllers/userController');
 
 const router = express.Router();
 
 router.post('/login', authController.login);
 
-router.post('/create-user', authController.createUser);
+router.post('/create-user', authController.protect, usersController.createUser);
 
 router.post('/reflesh-token', (req, res) => {
   res.status(500).json({

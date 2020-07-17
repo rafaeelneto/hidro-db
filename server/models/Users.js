@@ -4,12 +4,41 @@ const gql = require('graphql-tag');
 const gqlClient = require('../graph-client/client');
 
 const fragments = {
-  userId: gql`
-    fragment userId on users {
-      id
-    }
-  `,
+  userId: {
+    query: gql`
+      fragment userId on users {
+        id
+      }
+    `,
+    name: 'userId',
+  },
+  userLogin: {
+    query: gql`
+      fragment userLogin on users {
+        nome
+        email
+        scope
+        userOnRoles {
+          role {
+            nome
+          }
+        }
+      }
+    `,
+    name: 'userLogin',
+  },
+  userCheckToken: {
+    query: gql`
+      fragment userCheckToken on users {
+        id
+        psw_changed_at
+      }
+    `,
+    name: 'userCheckToken',
+  },
 };
+
+exports.fragments = fragments;
 
 const getQueriesOperations = {
   userIDByLogin: (login_name) => ({
@@ -19,7 +48,7 @@ const getQueriesOperations = {
           ...userId
         }
       }
-      ${fragments.userId}
+      ${fragments.userId.query}
     `,
     variables: {
       login_name,
@@ -51,20 +80,14 @@ const getQueriesOperations = {
       drt,
     },
   }),
-  userLoginByID: (id) => ({
+  userByID: (id, fragment) => ({
     query: gql`
-      query($id: uuid) {
-        users(where: { id: { _eq: $id } }) {
-          nome
-          email
-          scope
-          userOnRoles {
-            role {
-              nome
-            }
-          }
-        }
+    query($id: uuid) {
+      users(where: { id: { _eq: $id } }) {
+        ...${fragment.name}
       }
+    }
+    ${fragment.query}
     `,
     variables: {
       id,
@@ -92,13 +115,13 @@ const getUserData = async (operation) => {
   return data.users[0];
 };
 
-const setUserData = (operation, token) => {
+const setUserData = async (operation, token) => {
   //Creation and insertion is made only by autheticanted users and uses the users the token to request the graphQL engine
   operation = {
     ...operation,
     context: {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     },
   };
@@ -110,7 +133,7 @@ const setUserData = (operation, token) => {
   }
 
   return data.users[0];
-} 
+};
 
 exports.getUserIDBy = async (login_name, email, drt) => {
   let operation;
@@ -130,14 +153,15 @@ exports.getUserIDBy = async (login_name, email, drt) => {
   return user.id;
 };
 
-exports.getUserByID = async (id) => {
-  const operation = getQueriesOperations.userLoginByID(id);
-
-  const user = await getUserData(operation);
+exports.getUserByID = async (id, fragment) => {
+  const user = await getUserData(getQueriesOperations.userByID(id, fragment));
 
   if (!user) return null;
 
-  user.roles = user.userOnRoles.map((item) => item.role.nome);
+  //TMP
+  if (user.userOnRoles) {
+    user.roles = user.userOnRoles.map((item) => item.role.nome);
+  }
 
   return user;
 };
@@ -161,7 +185,7 @@ exports.verifyPassword = async (id, password) => {
   return password === user.psw;
 };
 
-exports.createUser = (newUser, token) => {
+exports.createUser = async (creatorId, newUser, token) => {
   const operation = {
     query: gql`
       query($id: uuid) {
