@@ -7,29 +7,38 @@ const AppError = require('../utils/appError');
 exports.createUser = catchAsync(async (req, res, next) => {
   const token = req.token;
 
+  // get request input
   const {
-    login_name,
     drt,
     email,
-    password,
-    passwordConfirm,
-    roles,
+    login_name,
+    nome,
+    psw,
+    pswConfirm,
     scope,
+    roles,
   } = req.body;
 
-  if (
-    !login_name &&
-    !email &&
-    !password &&
-    !passwordConfirm &&
-    !passwordConfirm
-  ) {
-    console.log('nfidaf');
+  if (!login_name && !email && !psw && !pswConfirm && !nome) {
     return next(new AppError('Bad request', 400));
   }
 
-  res.status(200).json({
-    status: 'success',
-    message: 'sucesso no teu cu porra',
+  const newUser = Users.createUser(
+    req.user_id,
+    {
+      drt,
+      email,
+      login_name,
+      nome,
+      psw,
+      pswConfirm,
+      scope,
+      roles,
+    },
+    req.token
+  );
+
+  return res.json({
+    newUser,
   });
 });

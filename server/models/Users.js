@@ -40,7 +40,7 @@ const fragments = {
 
 exports.fragments = fragments;
 
-const getQueriesOperations = {
+const queriesOperations = {
   userIDByLogin: (login_name) => ({
     query: gql`
       query($login_name: String) {
@@ -95,6 +95,23 @@ const getQueriesOperations = {
   }),
 };
 
+const mutationsOperations = {
+  newUser: (user) => ({
+    query: gql`
+      mutation createUser($user: users_insert_input!) {
+        insert_users_one(object: $user) {
+          id
+          nome
+          email
+        }
+      }
+    `,
+    variables: {
+      user,
+    },
+  }),
+};
+
 const getUserData = async (operation) => {
   //Simple user information role is set to default admin-secret
   operation = {
@@ -127,6 +144,7 @@ const setUserData = async (operation, token) => {
   };
 
   const data = await gqlClient.query(operation);
+  console.log(data);
 
   if (!data.users[0]) {
     return null;
@@ -139,11 +157,11 @@ exports.getUserIDBy = async (login_name, email, drt) => {
   let operation;
 
   if (login_name) {
-    operation = getQueriesOperations.userIDByLogin(login_name);
+    operation = queriesOperations.userIDByLogin(login_name);
   } else if (email) {
-    operation = getQueriesOperations.userIdByEmail(email);
+    operation = queriesOperations.userIdByEmail(email);
   } else if (drt) {
-    operation = getQueriesOperations.userIdByDrt(drt);
+    operation = queriesOperations.userIdByDrt(drt);
   }
 
   const user = await getUserData(operation);
@@ -154,7 +172,7 @@ exports.getUserIDBy = async (login_name, email, drt) => {
 };
 
 exports.getUserByID = async (id, fragment) => {
-  const user = await getUserData(getQueriesOperations.userByID(id, fragment));
+  const user = await getUserData(queriesOperations.userByID(id, fragment));
 
   if (!user) return null;
 
@@ -185,21 +203,20 @@ exports.verifyPassword = async (id, password) => {
   return password === user.psw;
 };
 
-exports.createUser = async (creatorId, newUser, token) => {
-  const operation = {
-    query: gql`
-      query($id: uuid) {
-        users(where: { id: { _eq: $id } }) {
-          psw
-        }
-      }
-    `,
-    variables: {
-      id,
-    },
+exports.createUser = async (created_by, newUser, token) => {
+  newUser.created_by = created_by;
+  newUser.userOnRoles = {
+    data: newUser.roles.map((id) => {
+      return {
+        role_id: id,
+      };
+    }),
   };
+  delete newUser.roles;
+
+  const operation = mutationsOperations.newUser(newUser);
 
   const user = await setUserData(operation, token);
 
-  return password === user.psw;
+  return user;
 };

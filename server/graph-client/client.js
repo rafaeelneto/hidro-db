@@ -12,7 +12,12 @@ const link = createHttpLink({
 
 exports.query = (operation) =>
   makePromise(execute(link, operation))
-    .then((res) => res.data)
+    .then((res) => {
+      if (res.errors) {
+        throw res;
+      }
+      return res.data;
+    })
     .catch((error) => {
-      console.log(`received error ${error}`);
+      return error;
     });
