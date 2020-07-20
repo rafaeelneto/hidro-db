@@ -17,13 +17,13 @@ exports.createUser = catchAsync(async (req, res, next) => {
     pswConfirm,
     scope,
     roles,
-  } = req.body;
+  } = req.body.input;
 
   if (!login_name && !email && !psw && !pswConfirm && !nome) {
     return next(new AppError('Bad request', 400));
   }
 
-  const newUser = Users.createUser(
+  const newUser = await Users.createUser(
     req.user_id,
     {
       drt,
@@ -38,7 +38,13 @@ exports.createUser = catchAsync(async (req, res, next) => {
     req.token
   );
 
+  if (newUser.errors) {
+    console.log('Esse erro');
+    return next(new AppError(newUser.errors[0].message, 400));
+  }
+
   return res.json({
-    newUser,
+    email: newUser.email,
+    nome: newUser.nome,
   });
 });

@@ -97,18 +97,21 @@ const queriesOperations = {
 
 const mutationsOperations = {
   newUser: (user) => ({
-    query: gql`
-      mutation createUser($user: users_insert_input!) {
-        insert_users_one(object: $user) {
-          id
-          nome
-          email
+    object: {
+      query: gql`
+        mutation createUser($user: users_insert_input!) {
+          insert_users_one(object: $user) {
+            id
+            nome
+            email
+          }
         }
-      }
-    `,
-    variables: {
-      user,
+      `,
+      variables: {
+        user,
+      },
     },
+    name: 'insert_users_one',
   }),
 };
 
@@ -125,8 +128,8 @@ const getUserData = async (operation) => {
 
   const data = await gqlClient.query(operation);
 
-  if (!data.users[0]) {
-    return null;
+  if (data.errors) {
+    return data;
   }
 
   return data.users[0];
@@ -134,8 +137,8 @@ const getUserData = async (operation) => {
 
 const setUserData = async (operation, token) => {
   //Creation and insertion is made only by autheticanted users and uses the users the token to request the graphQL engine
-  operation = {
-    ...operation,
+  operation.object = {
+    ...operation.object,
     context: {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -143,16 +146,18 @@ const setUserData = async (operation, token) => {
     },
   };
 
-  const data = await gqlClient.query(operation);
-  console.log(data);
+  const data = await gqlClient.query(operation.object);
 
-  if (!data.users[0]) {
-    return null;
+  if (data.errors) {
+    return data;
   }
 
-  return data.users[0];
+  console.log(data);
+
+  return data[operation.name];
 };
 
+const verifyNewPassword = () => {};
 exports.getUserIDBy = async (login_name, email, drt) => {
   let operation;
 
@@ -166,7 +171,7 @@ exports.getUserIDBy = async (login_name, email, drt) => {
 
   const user = await getUserData(operation);
 
-  if (!user) return null;
+  if (user.errors) return user;
 
   return user.id;
 };
@@ -174,7 +179,7 @@ exports.getUserIDBy = async (login_name, email, drt) => {
 exports.getUserByID = async (id, fragment) => {
   const user = await getUserData(queriesOperations.userByID(id, fragment));
 
-  if (!user) return null;
+  if (user.errors) return user;
 
   //TMP
   if (user.userOnRoles) {
@@ -217,6 +222,10 @@ exports.createUser = async (created_by, newUser, token) => {
   const operation = mutationsOperations.newUser(newUser);
 
   const user = await setUserData(operation, token);
+
+  if (user.errors) {
+    return user;
+  }
 
   return user;
 };

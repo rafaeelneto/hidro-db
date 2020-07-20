@@ -81,6 +81,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   ) {
     next(new AppError('Token has expired. Log in again'));
   }
+
+  //5) Pass some configurations to req object
   req.user_id = decodedToken.id;
   req.token = token;
   next();
