@@ -1,5 +1,7 @@
 const express = require('express');
 const gql = require('graphql-tag');
+const morgan = require('morgan');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 
@@ -11,6 +13,8 @@ const gqlClient = require('./graph-client/client');
 const app = express();
 
 app.use(express.json());
+app.use(morgan('dev'));
+app.use(cors());
 
 //TEST
 app.get('/', async (req, res, next) => {

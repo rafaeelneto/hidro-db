@@ -8,6 +8,7 @@ const AppError = require('../utils/appError');
 
 exports.login = catchAsync(async (req, res, next) => {
   const { login_name, drt, email, password } = req.body;
+  console.log(req.body);
 
   if (!login_name && !drt && !email) {
     next(new AppError('Bad request', 400));

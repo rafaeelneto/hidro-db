@@ -197,7 +197,7 @@ export default function LoginPage() {
     password,
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(fields.identifier.value);
     if (fields.identifier.value === '') {
@@ -207,6 +207,7 @@ export default function LoginPage() {
         error: true,
         errorMsg: 'Campo Vazio',
       });
+      return;
     }
     if (fields.password.value === '') {
       console.log('vazio');
@@ -215,7 +216,25 @@ export default function LoginPage() {
         error: true,
         errorMsg: 'Campo Vazio',
       });
+      return;
     }
+
+    const userInfo = JSON.stringify({
+      login_name: identifier.value,
+      password: password.value,
+    });
+
+    const fetchData = await fetch('http://localhost/v1/api/user/login', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc
+      mode: 'cors', // no-cors, *cors, same-origin
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: userInfo, // body data type must match "Content-Type" header
+    });
+    const data = await fetchData.json();
+
+    console.log(data);
   };
 
   const handleChange = async (event) => {
