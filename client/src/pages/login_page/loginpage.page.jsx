@@ -1,132 +1,243 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Button, Link } from '@material-ui/core/';
 import TextField from '@material-ui/core/TextField';
 
 import { makeStyles } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/styles';
 
 import background_main from '../../assets/images/background_main.jpg';
 import logo_cosanpa_db from '../../assets/logos/logo_cosanpa_db_vertical_wbg.svg';
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    overflow: 'overlay',
-    overflowX: 'hidden',
-  },
-  header: {
-    position: 'absolute',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
-    '& .header-container': {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'flex-end',
-      alignContent: 'center',
-    },
-    '& .login_section_btn': {
-      background: 'linear-gradient(45deg, #56afbc, #197f8c)',
-      width: '80px',
-    },
-  },
-  containerWrapper: {
-    maxWidth: '1132px',
-    margin: '20px',
-  },
-  hero_tile: {
-    height: '100vh',
-    width: '100%',
-    background: 'url(.assets/images/background_main.png)',
-    backgroundImage: `url(${background_main})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    color: 'white',
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    '& .main_container': {
-      display: 'inherit',
-      padding: '10%',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      '& .logo': {
-        height: '300px',
-        padding: '20px',
+const useStyles = makeStyles((theme) => {
+  const variables = {
+    login_tile: {
+      mobile: {
+        height: 'auto',
+      },
+      desktop: {
+        height: '600px',
       },
     },
-  },
-  login_tile: {
-    background: 'linear-gradient(45deg, #00525f, #00525f)',
-    height: '80vh',
-    width: '100%',
-    color: 'black',
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
-    '& .login_container': {
-      display: 'inherit',
-      alignContent: 'stretch',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+    login_boxes: {
+      mobile: {
+        width: '90%',
+      },
+      desktop: {
+        width: '40%',
+      },
     },
-  },
-  login_box: {
-    width: '40%',
-    height: '400px',
-    background: 'white',
-    padding: '40px',
-    borderRadius: '20px',
-    display: 'flex',
-    justifyContent: 'center',
-    flexFlow: 'column',
-    '& .login-form': {
+  };
+
+  return {
+    root: {
+      width: '100%',
+      overflow: 'overlay',
+      overflowX: 'hidden',
+    },
+    header: {
+      position: 'absolute',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'center',
+      '& .header-container': {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignContent: 'center',
+      },
+      '& .login_section_btn': {
+        background: 'linear-gradient(45deg, #56afbc, #197f8c)',
+        width: '80px',
+      },
+    },
+    containerWrapper: {
+      maxWidth: '1132px',
+      margin: '20px',
+    },
+    hero_tile: {
+      height: '600px',
+      width: '100%',
+      background: 'url(.assets/images/background_main.png)',
+      backgroundImage: `url(${background_main})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      color: 'white',
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+      '& .main_container': {
+        display: 'inherit',
+        padding: '10%',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        '& .logo': {
+          height: '300px',
+          padding: '20px',
+        },
+      },
+    },
+    login_tile: {
+      background: theme.palette.backgroundLightGray,
+      height: variables.login_tile.mobile.height,
+      width: '100%',
+      color: 'black',
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'center',
+      '& .login_container': {
+        display: 'inherit',
+        alignContent: 'stretch',
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+        alignItems: 'center',
+        [theme.breakpoints.up('md')]: {
+          flexDirection: 'row',
+        },
+      },
+    },
+    login_box: {
+      height: 'auto',
+      width: variables.login_boxes.mobile.width,
+      background: 'white',
+      padding: '40px',
+      borderRadius: '20px',
       display: 'flex',
       justifyContent: 'center',
       flexFlow: 'column',
+      '& .login-form': {
+        display: 'flex',
+        justifyContent: 'center',
+        flexFlow: 'column',
+      },
+      '& .login-btn': {
+        margin: '10px 0',
+        width: 'auto',
+      },
+      '& ion-icon': {
+        fontSize: '84px',
+        alignSelf: 'center',
+        color: theme.palette.primary.dark,
+      },
     },
-    '& .login-btn': {
-      margin: '10px 0',
-      width: 'auto',
+    info_box: {
+      width: variables.login_boxes.mobile.width,
+      '& p': {
+        color: theme.palette.grayNeutral,
+        fontFamily: theme.typography.lato.fontFamily,
+        fontWeight: '500',
+      },
+      '& h1': {
+        fontFamily: theme.typography.fontFamily,
+        color: theme.palette.primary.main,
+        fontWeight: '600',
+      },
     },
-  },
-  infoBox: {
-    width: '40%',
-    '& p': {
-      color: '#f6f6f6',
-    },
-    '& h2': {
+    visitante_btn: {
+      width: '300px',
+      background: 'linear-gradient(45deg, #ffcf60, #FF8E53)',
+      fontWeight: '700',
+      padding: '10px',
+      marginTop: '50px',
       color: 'white',
     },
-  },
-  visitante_btn: {
-    width: '300px',
-    background: 'linear-gradient(45deg, #ffcf60, #FF8E53)',
-    letterSpacing: '3px',
-    fontWeight: '700',
-    padding: '10px',
-    marginTop: '50px',
-    color: 'white',
-  },
-  sectionBtn: {
-    color: 'white',
-    margin: '0 10px',
-  },
-  section_title: {
-    color: '#0093a7',
-    fontWeight: 500,
-  },
-  inputFieldLogin: {
-    margin: '10px 0',
-  },
+    sectionBtn: {
+      color: 'white',
+      margin: '0 5px',
+      letterSpacing: '2px',
+    },
+    section_title: {
+      fontFamily: theme.typography.h1,
+      color: 'white',
+      fontWeight: 500,
+    },
+    inputFieldLogin: {
+      margin: '10px 0',
+    },
+    [theme.breakpoints.up('md')]: {
+      login_tile: {
+        height: variables.login_tile.desktop.height,
+      },
+      login_box: {
+        width: variables.login_boxes.desktop.width,
+        maxHeight: '80%',
+      },
+      info_box: {
+        width: variables.login_boxes.desktop.width,
+      },
+    },
+  };
 });
 
+class FieldText {
+  constructor(name, value, error = false, errorMsg = '') {
+    this.name = name;
+    this.value = value;
+    this.error = error;
+    this.errorMsg = errorMsg;
+  }
+}
+
 export default function LoginPage() {
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
+  const [identifier, setIdentifier] = useState(new FieldText('identifier', ''));
+  const [password, setPassword] = useState(new FieldText('password', ''));
+
+  const fieldType = {
+    type: TextField,
+  };
+
+  const fields = {
+    identifier,
+    password,
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(fields.identifier.value);
+    if (fields.identifier.value === '') {
+      console.log('vazio');
+      setIdentifier({
+        ...fields.identifier,
+        error: true,
+        errorMsg: 'Campo Vazio',
+      });
+    }
+    if (fields.password.value === '') {
+      console.log('vazio');
+      setPassword({
+        ...fields.password,
+        error: true,
+        errorMsg: 'Campo Vazio',
+      });
+    }
+  };
+
+  const handleChange = async (event) => {
+    const { name, value } = event.target;
+    const field = {
+      ...fields[name],
+      value,
+    };
+
+    console.log(field.value);
+    if (field.name === 'identifier') {
+      setIdentifier(field);
+    }
+    if (field.name === 'password') {
+      setPassword(field);
+    }
+  };
+
+  const handleLoginButton = () => {
+    console.log(identifier, password);
+  };
+
   return (
     <div className={classes.root}>
       <header className={classes.header}>
@@ -153,10 +264,10 @@ export default function LoginPage() {
       </div>
       <div className={classes.login_tile}>
         <div className={`${classes.containerWrapper} login_container`}>
-          <div className={classes.infoBox}>
-            <h2 className={classes.section_title}>
+          <div className={classes.info_box}>
+            <h1 className={classes.section_title}>
               Faça login para ter acesso avançado e para contribuir conosco
-            </h2>
+            </h1>
             <p>
               O nosso sistema é uma ferramenta colaborativa e integrada para o
               gerenciamento de informações da COSANPA e conta com a ajuda de
@@ -165,24 +276,51 @@ export default function LoginPage() {
             </p>
           </div>
           <div className={classes.login_box}>
-            <form className="login-form" noValidate autoComplete="off">
+            <ion-icon
+              className="user-icon"
+              name="people-circle-outline"
+            ></ion-icon>
+            <form
+              className="login-form"
+              noValidate
+              autoComplete="off"
+              onSubmit={handleSubmit}
+            >
               <TextField
-                id="login"
+                id="identifier"
+                name={fields.identifier.name}
                 label="Login/DRT/Email"
                 variant="outlined"
+                onChange={handleChange}
                 className={classes.inputFieldLogin}
+                error={fields.identifier.error}
+                helperText={
+                  fields.identifier.error ? fields.identifier.errorMsg : ''
+                }
+                required
               />
               <TextField
-                id="psw"
+                id="password"
+                name={fields.password.name}
+                type="password"
                 label="Senha"
                 variant="outlined"
-                type="password"
+                onChange={handleChange}
                 className={classes.inputFieldLogin}
+                required
+                error={fields.password.error}
+                helperText={
+                  fields.password.error ? fields.password.errorMsg : ''
+                }
               />
+              <Button
+                className={`${classes.visitante_btn} login-btn`}
+                type="submit"
+              >
+                LOGIN
+              </Button>
             </form>
-            <Button className={`${classes.visitante_btn} login-btn`}>
-              Faça login
-            </Button>
+
             <Link>Esqueceu sua senha?</Link>
           </div>
         </div>
