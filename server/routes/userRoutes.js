@@ -9,7 +9,7 @@ router.post('/login', authController.login);
 
 router.post('/create-user', authController.protect, usersController.createUser);
 
-router.post('/refresh-token', authController.reflesh_token);
+router.post('/refresh_token', authController.reflesh_token);
 
 router.post('/reset_psw', (req, res) => {
   res.status(500).json({
