@@ -37,6 +37,24 @@ const fragments = {
     `,
     name: 'userCheckToken',
   },
+  userRefreshToken: {
+    query: gql`
+      fragment userRefreshToken on users {
+        id
+        psw_changed_at
+        refresh_token
+        nome
+        email
+        scope
+        userOnRoles {
+          role {
+            nome
+          }
+        }
+      }
+    `,
+    name: 'userRefreshToken',
+  },
 };
 
 exports.fragments = fragments;
@@ -114,22 +132,28 @@ const mutationsOperations = {
     },
     name: 'insert_users_one',
   }),
-  setRefleshToken: (user_id, token) => ({
+  setRefleshToken: (id, token) => ({
     object: {
       query: gql`
-        mutation createUser($user: users_insert_input!) {
-          insert_users_one(object: $user) {
-            id
-            nome
-            email
+        mutation setRefreshToken(
+          $user: users_set_input!
+          $pk: users_pk_columns_input!
+        ) {
+          update_users_by_pk(_set: $user, pk_columns: $pk) {
+            refresh_token
           }
         }
       `,
       variables: {
-        user,
+        user: {
+          refresh_token: token,
+        },
+        pk: {
+          id,
+        },
       },
     },
-    name: 'insert_users_one',
+    name: 'update_users_by_pk',
   }),
 };
 
@@ -252,4 +276,12 @@ exports.createUser = async (created_by, newUser, token) => {
   return user;
 };
 
-exports.saveRefleshToken = (token) => {};
+exports.saveRefreshToken = async (id, refreshToken, authToken) => {
+  const operation = mutationsOperations.setRefleshToken(id, refreshToken);
+
+  const result = await setUserData(operation, authToken);
+  if (!result || result.errors)
+    throw new AppError('Error on generate token', 500);
+
+  return result.refresh_token;
+};

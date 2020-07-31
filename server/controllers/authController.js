@@ -5,8 +5,9 @@ const Users = require('../models/Users');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-const sendToken = (user, res) => {
-  const token = jwt.sign(
+const sendAuthToken = async (user, res) => {
+  //Generate main token
+  const token = await jwt.sign(
     {
       id: user.id,
       name: user.nome,
@@ -20,12 +21,70 @@ const sendToken = (user, res) => {
     { expiresIn: process.env.JWT_EXPIRES_IN }
   );
 
-  //res.cookie('reflesh_token');
+  const refreshToken = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
+  });
+
+  let savedRefreshToken;
+
+  try {
+    savedRefreshToken = await Users.saveRefreshToken(
+      user.id,
+      refreshToken,
+      token
+    );
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+
+  //SAVE REFRESH TOKEN ON COOKIES
+  res.cookie('refresh_token', savedRefreshToken, {
+    expires: new Date(
+      Date.now() +
+        process.env.JWT_REFRESH_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    //secure: true, //SET TO PRODUCTION ONLY LATER
+    httpOnly: true,
+  });
 
   res.status(200).json({
     status: 'success',
     token,
   });
+};
+
+const verifyToken = async (token, userFragment, next) => {
+  if (!token) {
+    return next(new AppError('Log in to have access', 401));
+  }
+
+  //1) Validate the token
+  const decodedToken = await promisify(jwt.verify)(
+    token,
+    process.env.JWT_SECRET
+  );
+
+  //2) Check if the user still exist
+  const user = await Users.getUserByID(decodedToken.id, userFragment);
+
+  if (!user) {
+    return next(new AppError("The users doesn't exist anymore", 401));
+  }
+
+  //3) Check if password was changed after token issued
+  if (
+    user.psw_changed_at &&
+    parseInt(new Date(user.psw_changed_at).getTime() / 1000, 10) >
+      decodedToken.iat
+  ) {
+    return next(new AppError('Token has expired. Log in again', 401));
+  }
+
+  return {
+    user,
+    decodedToken,
+  };
 };
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -43,14 +102,31 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect login data', 401));
   }
 
-  const userInfo = await Users.getUserByID(user_id, Users.fragments.userLogin);
-  userInfo.id = user_id;
+  const user = await Users.getUserByID(user_id, Users.fragments.userLogin);
+  user.id = user_id;
 
-  sendToken(user, res);
+  sendAuthToken(user, res);
 });
 
 exports.reflesh_token = catchAsync(async (req, res, next) => {
-  console.log(req.cookies);
+  let token;
+  //1) Verify if there's a token
+  if (req.cookies.refresh_token) {
+    token = req.cookies.refresh_token;
+  }
+  //2) Validate the token
+  const { user, decodedToken } = await verifyToken(
+    token,
+    Users.fragments.userRefreshToken,
+    next
+  );
+
+  //3) Check if token store in the database is equals to cookie token
+  if (!(token === user.refresh_token)) {
+    return next(new AppError('Token not valid. Login again', 401));
+  }
+
+  sendAuthToken(user, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -64,34 +140,12 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
-  if (!token) {
-    return next(new AppError('Log in to have access', 401));
-  }
-
   //2) Validate the token
-  const decodedToken = await promisify(jwt.verify)(
+  const { decodedToken } = await verifyToken(
     token,
-    process.env.JWT_SECRET
+    Users.fragments.userCheckToken,
+    next
   );
-
-  //3) Check if the user still exist
-  const user = await Users.getUserByID(
-    decodedToken.id,
-    Users.fragments.userCheckToken
-  );
-
-  if (!user) {
-    next(new AppError("The users doesn't exist anymore", 401));
-  }
-
-  //4) Check if password was changed after token issued
-  if (
-    user.psw_changed_at &&
-    parseInt(new Date(user.psw_changed_at).getTime() / 1000, 10) >
-      decodedToken.iat
-  ) {
-    next(new AppError('Token has expired. Log in again'));
-  }
 
   //5) Pass some configurations to req object
   req.user_id = decodedToken.id;

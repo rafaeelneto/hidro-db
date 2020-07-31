@@ -40,14 +40,40 @@ app.use(cors());
 
 //TEST
 app.get('/', async (req, res, next) => {
-  const operation = {
+  let operation = {
     query: gql`
       query {
         pocos {
+          id
           nome
+          situacao
+        }
+        cap_superf {
+          id
+          nome
+          situacao
+        }
+        reservatorios {
+          id
+          nome
+          tipo
+        }
+        sedes_setores {
+          id
+          nome
+          ender
         }
       }
     `,
+  };
+
+  operation = {
+    ...operation,
+    context: {
+      headers: {
+        'X-Hasura-Admin-Secret': 'myadminsecretkey',
+      },
+    },
   };
 
   const data = await gqlClient.query(operation);

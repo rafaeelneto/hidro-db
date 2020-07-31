@@ -9,19 +9,15 @@ router.post('/login', authController.login);
 
 router.post('/create-user', authController.protect, usersController.createUser);
 
-router.post('/reflesh-token', (req, res) => {
+router.post('/refresh-token', authController.reflesh_token);
+
+router.post('/reset_psw', (req, res) => {
   res.status(500).json({
     msg: 'On maintanance',
   });
 });
 
-router.post('/reset_pwd', (req, res) => {
-  res.status(500).json({
-    msg: 'On maintanance',
-  });
-});
-
-router.post('/forgot_pwd', (req, res) => {
+router.post('/forgot_psw', (req, res) => {
   res.status(500).json({
     msg: 'On maintanance',
   });
