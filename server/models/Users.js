@@ -1,7 +1,8 @@
-//const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const gql = require('graphql-tag');
 
 const gqlClient = require('../graph-client/client');
+const AppError = require('../utils/appError');
 
 const fragments = {
   userId: {
@@ -113,6 +114,23 @@ const mutationsOperations = {
     },
     name: 'insert_users_one',
   }),
+  setRefleshToken: (user_id, token) => ({
+    object: {
+      query: gql`
+        mutation createUser($user: users_insert_input!) {
+          insert_users_one(object: $user) {
+            id
+            nome
+            email
+          }
+        }
+      `,
+      variables: {
+        user,
+      },
+    },
+    name: 'insert_users_one',
+  }),
 };
 
 const getUserData = async (operation) => {
@@ -126,13 +144,13 @@ const getUserData = async (operation) => {
     },
   };
 
-  const data = await gqlClient.query(operation);
+  const response = await gqlClient.query(operation);
 
-  if (data.errors) {
-    return data;
+  if (response.errors) {
+    return response;
   }
 
-  return data.users[0];
+  return response.users[0];
 };
 
 const setUserData = async (operation, token) => {
@@ -152,12 +170,9 @@ const setUserData = async (operation, token) => {
     return data;
   }
 
-  console.log(data);
-
   return data[operation.name];
 };
 
-const verifyNewPassword = () => {};
 exports.getUserIDBy = async (login_name, email, drt) => {
   let operation;
 
@@ -171,7 +186,7 @@ exports.getUserIDBy = async (login_name, email, drt) => {
 
   const user = await getUserData(operation);
 
-  if (user.errors) return user;
+  if (!user || user.errors) throw new AppError('Incorrect login data', 401);
 
   return user.id;
 };
@@ -179,7 +194,7 @@ exports.getUserIDBy = async (login_name, email, drt) => {
 exports.getUserByID = async (id, fragment) => {
   const user = await getUserData(queriesOperations.userByID(id, fragment));
 
-  if (user.errors) return user;
+  if (!user || user.errors) throw new AppError("User doesn' exist", 404);
 
   //TMP
   if (user.userOnRoles) {
@@ -205,10 +220,16 @@ exports.verifyPassword = async (id, password) => {
 
   const user = await getUserData(operation);
 
-  return password === user.psw;
+  if (!user || user.errors) throw new AppError("User doesn' exist", 404);
+
+  return await bcrypt.compare(password, user.psw);
 };
 
 exports.createUser = async (created_by, newUser, token) => {
+  if (newUser.psw !== newUser.pswConfirm) {
+    throw new AppError('Passwords are not the same', 400);
+  }
+  newUser.psw = await bcrypt.hash(newUser.psw, 12);
   newUser.created_by = created_by;
   newUser.userOnRoles = {
     data: newUser.roles.map((id) => {
@@ -218,14 +239,17 @@ exports.createUser = async (created_by, newUser, token) => {
     }),
   };
   delete newUser.roles;
+  delete newUser.pswConfirm;
 
   const operation = mutationsOperations.newUser(newUser);
 
   const user = await setUserData(operation, token);
 
-  if (user.errors) {
+  if (!user || user.errors) {
     return user;
   }
 
   return user;
 };
+
+exports.saveRefleshToken = (token) => {};

@@ -39,7 +39,6 @@ exports.createUser = catchAsync(async (req, res, next) => {
   );
 
   if (newUser.errors) {
-    console.log('Esse erro');
     return next(new AppError(newUser.errors[0].message, 400));
   }
 
