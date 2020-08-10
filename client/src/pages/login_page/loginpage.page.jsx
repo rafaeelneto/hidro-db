@@ -6,6 +6,11 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/styles';
 
+import { gql, useQuery } from '@apollo/client';
+
+import { autheticate } from '../../utils/authetication';
+import { tokenVar } from '../../graphql/cache';
+
 import background_main from '../../assets/images/background_main.jpg';
 import logo_cosanpa_db from '../../assets/logos/logo_cosanpa_db_vertical_wbg.svg';
 
@@ -181,12 +186,22 @@ class FieldText {
   }
 }
 
+const GET_TOKEN = gql`
+  query GetToken {
+    tokenExpiresIn @client
+  }
+`;
+
 export default function LoginPage() {
   const theme = useTheme();
   const classes = useStyles(theme);
-
   const [identifier, setIdentifier] = useState(new FieldText('identifier', ''));
   const [password, setPassword] = useState(new FieldText('password', ''));
+
+  const { data, loading, error } = useQuery(GET_TOKEN);
+
+  if (loading) return <p>ERROR: {error.message}</p>;
+  if (error) return <p>ERROR: {error.message}</p>;
 
   const fieldType = {
     type: TextField,
@@ -219,22 +234,7 @@ export default function LoginPage() {
       return;
     }
 
-    const userInfo = JSON.stringify({
-      login_name: identifier.value,
-      password: password.value,
-    });
-
-    const fetchData = await fetch('http://localhost/v1/api/user/login', {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc
-      mode: 'cors', // no-cors, *cors, same-origin
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: userInfo, // body data type must match "Content-Type" header
-    });
-    const data = await fetchData.json();
-
-    console.log(data);
+    const authRes = await autheticate(identifier.value, password.value);
   };
 
   const handleChange = async (event) => {
@@ -286,6 +286,7 @@ export default function LoginPage() {
           <div className={classes.info_box}>
             <h1 className={classes.section_title}>
               Faça login para ter acesso avançado e para contribuir conosco
+              TOKEN: {data.tokenExpiresIn}
             </h1>
             <p>
               O nosso sistema é uma ferramenta colaborativa e integrada para o

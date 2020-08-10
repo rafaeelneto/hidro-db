@@ -19,6 +19,8 @@ const app = express();
 //SET SECURITY HEADERS
 app.use(helmet());
 
+app.use(cors());
+
 //PARSE DATA FROM BODY TO REQ.BODY
 app.use(express.json());
 //app.use(express.json({limit: '10kb'}));
@@ -36,7 +38,6 @@ const limiter = rateLimit({
 app.use('/v1/api/user', limiter);
 
 app.use(morgan('dev'));
-app.use(cors());
 
 //TEST
 app.get('/', async (req, res, next) => {

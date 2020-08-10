@@ -88,10 +88,19 @@ const verifyToken = async (token, userFragment, next) => {
 };
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { login_name, drt, email, password } = req.body;
-  console.log(req.body);
+  const { login_id, password } = req.body;
 
-  if (!login_name && !drt && !email) {
+  //define regex expressions to all the the fields
+  const regex_email = /^\S+@\S+$/;
+  const regex_drt = /^[0-9]{5}-[0-9]{1}$/im;
+  const regex_login = /^([a-z0-9_-]){5,12}$/;
+
+  //check the login_id against the properly regex expression
+  const email = regex_email.test(login_id) ? login_id : undefined;
+  const drt = regex_drt.test(login_id) ? login_id : undefined;
+  const login_name = regex_login.test(login_id) ? login_id : undefined;
+
+  if (!login_name && !drt && !email && !password) {
     next(new AppError('Bad request', 400));
     return;
   }
@@ -108,12 +117,13 @@ exports.login = catchAsync(async (req, res, next) => {
   sendAuthToken(user, res);
 });
 
-exports.reflesh_token = catchAsync(async (req, res, next) => {
+exports.refresh_token = catchAsync(async (req, res, next) => {
   let token;
-  //1) Verify if there's a token
+  //1) Verify if there's a token on cookies
   if (req.cookies.refresh_token) {
     token = req.cookies.refresh_token;
   }
+
   //2) Validate the token
   const { user, decodedToken } = await verifyToken(
     token,
