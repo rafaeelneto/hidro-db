@@ -253,10 +253,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleLoginButton = () => {
-    console.log(identifier, password);
-  };
-
   return (
     <div className={classes.root}>
       <header className={classes.header}>

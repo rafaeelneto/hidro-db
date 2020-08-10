@@ -19,7 +19,13 @@ const app = express();
 //SET SECURITY HEADERS
 app.use(helmet());
 
-app.use(cors());
+//SET THIS IN THE FUTURE TO ACCEPT OTHER DOMAINS
+app.use(
+  cors({
+    origin: 'http://localhost:3001',
+    credentials: true,
+  })
+);
 
 //PARSE DATA FROM BODY TO REQ.BODY
 app.use(express.json());

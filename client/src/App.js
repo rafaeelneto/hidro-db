@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from '@material-ui/styles';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { ApolloClient, ApolloProvider, gql } from '@apollo/client';
 
 import './App.css';
@@ -21,15 +21,6 @@ const client = new ApolloClient({
   cache,
 });
 
-/**
- * 
- client.writeData({
-   data: {
-     sidebarHidden: false,
-   },
- });
- */
-
 function App() {
   let [pocos, setPocos] = useState([]);
 
@@ -46,16 +37,37 @@ function App() {
     })
     .then((result) => setPocos(result.data.pocos));
 
+  //CHECK IF THE USER WAS A VISITING
+  const isUserVisitante = true;
+  if (isUserVisitante) {
+    //render console visitante
+  }
+
+  //Check if the user was logged
+  const userLogged = true;
+  if (!userLogged) {
+    //return redirenct homepage REDIRECTS TO HOMEPAGE
+  }
+
+  const silentRefreshSucess = true; //try silent refresh
+
+  if (!silentRefreshSucess) {
+    //redirect to login page
+  }
+
+  //IF ALL PASS
+  //RENDER CONSOLE AUTHETICATED PAGE
+
   return (
     <BrowserRouter>
       <ApolloProvider client={client}>
         <div className="App">
           <ThemeProvider theme={CustomTheme}>
             <Switch>
-              <Route exact path="/">
+              <Route exact path="/login">
                 <LoginPage />
               </Route>
-              <Route exact path="/console">
+              <Route exact path="/">
                 <ConsolePage />
               </Route>
             </Switch>

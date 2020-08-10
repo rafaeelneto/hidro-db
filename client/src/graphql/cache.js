@@ -3,6 +3,8 @@ import { makeVar, InMemoryCache } from '@apollo/client';
 export const sideBarHiddenVar = makeVar(false);
 export const tokenVar = makeVar('');
 export const tokenExpiresInVar = makeVar('');
+export const userLoggedInVar = makeVar(false);
+export const userVisitanteVar = makeVar(false);
 
 export const cache = new InMemoryCache({
   typePolicies: {
@@ -21,6 +23,16 @@ export const cache = new InMemoryCache({
         tokenExpiresIn: {
           read() {
             return tokenExpiresInVar();
+          },
+        },
+        userLoggedIn: {
+          read() {
+            return userLoggedInVar();
+          },
+        },
+        userVisitante: {
+          read() {
+            return userVisitanteVar();
           },
         },
       },
