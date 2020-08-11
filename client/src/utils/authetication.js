@@ -77,12 +77,10 @@ export const autheticate = async (login_id, password) => {
   }
 };
 
-const logout = () => {
-  tokenVar('');
-  tokenExpiresInVar('');
+export const logout = () => {
+  tokenVar(null);
+  tokenExpiresInVar(null);
   userLoggedInVar(false);
-
-  //CALL THE REDIRECTION TO LOGIN PAGE
 };
 
 //SET TIMER TO SILENT REFRESH

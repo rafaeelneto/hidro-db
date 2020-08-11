@@ -1,44 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from '@material-ui/styles';
+import { useQuery, gql } from '@apollo/client';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { ApolloClient, ApolloProvider, gql } from '@apollo/client';
 
 import './App.css';
 
-import { cache } from './graphql/cache';
+import { refreshToken } from './utils/authetication';
 
 import LoginPage from './pages/login_page/loginpage.page';
 import ConsolePage from './pages/console/console.page';
 import CustomTheme from './themes/custom_theme';
 
-const client = new ApolloClient({
-  uri: 'http://localhost:3000/v1/graphql',
-  //REPLACE BY A SETTING TO HANDLE AUTHETICATION
-  headers: {
-    'x-hasura-admin-secret': 'myadminsecretkey',
-  },
-  credentials: 'same-origin',
-  cache,
-});
-
 function App() {
-  let [pocos, setPocos] = useState([]);
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <ThemeProvider theme={CustomTheme}>
+          <Switch>
+            <Route exact path="/login" component={LoginPage}></Route>
+            <Route exact path="/" component={ProtectRoutes} />
+          </Switch>
+        </ThemeProvider>
+      </div>
+    </BrowserRouter>
+  );
+}
 
-  client
-    .query({
-      query: gql`
-        query pocos {
-          pocos {
-            id
-            nome
-          }
-        }
-      `,
-    })
-    .then((result) => setPocos(result.data.pocos));
+const GET_LOGIN_INFO = gql`
+  query GetToken {
+    token @client
+    userLoggedIn @client
+  }
+`;
 
-  //CHECK IF THE USER WAS A VISITING
-  const isUserVisitante = true;
+const ProtectRoutes = () => {
+  const { data, loading } = useQuery(GET_LOGIN_INFO);
+
+  //CHECK IF THE USER WAS A VISITING IN LOCALS
+  const isUserVisitante = false;
   if (isUserVisitante) {
     //render console visitante
   }
@@ -46,47 +45,16 @@ function App() {
   //Check if the user was logged
   const userLogged = true;
   if (!userLogged) {
-    //return redirenct homepage REDIRECTS TO HOMEPAGE
+    //return REDIRECTS TO HOMEPAGE
   }
 
-  const silentRefreshSucess = true; //try silent refresh
+  refreshToken().then((res) => {
+    if (!res) {
+      return <Route exact path="/login" component={LoginPage} />;
+    }
+  });
 
-  if (!silentRefreshSucess) {
-    //redirect to login page
-  }
-
-  //IF ALL PASS
-  //RENDER CONSOLE AUTHETICATED PAGE
-
-  return (
-    <BrowserRouter>
-      <ApolloProvider client={client}>
-        <div className="App">
-          <ThemeProvider theme={CustomTheme}>
-            <Switch>
-              <Route exact path="/login">
-                <LoginPage />
-              </Route>
-              <Route exact path="/">
-                <ConsolePage />
-              </Route>
-            </Switch>
-          </ThemeProvider>
-        </div>
-      </ApolloProvider>
-    </BrowserRouter>
-  );
-}
-/**
-<ul>
-              {pocos.map((poco) => {
-                return (
-                  <li>
-                    id: {poco.id}, nome: {poco.nome}
-                  </li>
-                );
-              })}
-            </ul>
- */
+  return <ConsolePage />;
+};
 
 export default App;

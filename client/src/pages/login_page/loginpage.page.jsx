@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/styles';
 
 import { gql, useQuery } from '@apollo/client';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { autheticate } from '../../utils/authetication';
 import { tokenVar } from '../../graphql/cache';
@@ -188,11 +189,16 @@ class FieldText {
 
 const GET_TOKEN = gql`
   query GetToken {
-    tokenExpiresIn @client
+    token @client
+    userLoggedIn @client
   }
 `;
 
 export default function LoginPage() {
+  const param = useParams();
+  const history = useHistory();
+  console.log(param);
+
   const theme = useTheme();
   const classes = useStyles(theme);
   const [identifier, setIdentifier] = useState(new FieldText('identifier', ''));
@@ -235,6 +241,9 @@ export default function LoginPage() {
     }
 
     const authRes = await autheticate(identifier.value, password.value);
+    if (authRes) {
+      history.push('/');
+    }
   };
 
   const handleChange = async (event) => {
@@ -282,7 +291,7 @@ export default function LoginPage() {
           <div className={classes.info_box}>
             <h1 className={classes.section_title}>
               Faça login para ter acesso avançado e para contribuir conosco
-              TOKEN: {data.tokenExpiresIn}
+              TOKEN: {data.userLoggedIn.toString()}
             </h1>
             <p>
               O nosso sistema é uma ferramenta colaborativa e integrada para o
