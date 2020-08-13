@@ -10,15 +10,13 @@ import {
 } from '../graphql/cache';
 
 //SAVE AUTHETICATION INFO AND SET SILENT REFRESH
-const saveAutheticationInfo = async (token) => {
+const saveAutheticationInfo = (token) => {
   //DECODE TOKEN
   const decodedToken = jwt.decode(token);
-
-  console.log(token);
   const expiresIn =
     new Date(decodedToken.exp * 1000).getTime() - new Date().getTime();
 
-  //SET TIMER TO REFRESH TOKEN 2s BEFORE IT EXPIRES
+  //SET TIMER TO REFRESH TOKEN 5s BEFORE IT EXPIRES
   setSilentRefreshTimer(expiresIn - 5000);
 
   //SAVE TOKEN TO LOCAL STATE CACHE AND USER LOGGED VARIABLE

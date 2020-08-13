@@ -11,21 +11,6 @@ import LoginPage from './pages/login_page/loginpage.page';
 import ConsolePage from './pages/console/console.page';
 import CustomTheme from './themes/custom_theme';
 
-function App() {
-  return (
-    <BrowserRouter>
-      <div className="App">
-        <ThemeProvider theme={CustomTheme}>
-          <Switch>
-            <Route exact path="/login" component={LoginPage}></Route>
-            <Route exact path="/" component={ProtectRoutes} />
-          </Switch>
-        </ThemeProvider>
-      </div>
-    </BrowserRouter>
-  );
-}
-
 const GET_LOGIN_INFO = gql`
   query GetToken {
     token @client
@@ -33,9 +18,46 @@ const GET_LOGIN_INFO = gql`
   }
 `;
 
-const ProtectRoutes = () => {
-  const { data, loading } = useQuery(GET_LOGIN_INFO);
+let counter = 0;
 
+function App() {
+  // const { data, loading } = useQuery(GET_LOGIN_INFO);
+  const [refresh, setRefresh] = useState();
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      const res = await refreshToken();
+      setRefresh(res);
+    };
+    if (!refresh) {
+      verifyToken();
+    }
+  }, [refresh]);
+
+  if (refresh === undefined) return 'Loading...';
+
+  counter += 1;
+  console.log(counter);
+  console.log(refresh);
+
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <ThemeProvider theme={CustomTheme}>
+          <Switch>
+            <Route exact path="/login" component={LoginPage}></Route>
+            <Route path="/">
+              <ProtectRoutes />
+            </Route>
+          </Switch>
+          {!refresh ? <Redirect to="/login" /> : ''}
+        </ThemeProvider>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+const ProtectRoutes = () => {
   //CHECK IF THE USER WAS A VISITING IN LOCALS
   const isUserVisitante = false;
   if (isUserVisitante) {
@@ -47,12 +69,6 @@ const ProtectRoutes = () => {
   if (!userLogged) {
     //return REDIRECTS TO HOMEPAGE
   }
-
-  refreshToken().then((res) => {
-    if (!res) {
-      return <Route exact path="/login" component={LoginPage} />;
-    }
-  });
 
   return <ConsolePage />;
 };
