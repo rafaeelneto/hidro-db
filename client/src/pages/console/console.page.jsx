@@ -8,94 +8,17 @@ import {
   Redirect,
 } from 'react-router-dom';
 
-import MapWrapper from '../../components/maps/map.wrapper';
-import PocosView from '../../tables/pocos/pocos.view';
+import { gql, useQuery } from '@apollo/client';
+
+import CollapseSide from '../../themes/CollapseSide';
 
 import MainSideBar from '../../components/main_sidebar/mainSidebar.component';
+import SubSideBar from '../../components/sub_sidebar/subSidebar.component';
 import Header from '../../components/header/header.component';
 
-import { ReactComponent as Documents } from '../../assets/icons/main_categories_btn/Documents.svg';
-import { ReactComponent as DocumentsOutline } from '../../assets/icons/main_categories_btn/DocumentsOutline.svg';
-import { ReactComponent as Water } from '../../assets/icons/main_categories_btn/Water.svg';
-import { ReactComponent as WaterOutline } from '../../assets/icons/main_categories_btn/WaterOutline.svg';
+import routesCategories from './routes';
 
-const buttonsCategories = [
-  {
-    path: '/agua',
-    name: 'ÁGUA',
-    icon: WaterOutline,
-    iconActive: Water,
-  },
-  {
-    path: '/esgoto',
-    name: 'ESGOTO',
-    icon: WaterOutline,
-    iconActive: Water,
-  },
-  {
-    path: '/licenciamento',
-    name: 'LICENCIAMENTO',
-    icon: DocumentsOutline,
-    iconActive: Documents,
-  },
-  {
-    path: '/manutencao',
-    name: 'MANUTENÇÃO',
-    icon: WaterOutline,
-    iconActive: Water,
-  },
-];
-
-const aguaItens = {
-  path: '/agua',
-  main: [
-    {
-      nome: 'Mapa Principal',
-      path: '/mapa',
-      component: () => <MapWrapper />,
-    },
-    {
-      nome: 'Sistemas',
-      path: '/sistemas',
-      component: () => <MapWrapper />,
-    },
-  ],
-  tables: [
-    {
-      nome: 'Poços',
-      path: '/pocos',
-      component: () => <PocosView />,
-    },
-  ],
-};
-
-const AguaRoute = () => {
-  const { path } = useRouteMatch();
-
-  return (
-    <div>
-      ÁGUA PAGE
-      <Switch>
-        {[
-          ...aguaItens.tables.map((route) => (
-            <Route
-              key={route.path}
-              path={path + route.path}
-              children={<route.component />}
-            />
-          )),
-          ...aguaItens.main.map((route) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              children={<route.component />}
-            />
-          )),
-        ]}
-      </Switch>
-    </div>
-  );
-};
+const SIDEBAR_WIDTH = '250px';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -113,6 +36,8 @@ const useStyles = makeStyles((theme) => {
     },
     sidebar: {
       height: '100%',
+      display: 'flex',
+      flowDirection: 'row',
     },
     mainSidebar: {
       background: theme.palette.primary.light,
@@ -120,8 +45,23 @@ const useStyles = makeStyles((theme) => {
       height: '100%',
       padding: '5px 0 5px 0',
     },
+    subRoutesSidebar: {
+      width: SIDEBAR_WIDTH,
+      background: theme.palette.common.white,
+      height: '100%',
+      padding: '10px 20px 5px 20px',
+    },
+    mainCanvas: {
+      padding: '20px',
+    },
   };
 });
+
+const SIDEBAR_HIDDEN = gql`
+  query IsUserLoggedIn {
+    sideBarHidden @client
+  }
+`;
 
 export default function ConsolePage() {
   const theme = useTheme();
@@ -129,6 +69,12 @@ export default function ConsolePage() {
 
   const history = useHistory();
   const { path, url } = useRouteMatch();
+
+  const { data } = useQuery(SIDEBAR_HIDDEN);
+  let sideBarHidden = false;
+  if (data) {
+    sideBarHidden = data.sideBarHidden;
+  }
 
   return (
     <div className={classes.root}>
@@ -138,29 +84,52 @@ export default function ConsolePage() {
           <aside className={classes.sidebar}>
             <div className={classes.mainSidebar}>
               <Switch>
-                {buttonsCategories.map((button, index) => {
+                {routesCategories.map(({ path: routePath }, index) => {
                   return (
-                    <Route key={index} path={button.path}>
-                      <MainSideBar buttons={buttonsCategories} />
+                    <Route key={index} path={routePath}>
+                      <MainSideBar
+                        buttons={routesCategories.map((route) => {
+                          return {
+                            path: route.path,
+                            name: route.name,
+                            ...route.btn,
+                          };
+                        })}
+                      />
                     </Route>
                   );
                 })}
               </Switch>
             </div>
-            <nav className="details_sidebar"></nav>
+            <CollapseSide in={!sideBarHidden} size={SIDEBAR_WIDTH}>
+              <div className={classes.subRoutesSidebar}>
+                <Switch>
+                  {routesCategories.map(
+                    ({ path: routePath, subMain, subTables }, index) => {
+                      return (
+                        <Route key={index} path={routePath}>
+                          <SubSideBar subMain={subMain} subTables={subTables} />
+                        </Route>
+                      );
+                    }
+                  )}
+                </Switch>
+              </div>
+            </CollapseSide>
           </aside>
         </Box>
-        <div className="main_canvas">
+        <div className={classes.mainCanvas}>
           <Switch>
             <Route exact path="/">
               <Redirect to="/agua"></Redirect>
             </Route>
-            <Route path="/agua">
-              <AguaRoute />
-            </Route>
-            <Route path="/esgoto">ESGOTO</Route>
-            <Route path="/licencimento">LICENCIMENTO</Route>
-            <Route path="/manutencao">MANUTENÇÃO</Route>
+            {routesCategories.map((route, index) => {
+              return (
+                <Route key={index} path={route.path}>
+                  {route.innerRouter(index)}
+                </Route>
+              );
+            })}
           </Switch>
         </div>
       </div>

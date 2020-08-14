@@ -13,6 +13,7 @@ const PocosView = () => {
 
 export default () => {
   const { path } = useRouteMatch();
+  console.log('poço', path);
   return (
     <RouteSwitch>
       <Route exact path={path}>

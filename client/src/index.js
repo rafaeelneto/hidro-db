@@ -7,7 +7,7 @@ import './index.css';
 import App from './App';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/v1/graphql',
+  uri: 'http://localhost:3001/v1/graphql',
   //REPLACE BY A SETTING TO HANDLE AUTHETICATION
   headers: {
     'x-hasura-admin-secret': 'myadminsecretkey',
@@ -24,3 +24,11 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <ApolloProvider client={client}>
+//       <App />
+//     </ApolloProvider>
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// );

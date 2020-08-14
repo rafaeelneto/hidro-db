@@ -47,9 +47,9 @@ services:
     volumes:
       - ./hasura:/hasura
     ports:
-      - "3000:3000"
-      - "9693:9693"
-      - "9695:9695"
+      - "3001:3000"
+      - "9893:9693"
+      - "9895:9695"
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:26119499@docker.for.win.localhost:5432/uema
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
@@ -62,3 +62,6 @@ services:
 networks:
   cosanpa_db_net:
     driver: bridge
+# - "3000:3000"
+# - "9693:9693"
+# - "9695:9695"

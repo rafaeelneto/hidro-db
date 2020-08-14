@@ -12,10 +12,13 @@ const useStyles = makeStyles((theme) => {
       margin: '5px 0 5px 0',
       borderRadius: '10px 0 0 10px',
       '& .icon': {
-        '& path': {
+        '& path ': {
           stroke: '#fff !important',
         },
-        height: '30px',
+        '& line ': {
+          stroke: '#fff !important',
+        },
+        height: '35px',
         width: 'auto',
       },
     },
