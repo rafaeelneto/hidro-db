@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from '@material-ui/styles';
-import { useQuery, gql } from '@apollo/client';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
@@ -10,13 +9,6 @@ import { refreshToken } from './utils/authetication';
 import LoginPage from './pages/login_page/loginpage.page';
 import ConsolePage from './pages/console/console.page';
 import CustomTheme from './themes/custom_theme';
-
-const GET_LOGIN_INFO = gql`
-  query GetToken {
-    token @client
-    userLoggedIn @client
-  }
-`;
 
 let counter = 0;
 

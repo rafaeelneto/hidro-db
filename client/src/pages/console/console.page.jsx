@@ -1,12 +1,6 @@
 import React from 'react';
-import { Button, useTheme, makeStyles, Box } from '@material-ui/core/';
-import {
-  useHistory,
-  useRouteMatch,
-  Route,
-  Switch,
-  Redirect,
-} from 'react-router-dom';
+import { useTheme, makeStyles, Box } from '@material-ui/core/';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import { gql, useQuery } from '@apollo/client';
 
@@ -53,6 +47,9 @@ const useStyles = makeStyles((theme) => {
     },
     mainCanvas: {
       padding: '20px',
+      height: 'auto',
+      maxHeight: '100%',
+      width: '100%',
     },
   };
 });
@@ -67,13 +64,12 @@ export default function ConsolePage() {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const history = useHistory();
-  const { path, url } = useRouteMatch();
-
   const { data } = useQuery(SIDEBAR_HIDDEN);
   let sideBarHidden = false;
   if (data) {
     sideBarHidden = data.sideBarHidden;
+  } else {
+    return <div>Loaging...</div>;
   }
 
   return (
@@ -83,23 +79,15 @@ export default function ConsolePage() {
         <Box boxShadow={2}>
           <aside className={classes.sidebar}>
             <div className={classes.mainSidebar}>
-              <Switch>
-                {routesCategories.map(({ path: routePath }, index) => {
-                  return (
-                    <Route key={index} path={routePath}>
-                      <MainSideBar
-                        buttons={routesCategories.map((route) => {
-                          return {
-                            path: route.path,
-                            name: route.name,
-                            ...route.btn,
-                          };
-                        })}
-                      />
-                    </Route>
-                  );
+              <MainSideBar
+                buttons={routesCategories.map((route) => {
+                  return {
+                    path: route.path,
+                    name: route.name,
+                    ...route.btn,
+                  };
                 })}
-              </Switch>
+              />
             </div>
             <CollapseSide in={!sideBarHidden} size={SIDEBAR_WIDTH}>
               <div className={classes.subRoutesSidebar}>
@@ -107,9 +95,16 @@ export default function ConsolePage() {
                   {routesCategories.map(
                     ({ path: routePath, subMain, subTables }, index) => {
                       return (
-                        <Route key={index} path={routePath}>
-                          <SubSideBar subMain={subMain} subTables={subTables} />
-                        </Route>
+                        <Route
+                          key={index}
+                          path={routePath}
+                          children={
+                            <SubSideBar
+                              subMain={subMain}
+                              subTables={subTables}
+                            />
+                          }
+                        />
                       );
                     }
                   )}

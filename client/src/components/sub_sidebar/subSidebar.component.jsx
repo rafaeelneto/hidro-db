@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, useTheme, makeStyles, Tooltip } from '@material-ui/core/';
-import { useHistory, useRouteMatch, Link } from 'react-router-dom';
+import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -12,6 +12,10 @@ const useStyles = makeStyles((theme) => {
       margin: '5px 0 5px 0',
       color: theme.palette.primary.main,
       justifyContent: 'start',
+      letterSpacing: '2px',
+    },
+    buttonActive: {
+      color: theme.palette.secondary.main,
     },
   };
 });
@@ -21,12 +25,17 @@ const SubSideBar = ({ subMain, subTables }) => {
   const classes = useStyles(theme);
   const history = useHistory();
   const { path } = useRouteMatch();
+  const { pathname } = useLocation();
+
   return (
     <nav className={classes.root}>
       {subMain.map((item, index) => {
         return (
           <Button
-            className={`${classes.button}`}
+            key={index}
+            className={`${classes.button} ${
+              pathname.includes(item.path) ? classes.buttonActive : ''
+            }`}
             onClick={() => history.push(path + item.path)}
           >
             {item.name}
@@ -36,7 +45,10 @@ const SubSideBar = ({ subMain, subTables }) => {
       {subTables.map((item, index) => {
         return (
           <Button
-            className={`${classes.button}`}
+            key={index}
+            className={`${classes.button} ${
+              pathname.includes(item.path) ? classes.buttonActive : ''
+            }`}
             onClick={() => history.push(path + item.path)}
           >
             {item.name}

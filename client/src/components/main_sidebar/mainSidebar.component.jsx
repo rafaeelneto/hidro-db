@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconButton, useTheme, makeStyles, Tooltip } from '@material-ui/core/';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -47,13 +47,13 @@ const MainSideBar = ({ buttons }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const history = useHistory();
-  const { path } = useRouteMatch();
+  const { pathname } = useLocation();
   return (
     <nav className={classes.root}>
       {buttons.map((button, index) => {
         return (
           <Tooltip key={index} title={button.name} placement="right">
-            {path.includes(button.path) ? (
+            {pathname.includes(button.path) ? (
               <IconButton
                 className={`${classes.button} ${classes.buttonActive}`}
                 onClick={() => history.push(button.path)}

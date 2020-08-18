@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  useHistory,
-  useRouteMatch,
-  Route,
-  Switch,
-  Redirect,
-} from 'react-router-dom';
+import { useRouteMatch, Route, Switch, Redirect } from 'react-router-dom';
 
 import MapWrapper from '../../components/maps/map.wrapper';
 import PocosView from '../../tables/pocos/pocos.view';
@@ -23,7 +17,6 @@ const InnerRouteSwitch = ({ index }) => {
   const { path } = useRouteMatch();
   return (
     <div>
-      {routesCategories[index].name}
       <Switch>
         {[
           ...routesCategories[index].subMain.map((route) => (
