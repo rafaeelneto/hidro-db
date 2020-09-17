@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => {
       display: 'flex',
       flowDirection: 'row',
       height: '100%',
+      maxHeight: '100%',
     },
     sidebar: {
       height: '100%',
@@ -47,9 +48,9 @@ const useStyles = makeStyles((theme) => {
     },
     mainCanvas: {
       padding: '20px',
-      height: 'auto',
       maxHeight: '100%',
-      width: '100%',
+      maxWidth: '100%',
+      overflow: 'scroll',
     },
   };
 });

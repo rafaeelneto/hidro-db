@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { Route, Switch as RouteSwitch, useRouteMatch } from 'react-router-dom';
-import { Button, useTheme, makeStyles, Tooltip } from '@material-ui/core/';
+import {
+  Button,
+  useTheme,
+  makeStyles,
+  Collapse,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+} from '@material-ui/core/';
 import { useQuery, gql } from '@apollo/client';
 
 //TABLE IMPORT TO DISPLAY
@@ -12,10 +20,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import { format } from 'date-fns';
 
 import PocosItem from './pocos.item';
+import Field from '../Field';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -34,69 +42,87 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const fieldsPocos = [
-  {
-    nome: 'Nome do poço',
-    main: true,
-    present: true,
-    getValue: (item) => (item.municipio ? item.municipio.nome : '-'),
-  },
-];
-
+//DECLARE FIELDS TO FILTER AND SHOW ON TABLE
 const fields = [
-  'setor_id',
-  'un_id',
-  'municipio_id',
-  'profun',
-  'situacao',
-  'licen_situ',
-  'data_perf',
-  'revest',
-  'vaz_max',
-  'horas_outorg',
-  'num_patrimonio',
-  'vaz_outorg',
-  'ponteira',
+  new Field('Nome do poço', 'nome', true, true, true, (item) =>
+    item.nome ? item.nome : '-'
+  ),
+  new Field('Situação', 'situacao', false, true, true, (item) =>
+    item.situacao ? item.situacao : '-'
+  ),
+  new Field('Setor', 'sede_setores', false, true, true, (item) =>
+    item.sede_setores ? item.sede_setores.nome : '-'
+  ),
+  new Field('Unid. Negócios', 'un', false, true, true, (item) =>
+    item.un ? item.un.nome : '-'
+  ),
+  new Field('Município', 'municipio', false, true, true, (item) =>
+    item.municipio ? item.municipio.nome : '-'
+  ),
+  new Field('Profundidade (m)', 'profun', false, true, true, (item) =>
+    item.profun ? item.profun : '-'
+  ),
+  new Field(
+    'Licenciamento',
+    'licen_situ',
+    false,
+    false,
+    true,
+    (item, enum_licen) => (item.licen_situ ? enum_licen[item.licen_situ] : '-')
+  ),
+  new Field('Data de Perfuração', 'data_perf', false, false, true, (item) =>
+    item.data_perf ? format(new Date(item.data_perf), 'dd/MM/yyyy') : '-'
+  ),
+  new Field('Vazão Máx.', 'vaz_max', false, false, true, (item) =>
+    item.vaz_max ? item.vaz_max : '-'
+  ),
+  new Field('Vazão Outorgada', 'vaz_outorg', false, false, true, (item) =>
+    item.vaz_outorg ? item.vaz_outorg : '-'
+  ),
+  new Field('Horas Outorgada', 'horas_outorg', false, false, true, (item) =>
+    item.horas_outorg ? item.horas_outorg : '-'
+  ),
+  new Field('N° patrimônio', 'num_patrimonio', false, false, true, (item) =>
+    item.num_patrimonio ? item.num_patrimonio : '-'
+  ),
+  new Field('Ponteira', 'ponteira', false, false, true, (item) =>
+    item.ponteira ? item.ponteira : '-'
+  ),
 ];
 
-const stringSelect = `
-  ${fields.map((item) => `$${item}: Boolean!,`)}
-`;
+const graphQLSelectVariables = Field.getGraphQlVariable(fields);
 
-const fieldsActives = {
-  setor_id: false,
-  un_id: false,
-  municipio_id: false,
-  profun: false,
-  situacao: false,
-  licen_situ: false,
-  data_perf: false,
-  revest: false,
-  vaz_max: false,
-  horas_outorg: false,
-  num_patrimonio: false,
-  vaz_outorg: false,
-  ponteira: false,
-};
-
-const GET_POCOS = gql`
+const GET_POCOS_2 = gql`
   query getPocos (
-    ${stringSelect}
+    ${graphQLSelectVariables}
+    $limit: Int!,
+    $offset: Int!,
   ) {
-    pocos(limit: 10, offset: 0) {
+    pocos (limit: $limit, offset: $offset) {
       id
       nome
-      situacao 
-      profun
-      municipio {
+      situacao @include (if: $situacao)
+      profun @include (if: $profun)
+      licen_situ @include (if: $licen_situ)
+      data_perf @include (if: $data_perf)
+      vaz_max @include (if: $vaz_max)
+      vaz_outorg @include (if: $vaz_outorg)
+      horas_outorg @include (if: $horas_outorg)
+      num_patrimonio @include (if: $num_patrimonio)
+      ponteira @include (if: $ponteira)
+      municipio @include (if: $municipio) {
         nome
       }
-      un {
+      un @include (if: $un) {
         nome
       }
-      sedes_setore {
+      sede_setores @include (if: $sede_setores) {
         nome
       }
+    }
+    enum_licen_situ{
+      nome
+      label
     }
   }
 `;
@@ -104,11 +130,20 @@ const GET_POCOS = gql`
 const PocosView = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [fieldsState, setFieldsState] = useState(fields);
+  const [tableSelectorHidden, setTableSelectorHidden] = useState(false);
 
-  console.log(GET_POCOS);
+  //SET FILTER COMPONENT AND
+  //SET TABLES TO SHOW
 
-  const { data, loading, error } = useQuery(GET_POCOS);
+  //QUERY INFORMATION
+  const { data, loading, error } = useQuery(GET_POCOS_2, {
+    variables: {
+      ...Field.getVariableActive(fieldsState),
+      limit: 50,
+      offset: 0,
+    },
+  });
 
   if (loading) return <h1>Loading</h1>;
   if (error) {
@@ -116,15 +151,23 @@ const PocosView = () => {
     return <h1>ERROR</h1>;
   }
 
-  const { pocos } = data;
+  console.log('RENDER');
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const { pocos, enum_licen_situ } = data;
+  const enum_licen = Field.normalizerEnum(enum_licen_situ);
+
+  const handleChange = (index) => {
+    let tmpFields = [...fieldsState];
+    let tmpField = fieldsState[index];
+    tmpField = {
+      ...tmpField,
+      present: !tmpField.present,
+    };
+    tmpFields[index] = tmpField;
+    setFieldsState(tmpFields);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  //SET GUIDES TO MAPS AND TABLES COMPONENTS
 
   return (
     <div className={classes.root}>
@@ -135,21 +178,31 @@ const PocosView = () => {
         <Button
           aria-controls="simple-menu"
           aria-haspopup="true"
-          onClick={handleClick}
+          onClick={() => {
+            setTableSelectorHidden(!tableSelectorHidden);
+          }}
         >
-          Open Menu
+          Colunas
         </Button>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
-        </Menu>
+        <Collapse in={tableSelectorHidden}>
+          <FormGroup row>
+            {fieldsState.map((field, index) => {
+              return (
+                <FormControlLabel
+                  key={index}
+                  control={
+                    <Checkbox
+                      checked={field.present}
+                      onChange={() => handleChange(index)}
+                      name="checkedA"
+                    />
+                  }
+                  label={field.label}
+                />
+              );
+            })}
+          </FormGroup>
+        </Collapse>
       </div>
 
       <div className={classes.tableWrapper}>
@@ -161,31 +214,43 @@ const PocosView = () => {
           >
             <TableHead>
               <TableRow>
-                <TableCell>Nome do poço</TableCell>
-                <TableCell align="right">Situação</TableCell>
-                <TableCell align="right">Profundidade (m)</TableCell>
-                <TableCell align="right">Setor</TableCell>
-                <TableCell align="right">Município</TableCell>
-                <TableCell align="right">Unid. Negócios</TableCell>
+                {fieldsState
+                  .filter(
+                    (item) => item.isMain || (item.onTable && item.present)
+                  )
+                  .map((field, index) => {
+                    return (
+                      <TableCell
+                        key={index}
+                        align={`${!field.isMain ? 'right' : ''}`}
+                      >
+                        {field.isMain ? (
+                          <div style={{ width: '300px' }}>{field.label}</div>
+                        ) : (
+                          field.label
+                        )}
+                      </TableCell>
+                    );
+                  })}
               </TableRow>
             </TableHead>
             <TableBody>
               {pocos.map((poco) => (
                 <TableRow key={poco.id}>
-                  <TableCell component="th" scope="row">
-                    {poco.nome}
-                  </TableCell>
-                  <TableCell align="right">{poco.situacao}</TableCell>
-                  <TableCell align="right">{poco.profun}</TableCell>
-                  <TableCell align="right">
-                    {poco.sedes_setore ? poco.sedes_setore.nome : '-'}
-                  </TableCell>
-                  <TableCell align="right">
-                    {poco.municipio ? poco.municipio.nome : '-'}
-                  </TableCell>
-                  <TableCell align="right">
-                    {poco.un ? poco.un.nome : '-'}
-                  </TableCell>
+                  {fieldsState
+                    .filter(
+                      (item) => item.isMain || (item.onTable && item.present)
+                    )
+                    .map((field, index) => {
+                      return (
+                        <TableCell
+                          key={index}
+                          align={`${!field.isMain ? 'right' : ''}`}
+                        >
+                          {field.getValue(poco, enum_licen)}
+                        </TableCell>
+                      );
+                    })}
                 </TableRow>
               ))}
             </TableBody>
@@ -196,15 +261,8 @@ const PocosView = () => {
   );
 };
 
-let COUNTER_REQUEST = 0;
-
 export default () => {
   const { path } = useRouteMatch();
-
-  COUNTER_REQUEST++;
-
-  console.log('pocos view page', path);
-  console.log(COUNTER_REQUEST);
 
   return (
     <RouteSwitch>
