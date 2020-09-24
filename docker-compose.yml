@@ -4,8 +4,8 @@ services:
   nodejs-server:
     image: node_js_image
     build:
-      context: .
-      dockerfile: ./server/Dockerfile
+      context: ./server
+      dockerfile: ./Dockerfile
     working_dir: /usr/src/app
     command: "nodemon server.js"
     restart: always
@@ -51,7 +51,7 @@ services:
       - "9893:9693"
       - "9895:9695"
     environment:
-      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:26119499@docker.for.win.localhost:5432/uema
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@docker.for.win.localhost:5432/cosanpa_dev
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log # http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_SERVER_PORT: 3000

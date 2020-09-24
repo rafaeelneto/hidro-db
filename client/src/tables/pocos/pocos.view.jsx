@@ -16,6 +16,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
+import TablePagination from '@material-ui/core/TablePagination';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
@@ -90,11 +91,9 @@ const fields = [
   ),
 ];
 
-const graphQLSelectVariables = Field.getGraphQlVariable(fields);
-
-const GET_POCOS_2 = gql`
+const GET_POCOS = gql`
   query getPocos (
-    ${graphQLSelectVariables}
+    ${Field.getGraphQlVariable(fields)}
     $limit: Int!,
     $offset: Int!,
   ) {
@@ -127,33 +126,55 @@ const GET_POCOS_2 = gql`
   }
 `;
 
+const COUNT_POCOS = gql`
+  query {
+    pocos_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
 const PocosView = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [fieldsState, setFieldsState] = useState(fields);
   const [tableSelectorHidden, setTableSelectorHidden] = useState(false);
+  const [page, setPage] = React.useState(0);
+  const [limit, setLimit] = React.useState(50);
+  const [offset, setOffset] = React.useState(0);
+
+  const handlePageChange = (event, newPage) => {
+    //
+    setOffset(newPage > 0 ? newPage * limit : 0);
+    setPage(newPage);
+  };
 
   //SET FILTER COMPONENT AND
   //SET TABLES TO SHOW
 
   //QUERY INFORMATION
-  const { data, loading, error } = useQuery(GET_POCOS_2, {
+  const { data, loading, error } = useQuery(GET_POCOS, {
     variables: {
       ...Field.getVariableActive(fieldsState),
-      limit: 50,
-      offset: 0,
+      limit,
+      offset,
     },
   });
 
-  if (loading) return <h1>Loading</h1>;
+  const { data: dataCount, loading: loadingCounter } = useQuery(COUNT_POCOS);
+
+  if (loading || loadingCounter) return <h1>Loading</h1>;
   if (error) {
     console.log(error);
     return <h1>ERROR</h1>;
   }
 
-  console.log('RENDER');
+  const count = dataCount.pocos_aggregate.aggregate.count;
 
   const { pocos, enum_licen_situ } = data;
+
   const enum_licen = Field.normalizerEnum(enum_licen_situ);
 
   const handleChange = (index) => {
@@ -187,19 +208,21 @@ const PocosView = () => {
         <Collapse in={tableSelectorHidden}>
           <FormGroup row>
             {fieldsState.map((field, index) => {
-              return (
-                <FormControlLabel
-                  key={index}
-                  control={
-                    <Checkbox
-                      checked={field.present}
-                      onChange={() => handleChange(index)}
-                      name="checkedA"
-                    />
-                  }
-                  label={field.label}
-                />
-              );
+              if (!field.isMain) {
+                return (
+                  <FormControlLabel
+                    key={index}
+                    control={
+                      <Checkbox
+                        checked={field.present}
+                        onChange={() => handleChange(index)}
+                        name="checkedA"
+                      />
+                    }
+                    label={field.label}
+                  />
+                );
+              }
             })}
           </FormGroup>
         </Collapse>
@@ -256,6 +279,14 @@ const PocosView = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[null]}
+          component="div"
+          count={count}
+          rowsPerPage={limit}
+          page={page}
+          onChangePage={handlePageChange}
+        />
       </div>
     </div>
   );
