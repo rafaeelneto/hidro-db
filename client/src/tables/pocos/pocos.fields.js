@@ -1,5 +1,7 @@
 import TextFieldComponent from '../../components/fields_components/textField.component';
 
+//WORKING ON
+
 import Fields from '../Fields';
 
 const fields = new Map();
@@ -22,6 +24,7 @@ fields.set(
 
 export default fields;
 
+//REFERENCE
 const fields1 = [
   new Field('Nome do poço', 'nome', true, true, true, (item) =>
     item.nome ? item.nome : '-'

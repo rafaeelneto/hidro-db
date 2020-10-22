@@ -45,52 +45,6 @@ app.use('/v1/api/user', limiter);
 
 app.use(morgan('dev'));
 
-//TEST
-app.get('/', async (req, res, next) => {
-  let operation = {
-    query: gql`
-      query {
-        pocos {
-          id
-          nome
-          situacao
-        }
-        cap_superf {
-          id
-          nome
-          situacao
-        }
-        reservatorios {
-          id
-          nome
-          tipo
-        }
-        sedes_setores {
-          id
-          nome
-          ender
-        }
-      }
-    `,
-  };
-
-  operation = {
-    ...operation,
-    context: {
-      headers: {
-        'X-Hasura-Admin-Secret': 'myadminsecretkey',
-      },
-    },
-  };
-
-  const data = await gqlClient.query(operation);
-
-  res.status(200).json({
-    msg: 'miau',
-    data,
-  });
-});
-
 app.use('/v1/api/user', userRoutes);
 
 app.all('*', (req, res, next) => {

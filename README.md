@@ -1,6 +1,6 @@
-# COSANPA-db
+# HIDRO-db
 
-Desenvolvimento de uma interface acessível para o banco de dados contendo os pontos de captação de água da COSANPA.
+Desenvolvimento de uma interface acessível para o banco de dados contendo os pontos de captação de água.
 
 ## Banco de dados
 
