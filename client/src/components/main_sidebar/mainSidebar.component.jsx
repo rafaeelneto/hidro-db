@@ -5,17 +5,19 @@ import { useHistory, useLocation } from 'react-router-dom';
 const useStyles = makeStyles((theme) => {
   return {
     root: {
-      //transform: 'rotate(-90deg)',
       display: 'flex',
       flexDirection: 'column',
     },
     button: {
-      margin: '0px 0 5px 0',
+      margin: '0px 0 10px 0',
+      padding: '20px 0 20px 0',
+      minWidth: '20px',
       alignSelf: 'stretch',
       borderRadius: '10px 0 0 10px',
       whiteSpace: 'nowrap',
       position: 'relative',
       '& .MuiButton-label': {
+        color: theme.palette.primary.dark,
         webkitWritingMode: 'vertical-lr',
         writingMode: 'vertical-lr',
         transform: 'scale(-1, -1);',
@@ -27,6 +29,9 @@ const useStyles = makeStyles((theme) => {
       borderRadius: '10px 0 0 10px',
       '&:hover': {
         background: '#fff',
+      },
+      '& .MuiButton-label': {
+        color: theme.palette.secondary.main,
       },
     },
   };
