@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => {
     },
     buttonActive: {
       color: theme.palette.secondary.main,
+      backgroundColor: theme.palette.backgroundLightGray,
     },
   };
 });
