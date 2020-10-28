@@ -86,7 +86,7 @@ const queriesOperations = {
       email,
     },
   }),
-  userIdByDrt: (email) => ({
+  userIdByDrt: (drt) => ({
     query: gql`
       query($drt: String) {
         users(where: { drt: { _eq: $drt } }) {
