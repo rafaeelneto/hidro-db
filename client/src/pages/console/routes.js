@@ -1,8 +1,32 @@
 import React from 'react';
-import { useRouteMatch, Route, Switch, Redirect } from 'react-router-dom';
+import { useRouteMatch, Route, Switch } from 'react-router-dom';
+
+import TableViewComponent from '../../components/tableViewComponent/tableView.component';
 
 import MapWrapper from '../../components/maps/map.wrapper';
-import PocosView from '../../tables/pocos/pocos.view';
+
+import pocosTable from '../../tables/tables/pocos/pocos.table';
+
+const routesCategories = [
+  {
+    name: 'ÁGUA',
+    path: '/agua',
+    innerRouter: (i) => <InnerRouteSwitch index={i} />,
+    subRoutes: [
+      {
+        name: 'Mapa Principal',
+        path: '/mapa',
+        isMain: true,
+        component: () => <MapWrapper />,
+      },
+      {
+        name: 'Poços',
+        path: '/pocos',
+        table: pocosTable(),
+      },
+    ],
+  },
+];
 
 const InnerRouteSwitch = ({ index }) => {
   const { path } = useRouteMatch();
@@ -10,72 +34,20 @@ const InnerRouteSwitch = ({ index }) => {
     <div>
       <Switch>
         {[
-          ...routesCategories[index].subMain.map((route) => (
-            <Route
-              key={route.path}
-              path={path + route.path}
-              children={<route.component />}
-            />
-          )),
-          ...routesCategories[index].subTables.map((route) => (
-            <Route
-              key={route.path}
-              path={path + route.path}
-              children={<route.component />}
-            />
-          )),
+          ...routesCategories[index].subRoutes.map((route) => {
+            if (route.isMain) {
+              console.log('Main route');
+            }
+            return (
+              <Route key={route.path} path={path + route.path}>
+                <TableViewComponent table={route.table} />
+              </Route>
+            );
+          }),
         ]}
       </Switch>
     </div>
   );
 };
-
-const routesCategories = [
-  {
-    name: 'ÁGUA',
-    path: '/agua',
-    innerRouter: (i) => <InnerRouteSwitch index={i} />,
-    subMain: [
-      {
-        name: 'Mapa Principal',
-        path: '/mapa',
-        component: () => <MapWrapper />,
-      },
-    ],
-    subTables: [
-      {
-        name: 'Poços',
-        path: '/pocos',
-        component: () => <PocosView />,
-      },
-    ],
-  },
-  {
-    name: 'LICENCIAMENTO',
-    path: '/licenciamento',
-    innerRouter: (i) => <InnerRouteSwitch index={i} />,
-    subMain: [],
-    subTables: [
-      {
-        name: 'OUTORGAS',
-        path: '/outorgas',
-        component: () => <PocosView />,
-      },
-    ],
-  },
-  {
-    name: 'MANUTENÇÃO',
-    path: '/manutencao',
-    innerRouter: (i) => <InnerRouteSwitch index={i} />,
-    subMain: [],
-    subTables: [
-      {
-        name: 'BOMBAS',
-        path: '/bombas',
-        component: () => <PocosView />,
-      },
-    ],
-  },
-];
 
 export default routesCategories;
