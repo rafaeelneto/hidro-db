@@ -47,8 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mainCanvas: {
     padding: '20px',
-    maxHeight: '100%',
-    maxWidth: '100%',
+    flexGrow: 1,
     overflow: 'scroll',
   },
 }));

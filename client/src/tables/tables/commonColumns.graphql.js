@@ -1,46 +1,46 @@
 import gql from '@apollo/client';
 
 export const queries = {
-  COLUMN_ID: () => gql`
+  COLUMN_ID: () => `
     id
   `,
-  COLUMN_NOME: () => gql`
+  COLUMN_NOME: () => `
     nome
   `,
-  COLUMN_SITUACAO: () => gql`
+  COLUMN_SITUACAO: () => `
     situacao
   `,
-  COLUMN_LICEN_SITU: () => gql`
+  COLUMN_LICEN_SITU: () => `
     licen_situ
   `,
-  COLUMN_VAZAO_MAX: () => gql`
+  COLUMN_VAZAO_MAX: () => `
     vaz_max
   `,
-  COLUMN_VAZAO_OUTORGA: () => gql`
+  COLUMN_VAZAO_OUTORGA: () => `
     vaz_outorg
   `,
-  COLUMN_HORAS_OUTORGA: () => gql`
+  COLUMN_HORAS_OUTORGA: () => `
     horas_outorg
   `,
-  COLUMN_OBS: () => gql`
+  COLUMN_OBS: () => `
     obs
   `,
-  COLUMN_NUM_PATRIMONIO: () => gql`
+  COLUMN_NUM_PATRIMONIO: () => `
     num_patrimonio
   `,
-  COLUMN_DATA_ENTREGA: () => gql`
+  COLUMN_DATA_ENTREGA: () => `
     data_entrega
   `,
-  COLUMN_USR_MODIF: () => gql`
+  COLUMN_USR_MODIF: () => `
     users{
         id
         nome
     }
   `,
-  COLUMN_LAST_MODIF: () => gql`
+  COLUMN_LAST_MODIF: () => `
     last_modif
   `,
-  COLUMN_FILES_JSON: () => gql`
+  COLUMN_FILES_JSON: () => `
     files
   `,
 };

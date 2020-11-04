@@ -10,7 +10,7 @@ class Table {
     queries,
     mutations,
   ) {
-    this.table_name = tableName;
+    this.tableName = tableName;
     this.previewComponent = previewComponent;
     this.fields = fields;
     this.getGIS = getGIS;
