@@ -301,10 +301,7 @@ export default function LoginPage() {
             </p>
           </div>
           <div className={classes.login_box}>
-            <ion-icon
-              className="user-icon"
-              name="people-circle-outline"
-            ></ion-icon>
+            <ion-icon className="user-icon" name="people-circle-outline" />
             <form
               className="login-form"
               noValidate

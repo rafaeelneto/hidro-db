@@ -1,30 +1,23 @@
-import React from 'react';
-import { Button, useTheme, makeStyles, TextField } from '@material-ui/core/';
+import React, { useState } from 'react';
+import {
+  useTheme,
+  makeStyles,
+  InputLabel,
+  Input,
+  FormControl,
+} from '@material-ui/core/';
 
-const TextFieldComponent = () => {
-  //CONFIGURING THEME AND STYLES
-  //const theme = useTheme();
-  //const classes = useStyles(theme);
+const TextFieldComponent = ({ value, field }) => {
+  const [fieldValue, setValue] = useState(value);
 
-  //const history = useHistory();
-
-  //use query makes the react update the ui on the Var() change
-  //const { data } = useQuery(SIDEBAR_HIDDEN);
-  //const sidebarHidden = sideBarHiddenVar();
-
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
   return (
-    <div className="div">
-      <TextField />
-      <Button
-        className="btn"
-        onClick={() => {
-          logout();
-          history.push('/login');
-        }}
-      >
-        Sair
-      </Button>
-    </div>
+    <FormControl>
+      <InputLabel htmlFor="component-simple">{field.label}</InputLabel>
+      <Input id="component-simple" value={fieldValue} onChange={handleChange} />
+    </FormControl>
   );
 };
 

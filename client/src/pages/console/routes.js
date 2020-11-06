@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouteMatch, Route, Switch } from 'react-router-dom';
 
-import TableViewComponent from '../../components/tableViewComponent/tableView.component';
+import MainViewComponent from '../../components/mainViewComponent/mainView.component';
 
 import MapWrapper from '../../components/maps/map.wrapper';
 
@@ -36,11 +36,15 @@ const InnerRouteSwitch = ({ index }) => {
         {[
           ...routesCategories[index].subRoutes.map((route) => {
             if (route.isMain) {
-              console.log('Main route');
+              return (
+                <Route key={route.path} path={path + route.path}>
+                  <route.component />
+                </Route>
+              );
             }
             return (
               <Route key={route.path} path={path + route.path}>
-                <TableViewComponent table={route.table} />
+                <MainViewComponent table={route.table} />
               </Route>
             );
           }),

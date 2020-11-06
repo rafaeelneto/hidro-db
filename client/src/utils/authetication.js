@@ -9,17 +9,17 @@ import {
   userVisitanteVar,
 } from '../graphql/cache';
 
-//SAVE AUTHETICATION INFO AND SET SILENT REFRESH
+// SAVE AUTHETICATION INFO AND SET SILENT REFRESH
 const saveAutheticationInfo = (token) => {
-  //DECODE TOKEN
+  // DECODE TOKEN
   const decodedToken = jwt.decode(token);
   const expiresIn =
     new Date(decodedToken.exp * 1000).getTime() - new Date().getTime();
 
-  //SET TIMER TO REFRESH TOKEN 5s BEFORE IT EXPIRES
+  // SET TIMER TO REFRESH TOKEN 5s BEFORE IT EXPIRES
   setSilentRefreshTimer(expiresIn - 5000);
 
-  //SAVE TOKEN TO LOCAL STATE CACHE AND USER LOGGED VARIABLE
+  // SAVE TOKEN TO LOCAL STATE CACHE AND USER LOGGED VARIABLE
   tokenVar(token);
   tokenExpiresInVar(expiresIn);
   userLoggedInVar(true);
@@ -28,12 +28,12 @@ const saveAutheticationInfo = (token) => {
   return true;
 };
 
-//TRY TO MAKE THE SILENT REFRESH OF THE AUTHETICATION TOKEN
+// TRY TO MAKE THE SILENT REFRESH OF THE AUTHETICATION TOKEN
 export const refreshToken = async () => {
   try {
     const res = await fetchPost(
       ENDPOINTS.SILENT_REFRESH_API,
-      JSON.stringify({})
+      JSON.stringify({}),
     );
     const { token } = await res.json();
 
@@ -51,7 +51,7 @@ export const refreshToken = async () => {
   }
 };
 
-//MAKE THE LOGIN REQUEST TO NODE SERVER TO AUTHETICATE USER
+// MAKE THE LOGIN REQUEST TO NODE SERVER TO AUTHETICATE USER
 export const autheticate = async (login_id, password) => {
   const userInfo = JSON.stringify({
     login_id: 'rafaeelneto',
@@ -81,7 +81,7 @@ export const logout = () => {
   userLoggedInVar(false);
 };
 
-//SET TIMER TO SILENT REFRESH
+// SET TIMER TO SILENT REFRESH
 const setSilentRefreshTimer = (time) => {
   setTimeout(() => {
     console.log('SILENT REFRESH');

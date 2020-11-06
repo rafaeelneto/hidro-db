@@ -26,12 +26,6 @@ export const queries = {
   COLUMN_PROFUNDIDADE: () => `
     profun
   `,
-  COLUMN_SITUACAO: () => `
-    situacao
-  `,
-  COLUMN_LICEN_SITU: () => `
-    licen_situ
-  `,
   COLUMN_DATA_PERF: () => `
     data_perf
   `,

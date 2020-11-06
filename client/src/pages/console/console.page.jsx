@@ -11,6 +11,7 @@ import SubSideBar from '../../components/sub_sidebar/subSidebar.component';
 import Header from '../../components/header/header.component';
 
 import routesCategories from './routes';
+import LoadingComponent from '../../components/loadingComponent/loading.component';
 
 const SIDEBAR_WIDTH = '250px';
 
@@ -67,7 +68,7 @@ export default function ConsolePage() {
   if (data) {
     sideBarHidden = data.sideBarHidden;
   } else {
-    return <div>Loaging...</div>;
+    return <LoadingComponent />;
   }
 
   return (

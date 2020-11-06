@@ -3,7 +3,7 @@ import gql from '@apollo/client';
 export const queries = {
   GET_ALL: (filters, orderBy, fields) => `
     query GET_MUNICIPIOS ($limit: Int!, $offset: Int!){
-        pocos (${filters} ${orderBy} limit: $limit, offset: $offset){
+        municipios (${filters} ${orderBy} limit: $limit, offset: $offset){
           id
           ${fields}
         }
@@ -11,10 +11,18 @@ export const queries = {
     `,
   GET_BY_ID: (fields) => `
     query GET_MUNICIPIO_BY_ID($id: bigint!) {
-      pocos_by_pk(id: $id) {
+      municipios_by_pk(id: $id) {
         ${fields}
       }
     }
+  `,
+  GET_ALL_OPTIONS: () => `
+  query GET_MUNICIPIOS_OPTIONS{
+    municipios{
+      id
+      nome
+    }
+}
   `,
   COLUMN_MUNICIPIO: () => `
     municipio{

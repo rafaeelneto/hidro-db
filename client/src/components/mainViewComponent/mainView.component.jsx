@@ -4,9 +4,11 @@ import { useTheme, makeStyles } from '@material-ui/core/';
 
 import { gql, useQuery } from '@apollo/client';
 
-import TableItem from '../tableItemComponent/tableItem.component';
+import ItemView from '../itemViewComponent/itemView.component';
 
 import MainTable from '../mainTable/mainTable.component';
+
+import LoadingComponent from '../loadingComponent/loading.component';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   tableWrapper: {
-    height: '60vh',
+    height: '70vh',
   },
 }));
 
@@ -102,7 +104,7 @@ const TableView = ({ table }) => {
     },
   });
 
-  if (loading) return <h1>Carregando</h1>;
+  if (loading) return <LoadingComponent />;
   if (error) return <h1>Erro na aplicação</h1>;
 
   // COMPOSE TABLE OBJECT AND DATA TREATMENT
@@ -146,7 +148,7 @@ export default ({ table }) => {
         <TableView table={table} />
       </Route>
       <Route path={`${path}/:id`}>
-        <TableItem table={table} />
+        <ItemView table={table} />
       </Route>
     </RouteSwitch>
   );
