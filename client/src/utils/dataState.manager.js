@@ -6,12 +6,14 @@ export const generatateInicialState = (fieldsArray, id) => {
   const initialFieldsState = {};
   fieldsArray.forEach((field) => {
     const obj = {};
+
     obj[field.columnName] = {
       columnName: field.columnName,
       changed: false,
       newValue: null,
       oldValue: null,
     };
+
     initialFieldsState[id] = {
       ...initialFieldsState[id],
       ...obj,
@@ -20,15 +22,12 @@ export const generatateInicialState = (fieldsArray, id) => {
   return initialFieldsState;
 };
 
-// export const getDataStateByTable = (tableName, newDataState) => {};
 export const setDataStateByTable = (dataState, tableName, newData) => {
   const newDataState = { ...dataState };
 
-  newDataState[tableName] = { ...newData };
+  newDataState[tableName] = { ...newDataState[tableName], ...newData };
   dataStateVar(newDataState);
 };
-
-// export const setDataStateByTableId = (tableName, id, newDataState) => {};
 
 export const changeDataState = (
   oldValue,
@@ -39,21 +38,15 @@ export const changeDataState = (
   id,
 ) => {
   // CLONE DATASTATE OBJECT
-  const newDataState = JSON.parse(JSON.stringify(previousDataState));
+  const newDataState = JSON.parse(JSON.stringify(previousDataState[tableName]));
 
   // CHANGE PROPERTIES OF THE FIELD DATA STATE
-  const newFieldDataState = {
-    ...newDataState[tableName][id][fieldName],
+  newDataState[id][fieldName] = {
+    ...newDataState[id][fieldName],
     changed: true,
     newValue,
     oldValue,
   };
-
-  // INSERT ON FULL DATA STATE
-  newDataState[tableName][id] = {
-    ...newFieldDataState,
-  };
-  console.log(newDataState);
 
   // CALL THE FUNCTION TO SET THE NEW DATA STATE FOR THIS TABLE
   setDataStateByTable(previousDataState, tableName, newDataState);

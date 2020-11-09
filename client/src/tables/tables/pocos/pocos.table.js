@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { InputAdornment } from '@material-ui/core';
+
 import TextFieldComponent from '../../../components/fields_components/textField.component';
 import AutoCompleteList from '../../../components/fields_components/autoCompleteList.component';
 
@@ -52,6 +54,8 @@ fields.set(
     function (row, tableName, featureId) {
       return (
         <TextFieldComponent
+          endAdornment={<InputAdornment position="end">metros</InputAdornment>}
+          type="number"
           value={row.profun ? row.profun : null}
           field={this}
           tableName={tableName}
@@ -95,6 +99,7 @@ fields.set(
 const fieldsOrder = [[columnNames.profundidade, columnNames.municipio]];
 
 const getGIS = () => null;
+
 const statistics = {
   count: {
     query: '',

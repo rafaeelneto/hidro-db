@@ -55,7 +55,7 @@ export default function ({
     );
     setValueId(newValue.value);
   };
-  // console.log(options.filter((option) => option.value === value)[0].label);
+
   return (
     <Autocomplete
       id="combo-box-demo"

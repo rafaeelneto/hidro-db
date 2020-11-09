@@ -16,6 +16,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
+  title: {
+    color: theme.palette.darkGray,
+    fontWeight: 600,
+    fontSize: '2em',
+    textTransform: 'uppercase',
+    letterSpacing: '0.2em',
+  },
   tableWrapper: {
     height: '70vh',
   },
@@ -130,7 +137,7 @@ const TableView = ({ table }) => {
 
   return (
     <div className={classes.root}>
-      <h3>Poços</h3>
+      <span className={classes.title}>{table.tableName.label}</span>
       <div>FILTROS...</div>
       <div className={classes.tableWrapper}>
         <MainTable dataTable={dataTable} />

@@ -63,11 +63,17 @@ const TableItem = ({ table }) => {
     data: { dataState },
   } = useQuery(GET_DATA_STATE);
 
-  setDataStateByTable(
-    dataState,
-    table.tableName.name,
-    generatateInicialState(fieldsArray, featureId),
-  );
+  if (
+    Object.keys(dataState).length === 0 ||
+    !dataState[table.tableName.name] ||
+    !dataState[table.tableName.name][featureId]
+  ) {
+    setDataStateByTable(
+      dataState,
+      table.tableName.name,
+      generatateInicialState(fieldsArray, featureId),
+    );
+  }
 
   const GET_DATA = composeGraphQlQuery(table);
 
@@ -81,10 +87,15 @@ const TableItem = ({ table }) => {
   if (error) return <h1>Erro na aplicação</h1>;
 
   const row = data[table.tableName.nameByPk];
+  const mainField = fieldsArray.filter((field) => field.isMain)[0];
+  console.log(dataState);
   return (
     <div>
       <MainFieldComponent
-        value={fieldsArray.filter((field) => field.isMain)[0].getValue(row)}
+        value={mainField.getValue(row)}
+        field={mainField}
+        tableName={table.tableName.name}
+        featureId={featureId}
       />
       <div>
         <GridList cellHeight={160} cols={3}>
