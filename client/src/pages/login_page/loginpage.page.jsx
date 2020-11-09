@@ -12,7 +12,6 @@ import { useParams, useHistory } from 'react-router-dom';
 import { autheticate } from '../../utils/authetication';
 import { tokenVar } from '../../graphql/cache';
 
-import background_main from '../../assets/images/background_main.jpg';
 import logo_cosanpa_db from '../../assets/logos/logo_cosanpa_db_vertical_wbg.svg';
 
 const useStyles = makeStyles((theme) => {
@@ -65,8 +64,7 @@ const useStyles = makeStyles((theme) => {
     hero_tile: {
       height: '600px',
       width: '100%',
-      background: 'url(.assets/images/background_main.png)',
-      backgroundImage: `url(${background_main})`,
+      backgroundColor: theme.palette.grayNeutral,
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       color: 'white',
@@ -289,15 +287,15 @@ export default function LoginPage() {
       <div className={classes.login_tile}>
         <div className={`${classes.containerWrapper} login_container`}>
           <div className={classes.info_box}>
-            <h1 className={classes.section_title}>
-              Faça login para ter acesso avançado e para contribuir conosco
-              TOKEN: {data.userLoggedIn.toString()}
-            </h1>
+            <h1 className={classes.section_title}>TITULO</h1>
             <p>
-              O nosso sistema é uma ferramenta colaborativa e integrada para o
-              gerenciamento de informações da COSANPA e conta com a ajuda de
-              toda a equipe da companhia para isso. Use seu login para entrar em
-              seu perfil. Caso não tenha o acesso, entre em contato conosco.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
           </div>
           <div className={classes.login_box}>
