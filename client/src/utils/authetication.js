@@ -53,11 +53,6 @@ export const refreshToken = async () => {
 
 // MAKE THE LOGIN REQUEST TO NODE SERVER TO AUTHETICATE USER
 export const autheticate = async (login_id, password) => {
-  const userInfo = JSON.stringify({
-    login_id: 'rafaeelneto',
-    password: 'miaaaau',
-  });
-
   try {
     const res = await fetchPost(ENDPOINTS.USER_LOGIN_API, userInfo);
     const { token } = await res.json();
