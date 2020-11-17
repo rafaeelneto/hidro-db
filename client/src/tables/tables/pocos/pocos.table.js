@@ -76,12 +76,12 @@ fields.set(
     false, // only on details page
     queriesMunicipios.COLUMN_MUNICIPIO, // query of the field
     null, // mutation to set to the field
-    (row) => (row.municipio.nome ? row.municipio.nome : '-'), // get value funcion
+    (row) => (row.municipio && row.municipio.nome ? row.municipio.nome : '-'), // get value funcion
     // eslint-disable-next-line prefer-arrow-callback
     function (row, tableName, featureId) {
       return (
         <AutoCompleteList
-          value={row.municipio.id ? row.municipio.id : null}
+          value={row.municipio && row.municipio.id ? row.municipio.id : null}
           graphQlQuery={{
             tableName: tableNames.municipios.name,
             query: queriesMunicipios.GET_ALL_OPTIONS(),

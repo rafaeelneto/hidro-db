@@ -1,3 +1,5 @@
+const authRoles = ['admin', 'contributor', 'manager'];
+
 const enumLicenSitu = new Map();
 enumLicenSitu.set('sem_outorga', 'Sem outorga');
 enumLicenSitu.set('outorgado', 'Outorgado');
@@ -14,4 +16,5 @@ enumFeaturesTypes.set('cap_superf', 'Cap. Superficial');
 export default {
   enum_licen_situ: enumLicenSitu,
   enum_features_types: enumFeaturesTypes,
+  authRoles,
 };

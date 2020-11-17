@@ -11,9 +11,10 @@ const sendAuthToken = async (user, res) => {
     {
       id: user.id,
       name: user.nome,
+      role: user.roles[0],
       'https://hasura.io/jwt/claims': {
         'x-hasura-allowed-roles': user.roles,
-        'x-hasura-default-role': 'admin',
+        'x-hasura-default-role': user.roles[0],
         'x-hasura-user-id': user.id,
       },
     },

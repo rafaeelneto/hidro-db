@@ -4,7 +4,12 @@ import { TextField, FormControl, Input, InputLabel } from '@material-ui/core';
 import { gql, useQuery } from '@apollo/client';
 
 import LoadingComponent from '../loadingComponent/loading.component';
-import { changeDataState } from '../../utils/dataState.manager';
+import {
+  useChangeDataState,
+  useDataState,
+  useDataStateByField,
+} from '../../utils/dataState.manager';
+import { useEffect } from 'react';
 
 // CONSTRUCT THE QUERY TO EXECUTE BASED ON FIELDS STATE
 const GET_DATA = (queryText) => gql`
@@ -19,19 +24,18 @@ export default function ({
   tableName,
   featureId,
 }) {
-  const [valueId, setValueId] = useState(value);
+  const changeDataState = useChangeDataState(tableName);
+  const valueModified = useDataStateByField(
+    tableName,
+    featureId,
+    field.columnName,
+  );
+
+  const [valueId, setValueId] = useState(
+    valueModified.newValue ? valueModified.newValue : value,
+  );
 
   let options = [];
-
-  const GET_DATA_STATE = gql`
-    query {
-      dataState @client
-    }
-  `;
-
-  const {
-    data: { dataState },
-  } = useQuery(GET_DATA_STATE);
 
   const { data, loading, error } = useQuery(GET_DATA(graphQlQuery.query), {
     skip: !graphQlQuery,
@@ -43,16 +47,9 @@ export default function ({
     options = data[graphQlQuery.tableName].map(graphQlQuery.getFunction);
   }
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (newValue) => {
     if (!newValue) return null;
-    changeDataState(
-      value,
-      newValue.value,
-      dataState,
-      tableName,
-      field.columnName,
-      featureId,
-    );
+    changeDataState(value, newValue.value, field.columnName, featureId);
     setValueId(newValue.value);
   };
 

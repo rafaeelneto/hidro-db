@@ -7,6 +7,7 @@ import {
   tokenExpiresInVar,
   userLoggedInVar,
   userVisitanteVar,
+  userInfoVar,
 } from '../graphql/cache';
 
 // SAVE AUTHETICATION INFO AND SET SILENT REFRESH
@@ -17,9 +18,13 @@ const saveAutheticationInfo = (token) => {
     new Date(decodedToken.exp * 1000).getTime() - new Date().getTime();
 
   // SET TIMER TO REFRESH TOKEN 5s BEFORE IT EXPIRES
+  // eslint-disable-next-line no-use-before-define
   setSilentRefreshTimer(expiresIn - 5000);
 
   // SAVE TOKEN TO LOCAL STATE CACHE AND USER LOGGED VARIABLE
+  const { id, role } = decodedToken;
+
+  userInfoVar({ id, role });
   tokenVar(token);
   tokenExpiresInVar(expiresIn);
   userLoggedInVar(true);

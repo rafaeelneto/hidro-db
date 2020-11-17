@@ -1,7 +1,7 @@
 export const queries = {
   GET_ALL: (filters, orderBy, fields) => `
     query GET_POCOS ($limit: Int!, $offset: Int!){
-        pocos (${filters} ${orderBy} limit: $limit, offset: $offset){
+        pocos (${filters} ${orderBy} limit: $limit, offset: $offset, order_by: { id: desc}){
           id
           ${fields}
         }

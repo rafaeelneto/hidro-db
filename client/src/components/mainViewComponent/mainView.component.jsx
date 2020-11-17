@@ -5,15 +5,15 @@ import { useTheme, makeStyles } from '@material-ui/core/';
 import { gql, useQuery } from '@apollo/client';
 
 import ItemView from '../itemViewComponent/itemView.component';
-
 import MainTable from '../mainTable/mainTable.component';
-
 import LoadingComponent from '../loadingComponent/loading.component';
+import EditPanelComponent from '../editPanel/editPanel.component';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxHeight: '100%',
     display: 'flex',
+    position: 'relative',
     flexDirection: 'column',
   },
   title: {
@@ -138,6 +138,7 @@ const TableView = ({ table }) => {
   return (
     <div className={classes.root}>
       <span className={classes.title}>{table.tableName.label}</span>
+      <EditPanelComponent />
       <div>FILTROS...</div>
       <div className={classes.tableWrapper}>
         <MainTable dataTable={dataTable} />

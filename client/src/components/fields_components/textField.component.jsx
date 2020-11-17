@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core/';
 import { useQuery, gql } from '@apollo/client';
 
-import { changeDataState } from '../../utils/dataState.manager';
+import { useChangeDataState } from '../../utils/dataState.manager';
 
 const TextFieldComponent = ({
   value,
@@ -18,6 +18,7 @@ const TextFieldComponent = ({
   ...otherProps
 }) => {
   const [fieldValue, setValue] = useState(value);
+  const changeDataState = useChangeDataState(tableName);
 
   const GET_DATA_STATE = gql`
     query {
@@ -32,14 +33,7 @@ const TextFieldComponent = ({
   const handleChange = (event) => {
     const newValue = event.target.value;
     if (!newValue) return null;
-    changeDataState(
-      value,
-      newValue,
-      dataState,
-      tableName,
-      field.columnName,
-      featureId,
-    );
+    changeDataState(value, newValue, field.columnName, featureId);
     setValue(newValue);
   };
   return (

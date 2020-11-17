@@ -8,6 +8,7 @@ const theme = {
     secondary: {
       main: '#919191',
     },
+    inactiveGray: '#dbdbdb',
     grayNeutral: '#656565',
     darkGray: '#3d3d3d',
     backgroundLightGray: '#EDEDED',
