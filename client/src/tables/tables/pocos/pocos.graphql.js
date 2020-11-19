@@ -40,4 +40,11 @@ export const queries = {
   `,
 };
 
-export const mutations = {};
+export const mutations = {
+  DELETE: (ids) => `
+  mutation deletePocos ($id: bigint!) {
+    delete_pocos_by_pk(id: $id){
+      id
+    }
+  }`,
+};

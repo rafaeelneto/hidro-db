@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
-import { useTheme, makeStyles, Button } from '@material-ui/core/';
+import { useTheme, makeStyles, Button, Checkbox } from '@material-ui/core/';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -40,18 +40,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MainTable = ({ dataTable }) => {
+const MainTable = ({ dataTable, selectedItems, onSelectItems }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
   const history = useHistory();
   const { path } = useRouteMatch();
 
+  const [allSelect, setAllSelect] = useState(false);
+
+  const checkItemSelect = (id) => selectedItems.includes(id);
+  const onCheckAllItems = (event) => {
+    if (allSelect) {
+      onSelectItems([]);
+    } else {
+      const allIds = dataTable.rows.map((row) => row.id);
+
+      onSelectItems(allIds);
+    }
+    setAllSelect(!allSelect);
+  };
+
   return (
     <TableContainer className={classes.tableContainer} component={Paper}>
       <Table stickyHeader className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
+            <TableCell key={`select-all-checkbox`} style={{ width: '40px' }}>
+              <Checkbox
+                checked={allSelect}
+                onChange={onCheckAllItems}
+                inputProps={{ 'aria-labelledby': 'Selecionar todos' }}
+              />
+            </TableCell>
             {dataTable.headers.map((field) => (
               <TableCell
                 key={field.name}
@@ -63,30 +84,39 @@ const MainTable = ({ dataTable }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {dataTable.rows.map((row) => (
-            <TableRow key={row.id} className={classes.bodyRow}>
-              {dataTable.headers.map((field) => (
-                <TableCell
-                  key={field.label + row.id}
-                  className={field.isMain ? classes.tableCell : ''}
-                >
-                  {row[field.name]}
-                  {field.isMain ? (
-                    <Button
-                      key={field.label + row.id}
-                      className="button-link"
-                      size="small"
-                      onClick={() => history.push(`${path}/${row.id}`)}
-                    >
-                      Abrir detalhes
-                    </Button>
-                  ) : (
-                    ''
-                  )}
+          {dataTable.rows.map((row) => {
+            const isItemSelected = checkItemSelect(row.id);
+            return (
+              <TableRow key={row.id} className={classes.bodyRow}>
+                <TableCell key={`${row.id} checkbox`} style={{ width: '40px' }}>
+                  <Checkbox
+                    checked={isItemSelected}
+                    onChange={(event) => onSelectItems(row.id)}
+                  />
                 </TableCell>
-              ))}
-            </TableRow>
-          ))}
+                {dataTable.headers.map((field) => (
+                  <TableCell
+                    key={field.label + row.id}
+                    className={field.isMain ? classes.tableCell : ''}
+                  >
+                    {row[field.name]}
+                    {field.isMain ? (
+                      <Button
+                        key={field.label + row.id}
+                        className="button-link"
+                        size="small"
+                        onClick={() => history.push(`${path}/${row.id}`)}
+                      >
+                        Abrir detalhes
+                      </Button>
+                    ) : (
+                      ''
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>

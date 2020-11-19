@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Route, Switch as RouteSwitch, useRouteMatch } from 'react-router-dom';
 import { useTheme, makeStyles } from '@material-ui/core/';
 
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery, useMutation } from '@apollo/client';
 
 import ItemView from '../itemViewComponent/itemView.component';
 import MainTable from '../mainTable/mainTable.component';
 import LoadingComponent from '../loadingComponent/loading.component';
 import EditPanelComponent from '../editPanel/editPanel.component';
+
+import { useSelectItemsState } from '../../utils/dataState.manager';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     position: 'relative',
     flexDirection: 'column',
+  },
+  subPageHeader: {
+    paddingBottom: '20px',
   },
   title: {
     color: theme.palette.darkGray,
@@ -88,6 +93,12 @@ const TableView = ({ table }) => {
   // eslint-disable-next-line react/prop-types
   const [fieldsState, setFieldsState] = useState(getFieldsState(table.fields));
 
+  // DEFINE ITEM SELECTION STATE
+  const [selectedItems, changeSelectItems] = useSelectItemsState(
+    table.tableName.name,
+    [],
+  );
+
   // SET TABLE's STATE VARIABLES AND HANDLE CHANGES ON PAGE
   const [tableSelectorHidden, setTableSelectorHidden] = useState(false);
   const [page, setPage] = React.useState(0);
@@ -104,12 +115,25 @@ const TableView = ({ table }) => {
 
   // QUERY DATA WITH APOLLO CLIENT
   // ================= NEEDS TO QUERY THE COUNT OF ROWS ========================
-  const { data, loading, error } = useQuery(GET_DATA, {
+  const { data, loading, error, refetch } = useQuery(GET_DATA, {
     variables: {
       limit,
       offset,
     },
   });
+
+  const DELETE_MUTATION = gql`
+    ${table.mutations.DELETE()}
+  `;
+
+  const [
+    deleteItems,
+    { data: dataMutation, loading: loadingMutation },
+  ] = useMutation(DELETE_MUTATION);
+
+  if (loadingMutation) {
+    refetch();
+  }
 
   if (loading) return <LoadingComponent />;
   if (error) return <h1>Erro na aplicação</h1>;
@@ -133,15 +157,38 @@ const TableView = ({ table }) => {
     setFieldsState(tmpFields);
   };
 
+  const onSelectItems = (id) => {
+    if (Array.isArray(id)) {
+      changeSelectItems(id);
+      return;
+    }
+
+    if (selectedItems.includes(id)) {
+      changeSelectItems(selectedItems.filter((item) => item !== id));
+    } else {
+      const newSelectedItems = [...selectedItems];
+      newSelectedItems.push(id);
+      changeSelectItems(newSelectedItems);
+    }
+  };
+
   // SET GUIDES TO MAPS AND TABLES COMPONENTS
 
   return (
     <div className={classes.root}>
-      <span className={classes.title}>{table.tableName.label}</span>
-      <EditPanelComponent />
-      <div>FILTROS...</div>
+      <div className={classes.subPageHeader}>
+        <span className={classes.title}>{table.tableName.label}</span>
+        <EditPanelComponent
+          tableName={table.tableName.name}
+          onDelete={deleteItems}
+        />
+      </div>
       <div className={classes.tableWrapper}>
-        <MainTable dataTable={dataTable} />
+        <MainTable
+          dataTable={dataTable}
+          selectedItems={selectedItems}
+          onSelectItems={onSelectItems}
+        />
       </div>
     </div>
   );

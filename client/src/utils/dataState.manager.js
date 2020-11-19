@@ -56,12 +56,34 @@ export const generatateInicialState = (fieldsArray, id) => {
 export const setDataStateByTable = (dataState, tableName, newData) => {
   const newDataState = { ...dataState };
 
-  newDataState[tableName] = { ...newDataState[tableName], ...newData };
+  newDataState[tableName] = {
+    ...newDataState[tableName],
+    ...newData,
+  };
   dataStateVar(newDataState);
+};
+
+export const useSelectItemsState = (tableName, inicialItems) => {
+  let dataState = { ...useDataState() };
+
+  const changeSelectItemState = (items) => {
+    const newDataState = { ...dataState };
+    newDataState[tableName] = { ...dataState[tableName], selectedItems: items };
+
+    dataStateVar(newDataState);
+    return newDataState;
+  };
+
+  if (!dataState[tableName] || !dataState[tableName].selectedItems) {
+    dataState = changeSelectItemState(inicialItems);
+  }
+
+  return [dataState[tableName].selectedItems, changeSelectItemState];
 };
 
 export const useChangeDataState = (tableName) => {
   const previousDataState = useDataStateByTable(tableName);
+  console.log(previousDataState);
   const changeDataState = (oldValue, newValue, fieldName, id) => {
     // CLONE DATASTATE OBJECT
 

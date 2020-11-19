@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -11,8 +11,6 @@ import {
 } from '@material-ui/core';
 import { useQuery, gql } from '@apollo/client';
 
-import CollapseSide from '../../themes/CollapseSide';
-
 import { ReactComponent as EditIcon } from '../../assets/icons/edit_icon.svg';
 import { ReactComponent as AddIcon } from '../../assets/icons/add_icon.svg';
 import { ReactComponent as SaveIcon } from '../../assets/icons/save_icon.svg';
@@ -20,10 +18,12 @@ import { ReactComponent as TrashIcon } from '../../assets/icons/trash_icon.svg';
 import { ReactComponent as UndoIcon } from '../../assets/icons/undo_icon.svg';
 
 import LoadingComponent from '../loadingComponent/loading.component';
+import AlertDialog from '../alertDialog/alertDialog.component';
 
 import enums from '../../tables/enums';
 
 import { isOnEditVar } from '../../graphql/cache';
+import { useDataStateByTable } from '../../utils/dataState.manager';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,9 +53,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default () => {
+export default ({ tableName, onDelete }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
+
+  const [exitDialogOpen, setExitDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const { selectedItems } = useDataStateByTable(tableName);
+
+  const onExitResponse = (response) => {
+    isOnEditVar(!response);
+    setExitDialogOpen(false);
+  };
+
+  const onDeleteResponse = (response) => {
+    // DELETE OPERATION
+    if (response) {
+      selectedItems.forEach((id) => {
+        onDelete({ variables: { id } });
+      });
+    }
+
+    setDeleteDialogOpen(false);
+  };
 
   const GET_DATA = gql`
     query {
@@ -73,14 +94,19 @@ export default () => {
 
   const handleEditBtn = () => {
     if (userInfo && enums.authRoles.includes(userInfo.role)) {
-      isOnEditVar(!isOnEdit);
+      if (isOnEdit) setExitDialogOpen(true);
+      else isOnEditVar(true);
     }
+  };
+
+  const handleDeleteBtn = () => {
+    if (isOnEdit && selectedItems.length > 0) setDeleteDialogOpen(true);
   };
 
   return (
     <div className={classes.root}>
       <div>
-        <Tooltip title="Editar" placement="top">
+        <Tooltip title={!isOnEdit ? 'Editar' : 'Fechar edição'} placement="top">
           <IconButton
             className={`${classes.editBtn} ${
               isOnEdit ? classes.editBtnActive : ''
@@ -103,6 +129,7 @@ export default () => {
         <IconButton
           className={`${classes.btn} ${isOnEdit ? classes.btnActive : ''}`}
           disabled={!isOnEdit}
+          onClick={handleDeleteBtn}
         >
           <TrashIcon />
         </IconButton>
@@ -123,6 +150,22 @@ export default () => {
           <UndoIcon />
         </IconButton>
       </Tooltip>
+      <AlertDialog
+        open={exitDialogOpen}
+        title={'Sair sem salvar'}
+        msg={
+          'Você tem certeza que deseja sair da edição sem salvar alterações?'
+        }
+        onResponse={onExitResponse}
+      />
+      <AlertDialog
+        open={deleteDialogOpen}
+        title={`Excluir ${selectedItems.length} items selectionados`}
+        msg={
+          'Você tem certeza que vai excluir estes itens? Essa operação não pode ser desfeita'
+        }
+        onResponse={onDeleteResponse}
+      />
     </div>
   );
 };
