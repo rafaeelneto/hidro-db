@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
-import { InputLabel, Input, FormControl } from '@material-ui/core/';
+import {
+  InputLabel,
+  Input,
+  FormControl,
+  makeStyles,
+  useTheme,
+} from '@material-ui/core/';
 
 import {
   useChangeDataState,
   useDataStateByField,
 } from '../../utils/dataState.manager';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: '10px',
+  },
+}));
 
 const TextFieldComponent = ({
   value,
@@ -13,6 +25,9 @@ const TextFieldComponent = ({
   featureId,
   ...otherProps
 }) => {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
   const changeDataState = useChangeDataState(tableName);
 
   const valueModified = useDataStateByField(
@@ -33,16 +48,18 @@ const TextFieldComponent = ({
   };
 
   return (
-    <FormControl>
-      <InputLabel htmlFor="component-simple">{field.label}</InputLabel>
-      <Input
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        {...otherProps}
-        id="component-simple"
-        value={fieldValue}
-        onChange={handleChange}
-      />
-    </FormControl>
+    <div className={classes.root}>
+      <FormControl>
+        <InputLabel htmlFor="component-simple">{field.label}</InputLabel>
+        <Input
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...otherProps}
+          id="component-simple"
+          value={fieldValue}
+          onChange={handleChange}
+        />
+      </FormControl>
+    </div>
   );
 };
 

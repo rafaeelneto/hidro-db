@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, FormControl, Input, InputLabel } from '@material-ui/core';
+import { TextField, makeStyles, useTheme } from '@material-ui/core';
 import { gql, useQuery } from '@apollo/client';
 
 import LoadingComponent from '../loadingComponent/loading.component';
@@ -16,6 +16,12 @@ const GET_DATA = (queryText) => gql`
   ${queryText}
 `;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: '10px',
+  },
+}));
+
 export default function AutoCompleteComponent({
   enumOptions,
   graphQlQuery,
@@ -24,6 +30,9 @@ export default function AutoCompleteComponent({
   tableName,
   featureId,
 }) {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
   const changeDataState = useChangeDataState(tableName);
   const valueModified = useDataStateByField(
     tableName,
@@ -64,17 +73,19 @@ export default function AutoCompleteComponent({
   };
 
   return (
-    <Autocomplete
-      id="combo-box-demo"
-      value={options.filter((option) => option.value === valueId)[0]}
-      options={options}
-      onChange={handleChange}
-      getOptionLabel={(option) => option.label}
-      renderInput={(params) => (
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        <TextField {...params} label={field.label} margin="normal" />
-      )}
-      style={{ width: 300 }}
-    />
+    <div classeName={classes.root}>
+      <Autocomplete
+        id="combo-box-demo"
+        value={options.filter((option) => option.value === valueId)[0]}
+        options={options}
+        onChange={handleChange}
+        getOptionLabel={(option) => option.label}
+        renderInput={(params) => (
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          <TextField {...params} label={field.label} margin="normal" />
+        )}
+        style={{ width: 300 }}
+      />
+    </div>
   );
 }
