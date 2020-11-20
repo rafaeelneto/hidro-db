@@ -20,7 +20,8 @@
     "prefer-promise-reject-errors": ["off"],
     "react/jsx-filename-extension": ["off"],
     "react/prefer-stateless-function": ["off"],
-    "react/prop-types": ["warn"],
+    "react/prop-types": ["off"],
+    "object-curly-newline": ["off"],
     "no-return-assign": ["off"]
   }
 }

@@ -1,6 +1,37 @@
-import { gql } from '@apollo/client';
-import { isNetworkRequestInFlight } from '@apollo/client/core/networkStatus';
+import { gql, useQuery } from '@apollo/client';
 import { dataStateVar } from '../graphql/cache';
+
+export const useDataState = () => {
+  const GET_DATA_STATE = gql`
+    query {
+      dataState @client
+    }
+  `;
+
+  const {
+    data: { dataState },
+  } = useQuery(GET_DATA_STATE);
+
+  return dataState;
+};
+
+export const useDataStateByTable = (tableName) => {
+  const dataState = useDataState();
+
+  return dataState[tableName];
+};
+
+export const useDataStateById = (tableName, id) => {
+  const dataState = useDataState();
+
+  return dataState[tableName][id];
+};
+
+export const useDataStateByField = (tableName, id, columnName) => {
+  const dataState = useDataState();
+
+  return dataState[tableName][id][columnName];
+};
 
 export const generatateInicialState = (fieldsArray, id) => {
   const initialFieldsState = {};
@@ -25,29 +56,49 @@ export const generatateInicialState = (fieldsArray, id) => {
 export const setDataStateByTable = (dataState, tableName, newData) => {
   const newDataState = { ...dataState };
 
-  newDataState[tableName] = { ...newDataState[tableName], ...newData };
+  newDataState[tableName] = {
+    ...newDataState[tableName],
+    ...newData,
+  };
   dataStateVar(newDataState);
 };
 
-export const changeDataState = (
-  oldValue,
-  newValue,
-  previousDataState,
-  tableName,
-  fieldName,
-  id,
-) => {
-  // CLONE DATASTATE OBJECT
-  const newDataState = JSON.parse(JSON.stringify(previousDataState[tableName]));
+export const useSelectItemsState = (tableName, inicialItems) => {
+  let dataState = { ...useDataState() };
 
-  // CHANGE PROPERTIES OF THE FIELD DATA STATE
-  newDataState[id][fieldName] = {
-    ...newDataState[id][fieldName],
-    changed: true,
-    newValue,
-    oldValue,
+  const changeSelectItemState = (items) => {
+    const newDataState = { ...dataState };
+    newDataState[tableName] = { ...dataState[tableName], selectedItems: items };
+
+    dataStateVar(newDataState);
+    return newDataState;
   };
 
-  // CALL THE FUNCTION TO SET THE NEW DATA STATE FOR THIS TABLE
-  setDataStateByTable(previousDataState, tableName, newDataState);
+  if (!dataState[tableName] || !dataState[tableName].selectedItems) {
+    dataState = changeSelectItemState(inicialItems);
+  }
+
+  return [dataState[tableName].selectedItems, changeSelectItemState];
+};
+
+export const useChangeDataState = (tableName) => {
+  const previousDataState = useDataState();
+  const previousTableState = useDataStateByTable(tableName);
+
+  const changeDataState = (oldValue, newValue, fieldName, id) => {
+    // CLONE DATASTATE OBJECT
+    const newDataState = JSON.parse(JSON.stringify(previousTableState));
+
+    // CHANGE PROPERTIES OF THE FIELD DATA STATE
+    newDataState[id][fieldName] = {
+      ...newDataState[id][fieldName],
+      changed: true,
+      newValue,
+      oldValue,
+    };
+
+    // CALL THE FUNCTION TO SET THE NEW DATA STATE FOR THIS TABLE
+    setDataStateByTable(previousDataState, tableName, newDataState);
+  };
+  return changeDataState;
 };
