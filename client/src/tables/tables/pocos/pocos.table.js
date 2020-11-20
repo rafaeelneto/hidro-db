@@ -15,6 +15,10 @@ import Fields from '../../Fields';
 
 const previewComponent = {};
 const fields = new Map();
+
+// =================================================
+// NOME
+// =================================================
 fields.set(
   columnNames.nome,
   new Fields(
@@ -39,6 +43,10 @@ fields.set(
     }, // component to be show on the details page
   ),
 );
+
+// =================================================
+// PROFUNDIDADE
+// =================================================
 fields.set(
   columnNames.profundidade,
   new Fields(
@@ -65,6 +73,10 @@ fields.set(
     }, // component to be show on the details page
   ),
 );
+
+// =================================================
+// MUNICIPIO
+// =================================================
 fields.set(
   columnNames.municipio,
   new Fields(
