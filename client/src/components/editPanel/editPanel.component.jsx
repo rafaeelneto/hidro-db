@@ -52,7 +52,16 @@ export default ({ tableName, onDelete }) => {
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const { selectedItems } = useDataStateByTable(tableName);
+  const tableState = useDataStateByTable(tableName);
+
+  const { selectedItems } = tableState;
+
+  if (!selectedItems) {
+    delete tableState.selectedItems;
+  }
+
+  // CHANGE LATER
+  const unsavedChanges = true;
 
   const onExitResponse = (response) => {
     isOnEditVar(!response);
@@ -129,7 +138,7 @@ export default ({ tableName, onDelete }) => {
       <Tooltip title="Salvar alterações" placement="top">
         <IconButton
           className={`${classes.btn} ${isOnEdit ? classes.btnActive : ''}`}
-          disabled={!isOnEdit}
+          disabled={!isOnEdit && unsavedChanges}
         >
           <SaveIcon />
         </IconButton>
@@ -137,7 +146,7 @@ export default ({ tableName, onDelete }) => {
       <Tooltip title="Descartar alterações" placement="top">
         <IconButton
           className={`${classes.btn} ${isOnEdit ? classes.btnActive : ''}`}
-          disabled={!isOnEdit}
+          disabled={!isOnEdit && unsavedChanges}
         >
           <UndoIcon />
         </IconButton>
@@ -150,8 +159,16 @@ export default ({ tableName, onDelete }) => {
       />
       <AlertDialog
         open={deleteDialogOpen}
-        title={`Excluir ${selectedItems.length} items selectionados`}
-        msg="Você tem certeza que vai excluir estes itens? Essa operação não pode ser desfeita"
+        title={`Excluir ${
+          selectedItems
+            ? `${selectedItems.length} items selectionados`
+            : 'este item?'
+        }`}
+        msg={`Você tem certeza que vai excluir ${
+          selectedItems
+            ? `${selectedItems.length} items selectionados`
+            : 'este item?'
+        }? Essa operação não pode ser desfeita`}
         onResponse={onDeleteResponse}
       />
     </div>

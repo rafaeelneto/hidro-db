@@ -89,7 +89,6 @@ fields.set(
     queriesMunicipios.COLUMN_MUNICIPIO, // query of the field
     null, // mutation to set to the field
     (row) => (row.municipio && row.municipio.nome ? row.municipio.nome : '-'), // get value funcion
-    // eslint-disable-next-line prefer-arrow-callback
     function (row, tableName, featureId) {
       return (
         <AutoCompleteList

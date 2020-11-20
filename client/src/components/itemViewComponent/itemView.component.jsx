@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, useMutation, gql } from '@apollo/client';
 import {
   GridList,
   GridListTile,
@@ -10,7 +10,6 @@ import {
   useTheme,
 } from '@material-ui/core';
 
-import { dataStateVar } from '../../graphql/cache';
 import {
   generatateInicialState,
   setDataStateByTable,
@@ -18,6 +17,7 @@ import {
 
 import MainFieldComponent from '../fields_components/mainField.component';
 import LoadingComponent from '../loadingComponent/loading.component';
+import EditPanelComponent from '../editPanel/editPanel.component';
 
 let fieldsArray;
 
@@ -38,8 +38,17 @@ const composeGraphQlQuery = (table) => {
 };
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    maxHeight: '100%',
+    display: 'flex',
+    position: 'relative',
+    flexDirection: 'column',
+  },
   gridTile: {
     padding: '10px',
+  },
+  subPageHeader: {
+    paddingBottom: '20px',
   },
 }));
 
@@ -47,6 +56,12 @@ const TableItem = ({ table }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const { id: featureId } = useParams();
+
+  const DELETE_MUTATION = gql`
+    ${table.mutations.DELETE()}
+  `;
+
+  const [deleteItem] = useMutation(DELETE_MUTATION);
 
   fieldsArray = Array.from(table.fields.values()).filter(
     (field) => !field.onlyTable,
@@ -88,16 +103,23 @@ const TableItem = ({ table }) => {
   const row = data[table.tableName.nameByPk];
   const mainField = fieldsArray.filter((field) => field.isMain)[0];
   return (
-    <div>
-      <MainFieldComponent
-        value={mainField.getValue(row)}
-        field={mainField}
-        tableName={table.tableName.name}
-        featureId={featureId}
-      />
+    <div className={classes.root}>
+      <div className={classes.subPageHeader}>
+        <MainFieldComponent
+          value={mainField.getValue(row)}
+          field={mainField}
+          tableName={table.tableName.name}
+          featureId={featureId}
+        />
+        <EditPanelComponent
+          tableName={table.tableName.name}
+          onDelete={deleteItem}
+        />
+      </div>
       <div>
         <GridList cellHeight={160} cols={3}>
           {table.fieldOrder.map((tile, index) => (
+            // eslint-disable-next-line react/no-array-index-key
             <GridListTile key={index} className={classes.gridTile}>
               <Paper elevation={2}>
                 {tile.map((fieldName) => (

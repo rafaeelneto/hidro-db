@@ -126,10 +126,9 @@ const TableView = ({ table }) => {
     ${table.mutations.DELETE()}
   `;
 
-  const [
-    deleteItems,
-    { data: dataMutation, loading: loadingMutation },
-  ] = useMutation(DELETE_MUTATION);
+  const [deleteItems, { loading: loadingMutation }] = useMutation(
+    DELETE_MUTATION,
+  );
 
   if (loadingMutation) {
     refetch();
