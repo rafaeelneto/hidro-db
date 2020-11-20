@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  GridList,
-  GridListTile,
-  IconButton,
-  Tooltip,
-  makeStyles,
-  useTheme,
-} from '@material-ui/core';
+import { IconButton, Tooltip, makeStyles, useTheme } from '@material-ui/core';
 import { useQuery, gql } from '@apollo/client';
 
 import { ReactComponent as EditIcon } from '../../assets/icons/edit_icon.svg';
@@ -53,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// eslint-disable-next-line react/prop-types
 export default ({ tableName, onDelete }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -152,18 +144,14 @@ export default ({ tableName, onDelete }) => {
       </Tooltip>
       <AlertDialog
         open={exitDialogOpen}
-        title={'Sair sem salvar'}
-        msg={
-          'Você tem certeza que deseja sair da edição sem salvar alterações?'
-        }
+        title="Sair sem salvar"
+        msg="Você tem certeza que deseja sair da edição sem salvar alterações?"
         onResponse={onExitResponse}
       />
       <AlertDialog
         open={deleteDialogOpen}
         title={`Excluir ${selectedItems.length} items selectionados`}
-        msg={
-          'Você tem certeza que vai excluir estes itens? Essa operação não pode ser desfeita'
-        }
+        msg="Você tem certeza que vai excluir estes itens? Essa operação não pode ser desfeita"
         onResponse={onDeleteResponse}
       />
     </div>

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+
+import React, { useState, useEffect } from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, FormControl, Input, InputLabel } from '@material-ui/core';
 import { gql, useQuery } from '@apollo/client';
@@ -6,17 +8,15 @@ import { gql, useQuery } from '@apollo/client';
 import LoadingComponent from '../loadingComponent/loading.component';
 import {
   useChangeDataState,
-  useDataState,
   useDataStateByField,
 } from '../../utils/dataState.manager';
-import { useEffect } from 'react';
 
 // CONSTRUCT THE QUERY TO EXECUTE BASED ON FIELDS STATE
 const GET_DATA = (queryText) => gql`
   ${queryText}
 `;
 
-export default function ({
+export default function AutoCompleteComponent({
   enumOptions,
   graphQlQuery,
   value,
@@ -31,25 +31,35 @@ export default function ({
     field.columnName,
   );
 
+  // SET VALUE ID STATE
   const [valueId, setValueId] = useState(
     valueModified.newValue ? valueModified.newValue : value,
   );
 
   let options = [];
 
+  // MAKE THE GRAPHQL QUERY WITH THE APOLLO HOOK
   const { data, loading, error } = useQuery(GET_DATA(graphQlQuery.query), {
+    // SKIP IF THE THE GRAPHQL VARIABLE ISN'T PRESENT
     skip: !graphQlQuery,
   });
 
+  // MAKE THE DATA TREATMENT OF THE RECEIVED GRAPHQL DATA
   if (graphQlQuery) {
     if (loading) return <LoadingComponent />;
     if (error) return <h1>Erro na aplicação</h1>;
     options = data[graphQlQuery.tableName].map(graphQlQuery.getFunction);
   }
 
-  const handleChange = (newValue) => {
+  // handle on change of properties
+  const handleChange = (event, newValue) => {
+    // CHECK IF NEW VALUE IS PRESENT
     if (!newValue) return null;
+
+    // SET THE DATA STATE
     changeDataState(value, newValue.value, field.columnName, featureId);
+
+    // SET THIS STATE AS THE NEW VALUE
     setValueId(newValue.value);
   };
 
@@ -61,6 +71,7 @@ export default function ({
       onChange={handleChange}
       getOptionLabel={(option) => option.label}
       renderInput={(params) => (
+        // eslint-disable-next-line react/jsx-props-no-spreading
         <TextField {...params} label={field.label} margin="normal" />
       )}
       style={{ width: 300 }}

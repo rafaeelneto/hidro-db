@@ -82,12 +82,12 @@ export const useSelectItemsState = (tableName, inicialItems) => {
 };
 
 export const useChangeDataState = (tableName) => {
-  const previousDataState = useDataStateByTable(tableName);
-  console.log(previousDataState);
+  const previousDataState = useDataState();
+  const previousTableState = useDataStateByTable(tableName);
+
   const changeDataState = (oldValue, newValue, fieldName, id) => {
     // CLONE DATASTATE OBJECT
-
-    const newDataState = JSON.parse(JSON.stringify(previousDataState));
+    const newDataState = JSON.parse(JSON.stringify(previousTableState));
 
     // CHANGE PROPERTIES OF THE FIELD DATA STATE
     newDataState[id][fieldName] = {

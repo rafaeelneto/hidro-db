@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useTheme, makeStyles, Input, FormControl } from '@material-ui/core/';
-import { gql, useQuery } from '@apollo/client';
 
-import { useChangeDataState } from '../../utils/dataState.manager';
+import {
+  useChangeDataState,
+  useDataStateByField,
+} from '../../utils/dataState.manager';
 
 const useStyles = makeStyles((theme) => ({
   inputMain: {
@@ -15,23 +17,24 @@ const useStyles = makeStyles((theme) => ({
 const TextFieldComponent = ({ value, field, tableName, featureId }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const [fieldValue, setValue] = useState(value);
+
   const changeDataState = useChangeDataState(tableName);
 
-  const GET_DATA_STATE = gql`
-    query {
-      dataState @client
-    }
-  `;
+  const valueModified = useDataStateByField(
+    tableName,
+    featureId,
+    field.columnName,
+  );
 
-  const {
-    data: { dataState },
-  } = useQuery(GET_DATA_STATE);
+  const [fieldValue, setValue] = useState(
+    valueModified.newValue ? valueModified.newValue : value,
+  );
 
   const handleChange = (event) => {
     changeDataState(value, event.target.value, field.columnName, featureId);
     setValue(event.target.value);
   };
+
   return (
     <FormControl>
       <Input

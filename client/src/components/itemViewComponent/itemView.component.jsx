@@ -1,9 +1,8 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import {
-  Box,
-  Button,
   GridList,
   GridListTile,
   Paper,
@@ -88,7 +87,6 @@ const TableItem = ({ table }) => {
 
   const row = data[table.tableName.nameByPk];
   const mainField = fieldsArray.filter((field) => field.isMain)[0];
-  console.log(dataState);
   return (
     <div>
       <MainFieldComponent

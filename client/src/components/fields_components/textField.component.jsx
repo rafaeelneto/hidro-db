@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import {
-  useTheme,
-  makeStyles,
-  InputLabel,
-  Input,
-  FormControl,
-} from '@material-ui/core/';
-import { useQuery, gql } from '@apollo/client';
+import { InputLabel, Input, FormControl } from '@material-ui/core/';
 
-import { useChangeDataState } from '../../utils/dataState.manager';
+import {
+  useChangeDataState,
+  useDataStateByField,
+} from '../../utils/dataState.manager';
 
 const TextFieldComponent = ({
   value,
@@ -17,18 +13,17 @@ const TextFieldComponent = ({
   featureId,
   ...otherProps
 }) => {
-  const [fieldValue, setValue] = useState(value);
   const changeDataState = useChangeDataState(tableName);
 
-  const GET_DATA_STATE = gql`
-    query {
-      dataState @client
-    }
-  `;
+  const valueModified = useDataStateByField(
+    tableName,
+    featureId,
+    field.columnName,
+  );
 
-  const {
-    data: { dataState },
-  } = useQuery(GET_DATA_STATE);
+  const [fieldValue, setValue] = useState(
+    valueModified.newValue ? valueModified.newValue : value,
+  );
 
   const handleChange = (event) => {
     const newValue = event.target.value;
@@ -36,10 +31,12 @@ const TextFieldComponent = ({
     changeDataState(value, newValue, field.columnName, featureId);
     setValue(newValue);
   };
+
   return (
     <FormControl>
       <InputLabel htmlFor="component-simple">{field.label}</InputLabel>
       <Input
+        // eslint-disable-next-line react/jsx-props-no-spreading
         {...otherProps}
         id="component-simple"
         value={fieldValue}
