@@ -41,10 +41,21 @@ export const queries = {
 };
 
 export const mutations = {
-  DELETE: (ids) => `
+  UPDATE: () => `
+  mutation updatePocos ($id: bigint!, $changes: pocos_set_input!) {
+    update_pocos_by_pk(
+      pk_columns: {id: $id}
+      _set: $changes
+    ){
+      id
+    }
+  }
+  `,
+  DELETE: () => `
   mutation deletePocos ($id: bigint!) {
     delete_pocos_by_pk(id: $id){
       id
     }
   }`,
+  COLUMN_PROFUNDIDADE: () => 'profun',
 };

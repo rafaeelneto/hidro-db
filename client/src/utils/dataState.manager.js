@@ -21,20 +21,20 @@ export const useDataStateByTable = (tableName) => {
   return dataState[tableName];
 };
 
-export const useDataStateById = (tableName, id) => {
+export const useDataChangesById = (tableName, id) => {
   const dataState = useDataState();
 
-  return dataState[tableName][id];
+  return dataState[tableName].changes.get(id);
 };
 
-export const useDataStateByField = (tableName, id, columnName) => {
+export const useDataChangesByField = (tableName, id, columnName) => {
   const dataState = useDataState();
 
-  return dataState[tableName][id][columnName];
+  return dataState[tableName].changes.get(id)[columnName];
 };
 
 export const generatateInicialState = (fieldsArray, id) => {
-  const initialFieldsState = {};
+  const initialFieldsState = new Map();
   fieldsArray.forEach((field) => {
     const obj = {};
 
@@ -45,21 +45,22 @@ export const generatateInicialState = (fieldsArray, id) => {
       oldValue: null,
     };
 
-    initialFieldsState[id] = {
-      ...initialFieldsState[id],
+    initialFieldsState.set(id, {
+      ...initialFieldsState.get(id),
       ...obj,
-    };
+    });
   });
   return initialFieldsState;
 };
 
-export const setDataStateByTable = (dataState, tableName, newData) => {
+export const setDataChangesByTable = (dataState, tableName, changes) => {
   const newDataState = { ...dataState };
 
   newDataState[tableName] = {
     ...newDataState[tableName],
-    ...newData,
+    changes,
   };
+
   dataStateVar(newDataState);
 };
 
@@ -81,24 +82,68 @@ export const useSelectItemsState = (tableName, inicialItems) => {
   return [dataState[tableName].selectedItems, changeSelectItemState];
 };
 
+export const useDataStateStatus = (tableName) => {
+  const previousDataState = useDataState();
+  const tableState = { ...previousDataState[tableName] };
+
+  const changeDataStateStatus = (isSaved) => {
+    const newDataState = { ...previousDataState };
+    const newTableState = { ...tableState, isSaved };
+
+    if (isSaved) {
+      newTableState.changes = new Map();
+    }
+
+    newDataState[tableName] = newTableState;
+    dataStateVar(newDataState);
+  };
+
+  return [tableState.isSaved, changeDataStateStatus];
+};
+
+export const useResetDataStatus = (tableName) => {
+  const previousDataState = useDataState();
+  const tableState = { ...previousDataState[tableName] };
+
+  const resetDataStatus = () => {
+    const newDataState = { ...previousDataState };
+    const newTableState = { ...tableState, isSaved: false, changes: new Map() };
+
+    newDataState[tableName] = newTableState;
+
+    dataStateVar(newDataState);
+  };
+
+  return resetDataStatus;
+};
+
 export const useChangeDataState = (tableName) => {
   const previousDataState = useDataState();
-  const previousTableState = useDataStateByTable(tableName);
+  const previousTableState = previousDataState[tableName];
+
+  const [, changeDataStateStatus] = useDataStateStatus(tableName);
 
   const changeDataState = (oldValue, newValue, fieldName, id) => {
     // CLONE DATASTATE OBJECT
-    const newDataState = JSON.parse(JSON.stringify(previousTableState));
+    const newChangesState = previousTableState.changes.get(id);
 
-    // CHANGE PROPERTIES OF THE FIELD DATA STATE
-    newDataState[id][fieldName] = {
-      ...newDataState[id][fieldName],
+    newChangesState[fieldName] = {
+      ...newChangesState[fieldName],
       changed: true,
       newValue,
       oldValue,
     };
 
+    // CHANGE PROPERTIES OF THE FIELD DATA STATE
+    previousTableState.changes.set(id, newChangesState);
+
     // CALL THE FUNCTION TO SET THE NEW DATA STATE FOR THIS TABLE
-    setDataStateByTable(previousDataState, tableName, newDataState);
+    setDataChangesByTable(
+      previousDataState,
+      tableName,
+      previousTableState.changes,
+    );
+    changeDataStateStatus(false);
   };
   return changeDataState;
 };

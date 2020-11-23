@@ -12,7 +12,8 @@ import {
 
 import {
   generatateInicialState,
-  setDataStateByTable,
+  setDataChangesByTable,
+  useDataStateStatus,
 } from '../../utils/dataState.manager';
 
 import MainFieldComponent from '../fields_components/mainField.component';
@@ -45,7 +46,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   gridTile: {
-    padding: '10px',
+    height: '100% !important',
+    '& .MuiGridListTile-tile': {
+      padding: '10px',
+      display: 'flex',
+    },
   },
   subPageHeader: {
     paddingBottom: '20px',
@@ -57,15 +62,38 @@ const TableItem = ({ table }) => {
   const classes = useStyles(theme);
   const { id: featureId } = useParams();
 
+  fieldsArray = Array.from(table.fields.values()).filter(
+    (field) => !field.onlyTable,
+  );
+
   const DELETE_MUTATION = gql`
     ${table.mutations.DELETE()}
   `;
 
   const [deleteItem] = useMutation(DELETE_MUTATION);
 
-  fieldsArray = Array.from(table.fields.values()).filter(
-    (field) => !field.onlyTable,
-  );
+  const UPDATE_MUTATION = gql`
+    ${table.mutations.UPDATE()}
+  `;
+
+  const [updateItem] = useMutation(UPDATE_MUTATION);
+
+  const [isSaved, changeDataStatus] = useDataStateStatus(table.tableName.name);
+
+  const updateItemListerner = (fieldsChanges) => {
+    const changes = {};
+
+    if (isSaved) return;
+
+    fieldsArray.forEach((field) => {
+      const newValue = fieldsChanges.get(field.columnName);
+      if (!newValue) return;
+      changes[field.mutation()] = newValue;
+    });
+
+    changeDataStatus(true);
+    updateItem({ variables: { id: featureId, changes } });
+  };
 
   const GET_DATA_STATE = gql`
     query {
@@ -80,9 +108,10 @@ const TableItem = ({ table }) => {
   if (
     Object.keys(dataState).length === 0 ||
     !dataState[table.tableName.name] ||
-    !dataState[table.tableName.name][featureId]
+    !dataState[table.tableName.name].changes ||
+    dataState[table.tableName.name].changes.size == 0
   ) {
-    setDataStateByTable(
+    setDataChangesByTable(
       dataState,
       table.tableName.name,
       generatateInicialState(fieldsArray, featureId),
@@ -102,6 +131,8 @@ const TableItem = ({ table }) => {
 
   const row = data[table.tableName.nameByPk];
   const mainField = fieldsArray.filter((field) => field.isMain)[0];
+
+  console.log(dataState);
   return (
     <div className={classes.root}>
       <div className={classes.subPageHeader}>
@@ -114,6 +145,7 @@ const TableItem = ({ table }) => {
         <EditPanelComponent
           tableName={table.tableName.name}
           onDelete={deleteItem}
+          onUpdate={updateItemListerner}
         />
       </div>
       <div>
@@ -121,7 +153,7 @@ const TableItem = ({ table }) => {
           {table.fieldOrder.map((tile, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <GridListTile key={index} className={classes.gridTile}>
-              <Paper elevation={2}>
+              <Paper elevation={2} style={{ width: '100%' }}>
                 {tile.map((fieldName) => (
                   <div key={fieldName}>
                     {fieldsArray
