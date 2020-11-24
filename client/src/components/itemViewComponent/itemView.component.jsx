@@ -109,7 +109,8 @@ const TableItem = ({ table }) => {
     Object.keys(dataState).length === 0 ||
     !dataState[table.tableName.name] ||
     !dataState[table.tableName.name].changes ||
-    dataState[table.tableName.name].changes.size == 0
+    dataState[table.tableName.name].changes.size == 0 ||
+    !dataState[table.tableName.name].changes.get(featureId)
   ) {
     setDataChangesByTable(
       dataState,
