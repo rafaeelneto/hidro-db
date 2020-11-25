@@ -14,10 +14,7 @@ import AlertDialog from '../alertDialog/alertDialog.component';
 import enums from '../../tables/enums';
 
 import { isOnEditVar } from '../../graphql/cache';
-import {
-  useDataStateByTable,
-  useResetDataStatus,
-} from '../../utils/dataState.manager';
+import { useDataStateByTable } from '../../utils/dataState.manager';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // eslint-disable-next-line react/prop-types
-export default ({ tableName, onDelete, onUpdate }) => {
+export default ({ tableName, onDelete }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -56,28 +53,17 @@ export default ({ tableName, onDelete, onUpdate }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const tableState = useDataStateByTable(tableName);
-  const resetDataStatus = useResetDataStatus(tableName);
 
-  const { selectedItems, changes } = tableState;
+  const { selectedItems } = tableState;
 
   if (!selectedItems) {
     delete tableState.selectedItems;
   }
 
-  let unsavedChanges = false;
-  const fieldsChanged = new Map();
-
-  Array.from(changes.values()).forEach((featureItem) => {
-    Object.values(featureItem).forEach((field) => {
-      if (field.changed) {
-        unsavedChanges = true;
-        fieldsChanged.set(field.columnName, field.newValue);
-      }
-    });
-  });
+  // CHANGE LATER
+  const unsavedChanges = true;
 
   const onExitResponse = (response) => {
-    if (response) resetDataStatus();
     isOnEditVar(!response);
     setExitDialogOpen(false);
   };
@@ -109,10 +95,8 @@ export default ({ tableName, onDelete, onUpdate }) => {
 
   const handleEditBtn = () => {
     if (userInfo && enums.authRoles.includes(userInfo.role)) {
-      if (isOnEdit) {
-        if (unsavedChanges) setExitDialogOpen(true);
-        else isOnEditVar(false);
-      } else isOnEditVar(true);
+      if (isOnEdit) setExitDialogOpen(true);
+      else isOnEditVar(true);
     }
   };
 
@@ -153,23 +137,16 @@ export default ({ tableName, onDelete, onUpdate }) => {
       </Tooltip>
       <Tooltip title="Salvar alterações" placement="top">
         <IconButton
-          className={`${classes.btn} ${
-            isOnEdit && unsavedChanges ? classes.btnActive : ''
-          }`}
-          disabled={!(isOnEdit && unsavedChanges)}
-          onClick={() => {
-            onUpdate(fieldsChanged);
-          }}
+          className={`${classes.btn} ${isOnEdit ? classes.btnActive : ''}`}
+          disabled={!isOnEdit && unsavedChanges}
         >
           <SaveIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Descartar alterações" placement="top">
         <IconButton
-          className={`${classes.btn} ${
-            isOnEdit && unsavedChanges ? classes.btnActive : ''
-          }`}
-          disabled={!(isOnEdit && unsavedChanges)}
+          className={`${classes.btn} ${isOnEdit ? classes.btnActive : ''}`}
+          disabled={!isOnEdit && unsavedChanges}
         >
           <UndoIcon />
         </IconButton>

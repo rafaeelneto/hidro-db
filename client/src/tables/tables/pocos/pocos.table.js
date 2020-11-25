@@ -9,13 +9,8 @@ import TableModel from '../../Table.model';
 import tableNames from '../../tableNames';
 import columnNames from '../../columnsNames';
 import { queries, mutations } from './pocos.graphql';
-
-import {
-  queries as queriesMunicipios,
-  mutations as mutationsMunicipios,
-} from '../municipios/municipios.graphql';
-
-import { queries as queriesCommon, mutations as mutationsCommon} from '../commonColumns.graphql';
+import { queries as queriesMunicipios } from '../municipios/municipios.graphql';
+import { queries as queriesCommon } from '../commonColumns.graphql';
 import Fields from '../../Fields';
 
 const previewComponent = {};
@@ -34,7 +29,7 @@ fields.set(
     false, // only on table
     false, // only on details page
     queriesCommon.COLUMN_NOME, // query of the field
-    mutationsCommon.COLUMN_NOME, // mutation to set to the field
+    null, // mutation to set to the field
     (row) => (row.nome ? row.nome : '-'), // get value funcion
     function (row, tableName, featureId) {
       return (
@@ -62,7 +57,7 @@ fields.set(
     false, // only on table
     false, // only on details page
     queries.COLUMN_PROFUNDIDADE, // query of the field
-    mutations.COLUMN_PROFUNDIDADE, // mutation to set to the field
+    null, // mutation to set to the field
     (row) => (row.profun ? `${row.profun} m` : '-'), // get value funcion
     function (row, tableName, featureId) {
       return (
@@ -92,7 +87,7 @@ fields.set(
     false, // only on table
     false, // only on details page
     queriesMunicipios.COLUMN_MUNICIPIO, // query of the field
-    mutationsMunicipios.COLUMN_MUNICIPIO, // mutation to set to the field
+    null, // mutation to set to the field
     (row) => (row.municipio && row.municipio.nome ? row.municipio.nome : '-'), // get value funcion
     function (row, tableName, featureId) {
       return (

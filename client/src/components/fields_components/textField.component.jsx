@@ -9,7 +9,7 @@ import {
 
 import {
   useChangeDataState,
-  useDataChangesByField,
+  useDataStateByField,
 } from '../../utils/dataState.manager';
 
 const useStyles = makeStyles((theme) => ({
@@ -30,7 +30,7 @@ const TextFieldComponent = ({
 
   const changeDataState = useChangeDataState(tableName);
 
-  const valueModified = useDataChangesByField(
+  const valueModified = useDataStateByField(
     tableName,
     featureId,
     field.columnName,
@@ -42,6 +42,7 @@ const TextFieldComponent = ({
 
   const handleChange = (event) => {
     const newValue = event.target.value;
+    if (!newValue) return null;
     changeDataState(value, newValue, field.columnName, featureId);
     setValue(newValue);
   };

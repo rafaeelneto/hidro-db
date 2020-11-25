@@ -3,7 +3,7 @@ import { useTheme, makeStyles, Input, FormControl } from '@material-ui/core/';
 
 import {
   useChangeDataState,
-  useDataChangesByField,
+  useDataStateByField,
 } from '../../utils/dataState.manager';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,7 +20,7 @@ const TextFieldComponent = ({ value, field, tableName, featureId }) => {
 
   const changeDataState = useChangeDataState(tableName);
 
-  const valueModified = useDataChangesByField(
+  const valueModified = useDataStateByField(
     tableName,
     featureId,
     field.columnName,

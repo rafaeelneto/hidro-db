@@ -9,10 +9,7 @@ import MainTable from '../mainTable/mainTable.component';
 import LoadingComponent from '../loadingComponent/loading.component';
 import EditPanelComponent from '../editPanel/editPanel.component';
 
-import {
-  useSelectItemsState,
-  useDataStateStatus,
-} from '../../utils/dataState.manager';
+import { useSelectItemsState } from '../../utils/dataState.manager';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -133,10 +130,7 @@ const TableView = ({ table }) => {
     DELETE_MUTATION,
   );
 
-  const [isSaved, changeDataStatus] = useDataStateStatus(table.tableName.name);
-
-  if (loadingMutation || isSaved) {
-    changeDataStatus(false);
+  if (loadingMutation) {
     refetch();
   }
 
