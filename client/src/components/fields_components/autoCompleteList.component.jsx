@@ -8,7 +8,7 @@ import { gql, useQuery } from '@apollo/client';
 import LoadingComponent from '../loadingComponent/loading.component';
 import {
   useChangeDataState,
-  useDataStateByField,
+  useDataChangesByField,
 } from '../../utils/dataState.manager';
 
 // CONSTRUCT THE QUERY TO EXECUTE BASED ON FIELDS STATE
@@ -17,7 +17,11 @@ const GET_DATA = (queryText) => gql`
 `;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  fieldWrapper: {
+    padding: '10px',
+  },
+  autoComplete: {
+    width: '100%',
     padding: '10px',
   },
 }));
@@ -34,15 +38,10 @@ export default function AutoCompleteComponent({
   const classes = useStyles(theme);
 
   const changeDataState = useChangeDataState(tableName);
-  const valueModified = useDataStateByField(
+  const valueModified = useDataChangesByField(
     tableName,
     featureId,
     field.columnName,
-  );
-
-  // SET VALUE ID STATE
-  const [valueId, setValueId] = useState(
-    valueModified.newValue ? valueModified.newValue : value,
   );
 
   let options = [];
@@ -67,16 +66,20 @@ export default function AutoCompleteComponent({
 
     // SET THE DATA STATE
     changeDataState(value, newValue.value, field.columnName, featureId);
-
-    // SET THIS STATE AS THE NEW VALUE
-    setValueId(newValue.value);
   };
 
   return (
-    <div classeName={classes.root}>
+    <div classeName={classes.fieldWrapper}>
       <Autocomplete
+        className={classes.autoComplete}
         id="combo-box-demo"
-        value={options.filter((option) => option.value === valueId)[0]}
+        value={
+          options.filter(
+            (option) =>
+              option.value ===
+              (valueModified.newValue ? valueModified.newValue : value),
+          )[0]
+        }
         options={options}
         onChange={handleChange}
         getOptionLabel={(option) => option.label}
@@ -84,7 +87,6 @@ export default function AutoCompleteComponent({
           // eslint-disable-next-line react/jsx-props-no-spreading
           <TextField {...params} label={field.label} margin="normal" />
         )}
-        style={{ width: 300 }}
       />
     </div>
   );
