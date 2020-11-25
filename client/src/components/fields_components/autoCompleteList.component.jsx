@@ -43,6 +43,7 @@ export default function AutoCompleteComponent({
     featureId,
     field.columnName,
   );
+  console.log(valueModified.newValue, value);
 
   let options = [];
 

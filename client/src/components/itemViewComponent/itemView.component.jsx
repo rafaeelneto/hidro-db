@@ -76,12 +76,17 @@ const TableItem = ({ table }) => {
     ${table.mutations.UPDATE()}
   `;
 
-  const [updateItem] = useMutation(UPDATE_MUTATION);
+  const [
+    updateItem,
+    { data: dataUpdate, loading: loadingUpdate },
+  ] = useMutation(UPDATE_MUTATION);
 
   const [isSaved, changeDataStatus] = useDataStateStatus(table.tableName.name);
 
   const updateItemListerner = (fieldsChanges) => {
     const changes = {};
+
+    console.log(fieldsChanges, isSaved);
 
     if (isSaved) return;
 
@@ -92,6 +97,7 @@ const TableItem = ({ table }) => {
     });
 
     changeDataStatus(true);
+
     updateItem({ variables: { id: featureId, changes } });
   };
 
@@ -109,7 +115,7 @@ const TableItem = ({ table }) => {
     Object.keys(dataState).length === 0 ||
     !dataState[table.tableName.name] ||
     !dataState[table.tableName.name].changes ||
-    dataState[table.tableName.name].changes.size == 0
+    !dataState[table.tableName.name].changes[featureId]
   ) {
     setDataChangesByTable(
       dataState,
@@ -120,7 +126,7 @@ const TableItem = ({ table }) => {
 
   const GET_DATA = composeGraphQlQuery(table);
 
-  const { data, loading, error } = useQuery(GET_DATA, {
+  const { data, loading, error, refetch } = useQuery(GET_DATA, {
     variables: {
       id: featureId,
     },
@@ -129,10 +135,12 @@ const TableItem = ({ table }) => {
   if (loading) return <LoadingComponent />;
   if (error) return <h1>Erro na aplicação</h1>;
 
+  if (loadingUpdate) {
+    refetch();
+  }
+
   const row = data[table.tableName.nameByPk];
   const mainField = fieldsArray.filter((field) => field.isMain)[0];
-
-  console.log(dataState);
 
   return (
     <div className={classes.root}>

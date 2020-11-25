@@ -67,14 +67,16 @@ export default ({ tableName, onDelete, onUpdate }) => {
   let unsavedChanges = false;
   const fieldsChanged = new Map();
 
-  Object.values(changes).forEach((featureItem) => {
-    Object.values(featureItem).forEach((field) => {
-      if (field.changed) {
-        unsavedChanges = true;
-        fieldsChanged.set(field.columnName, field.newValue);
-      }
+  if (changes) {
+    Object.values(changes).forEach((featureItem) => {
+      Object.values(featureItem).forEach((field) => {
+        if (field.changed) {
+          unsavedChanges = true;
+          fieldsChanged.set(field.columnName, field.newValue);
+        }
+      });
     });
-  });
+  }
 
   const onExitResponse = (response) => {
     if (response) resetDataStatus();

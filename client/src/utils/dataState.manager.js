@@ -59,6 +59,7 @@ export const setDataChangesByTable = (dataState, tableName, changes) => {
   newDataState[tableName] = {
     ...newDataState[tableName],
     changes,
+    isSaved: false,
   };
 
   dataStateVar(newDataState);
@@ -107,7 +108,7 @@ export const useResetDataStatus = (tableName) => {
 
   const resetDataStatus = () => {
     const newDataState = { ...previousDataState };
-    const newTableState = { ...tableState, isSaved: false, changes: new Map() };
+    const newTableState = { ...tableState, isSaved: false, changes: {} };
 
     newDataState[tableName] = newTableState;
 
@@ -140,7 +141,6 @@ export const useChangeDataState = (tableName) => {
     changes[id] = { ...changes[id], ...newChangesState };
 
     // CALL THE FUNCTION TO SET THE NEW DATA STATE FOR THIS TABLE
-    changeDataStateStatus(false);
     setDataChangesByTable(previousDataState, tableName, changes);
   };
   return changeDataState;
