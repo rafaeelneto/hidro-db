@@ -15,7 +15,7 @@ import enums from '../../tables/enums';
 
 import { isOnEditVar } from '../../graphql/cache';
 import {
-  useDataState,
+  useDataStateByTable,
   useResetDataStatus,
 } from '../../utils/dataState.manager';
 
@@ -55,14 +55,17 @@ export default ({ tableName, onDelete, onUpdate }) => {
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
+  const tableState = useDataStateByTable(tableName);
   const resetDataStatus = useResetDataStatus(tableName);
 
-  const { selectedItems, changes } = useDataState()[tableName];
+  const { selectedItems, changes } = tableState;
+
+  if (!selectedItems) {
+    delete tableState.selectedItems;
+  }
 
   let unsavedChanges = false;
   const fieldsChanged = new Map();
-
-  console.log(changes);
 
   if (changes) {
     Array.from(changes.values()).forEach((featureItem) => {
@@ -73,7 +76,6 @@ export default ({ tableName, onDelete, onUpdate }) => {
         }
       });
     });
-    console.log(fieldsChanged);
   }
 
   const onExitResponse = (response) => {
@@ -158,7 +160,6 @@ export default ({ tableName, onDelete, onUpdate }) => {
           }`}
           disabled={!(isOnEdit && unsavedChanges)}
           onClick={() => {
-            console.log(fieldsChanged);
             onUpdate(fieldsChanged);
           }}
         >

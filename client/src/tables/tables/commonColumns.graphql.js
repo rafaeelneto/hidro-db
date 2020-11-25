@@ -45,4 +45,6 @@ export const queries = {
   `,
 };
 
-export const mutations = {};
+export const mutations = {
+  COLUMN_NOME: () => 'nome',
+};
