@@ -133,6 +133,7 @@ const TableItem = ({ table }) => {
   const mainField = fieldsArray.filter((field) => field.isMain)[0];
 
   console.log(dataState);
+
   return (
     <div className={classes.root}>
       <div className={classes.subPageHeader}>

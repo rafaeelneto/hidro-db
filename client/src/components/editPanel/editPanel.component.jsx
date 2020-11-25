@@ -67,7 +67,7 @@ export default ({ tableName, onDelete, onUpdate }) => {
   let unsavedChanges = false;
   const fieldsChanged = new Map();
 
-  Array.from(changes.values()).forEach((featureItem) => {
+  Object.values(changes).forEach((featureItem) => {
     Object.values(featureItem).forEach((field) => {
       if (field.changed) {
         unsavedChanges = true;
