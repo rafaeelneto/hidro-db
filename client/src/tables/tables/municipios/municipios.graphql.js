@@ -32,6 +32,4 @@ export const queries = {
   `,
 };
 
-export const mutations = {
-  COLUMN_MUNICIPIO: () => 'municipio_id',
-};
+export const mutations = {};
