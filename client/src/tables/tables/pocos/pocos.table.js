@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { InputAdornment } from '@material-ui/core';
+import { useQuery, gql } from '@apollo/client';
 
 import TextFieldComponent from '../../../components/fields_components/textField.component';
 import AutoCompleteList from '../../../components/fields_components/autoCompleteList.component';
@@ -15,7 +16,10 @@ import {
   mutations as mutationsMunicipios,
 } from '../municipios/municipios.graphql';
 
-import { queries as queriesCommon, mutations as mutationsCommon} from '../commonColumns.graphql';
+import {
+  queries as queriesCommon,
+  mutations as mutationsCommon,
+} from '../commonColumns.graphql';
 import Fields from '../../Fields';
 
 const previewComponent = {};
@@ -117,11 +121,12 @@ const fieldsOrder = [[columnNames.profundidade, columnNames.municipio]];
 const getGIS = () => null;
 
 const statistics = {
-  count: {
-    query: '',
-    getValue: (data) => {
-      console.log(data);
-    },
+  count: function useCount() {
+    const { data, loading } = useQuery(gql`
+      ${queries.COUNT_POCOS()}
+    `);
+    if (loading) return null;
+    return data.pocos_aggregate ? data.pocos_aggregate.aggregate.count : 0;
   },
 };
 

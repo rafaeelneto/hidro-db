@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Switch as RouteSwitch, useRouteMatch } from 'react-router-dom';
-import { useTheme, makeStyles } from '@material-ui/core/';
+import { useTheme, makeStyles, Button } from '@material-ui/core/';
 
 import { gql, useQuery, useMutation } from '@apollo/client';
 
@@ -12,7 +12,10 @@ import EditPanelComponent from '../editPanel/editPanel.component';
 import {
   useSelectItemsState,
   useDataStateStatus,
+  useLoadingDataStatus,
 } from '../../utils/dataState.manager';
+
+import { ReactComponent as RefreshIcon } from '../../assets/icons/refresh_icon.svg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,16 +26,23 @@ const useStyles = makeStyles((theme) => ({
   },
   subPageHeader: {
     paddingBottom: '20px',
+    display: 'flex',
+    alignItems: 'center',
   },
   title: {
     color: theme.palette.darkGray,
-    fontWeight: 600,
+    fontWeight: 700,
     fontSize: '2em',
     textTransform: 'uppercase',
-    letterSpacing: '0.2em',
+    letterSpacing: '0.1em',
   },
   tableWrapper: {
-    height: '70vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+  },
+  updateButton: {
+    fill: theme.palette.primary.dark,
   },
 }));
 
@@ -102,11 +112,16 @@ const TableView = ({ table }) => {
     [],
   );
 
+  const [isLoading, changeLoadingStatus] = useLoadingDataStatus(
+    table.tableName.name,
+  );
+
   // SET TABLE's STATE VARIABLES AND HANDLE CHANGES ON PAGE
   const [tableSelectorHidden, setTableSelectorHidden] = useState(false);
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(50);
   const [offset, setOffset] = React.useState(0);
+  const count = table.statistics.count();
 
   const handlePageChange = (event, newPage) => {
     setOffset(newPage > 0 ? newPage * limit : 0);
@@ -131,13 +146,24 @@ const TableView = ({ table }) => {
 
   const [deleteItems, { loading: loadingMutation }] = useMutation(
     DELETE_MUTATION,
+    {
+      refetchQueries: [
+        {
+          query: GET_DATA,
+          variables: {
+            limit,
+            offset,
+          },
+        },
+      ],
+    },
   );
 
   const [isSaved, changeDataStatus] = useDataStateStatus(table.tableName.name);
 
-  if (loadingMutation || isSaved) {
-    changeDataStatus(false);
-    refetch();
+  if (!loadingMutation && isLoading) {
+    changeLoadingStatus(false);
+    changeDataStatus(true, false);
   }
 
   if (loading) return <LoadingComponent />;
@@ -183,6 +209,14 @@ const TableView = ({ table }) => {
     <div className={classes.root}>
       <div className={classes.subPageHeader}>
         <span className={classes.title}>{table.tableName.label}</span>
+        <Button
+          color="secondary"
+          className={classes.updateButton}
+          startIcon={<RefreshIcon />}
+          onClick={() => refetch()}
+        >
+          Atualizar
+        </Button>
         <EditPanelComponent
           tableName={table.tableName.name}
           onDelete={deleteItems}
@@ -193,6 +227,10 @@ const TableView = ({ table }) => {
           dataTable={dataTable}
           selectedItems={selectedItems}
           onSelectItems={onSelectItems}
+          count={count}
+          limit={limit}
+          page={page}
+          handlePageChange={handlePageChange}
         />
       </div>
     </div>

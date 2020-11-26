@@ -91,10 +91,6 @@ export const useDataStateStatus = (tableName) => {
     const newDataState = { ...previousDataState };
     const newTableState = { ...tableState, isSaved };
 
-    if (isSaved) {
-      newTableState.changes = {};
-    }
-
     newDataState[tableName] = newTableState;
     dataStateVar(newDataState);
   };
@@ -102,15 +98,56 @@ export const useDataStateStatus = (tableName) => {
   return [tableState.isSaved, changeDataStateStatus];
 };
 
+export const useLoadingDataStatus = (tableName) => {
+  const previousDataState = useDataState();
+  const tableState = { ...previousDataState[tableName] };
+
+  const changeLoadingStatus = (isLoading) => {
+    const newDataState = { ...previousDataState };
+    const newTableState = { ...tableState, isLoading };
+
+    newDataState[tableName] = newTableState;
+    dataStateVar(newDataState);
+  };
+
+  return [tableState.isLoading, changeLoadingStatus];
+};
+
 export const useResetDataStatus = (tableName) => {
   const previousDataState = useDataState();
   const tableState = { ...previousDataState[tableName] };
 
-  const resetDataStatus = () => {
+  const resetDataStatus = (featureId) => {
     const newDataState = { ...previousDataState };
-    const newTableState = { ...tableState, isSaved: false, changes: {} };
+    let newTableState = { ...tableState, isSaved: false };
+    const { changes } = { ...newTableState };
+
+    const newChanges = { ...changes };
+    if (changes) {
+      Object.values(newTableState.changes).forEach((featureItem) => {
+        const obj = {};
+        Object.values(featureItem).forEach((field) => {
+          obj[field.columnName] = {
+            ...obj[field.columnName],
+            columnName: field.columnName,
+            changed: false,
+            newValue: null,
+            oldValue: null,
+          };
+        });
+
+        newChanges[featureId] = { ...obj };
+      });
+    }
+
+    newTableState = {
+      ...newTableState,
+      changes: newChanges,
+    };
 
     newDataState[tableName] = newTableState;
+
+    console.log(newDataState);
 
     dataStateVar(newDataState);
   };

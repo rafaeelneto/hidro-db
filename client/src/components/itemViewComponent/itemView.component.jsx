@@ -14,6 +14,8 @@ import {
   generatateInicialState,
   setDataChangesByTable,
   useDataStateStatus,
+  useLoadingDataStatus,
+  useResetDataStatus,
 } from '../../utils/dataState.manager';
 
 import MainFieldComponent from '../fields_components/mainField.component';
@@ -66,40 +68,11 @@ const TableItem = ({ table }) => {
     (field) => !field.onlyTable,
   );
 
-  const DELETE_MUTATION = gql`
-    ${table.mutations.DELETE()}
-  `;
-
-  const [deleteItem] = useMutation(DELETE_MUTATION);
-
-  const UPDATE_MUTATION = gql`
-    ${table.mutations.UPDATE()}
-  `;
-
-  const [
-    updateItem,
-    { data: dataUpdate, loading: loadingUpdate },
-  ] = useMutation(UPDATE_MUTATION);
-
   const [isSaved, changeDataStatus] = useDataStateStatus(table.tableName.name);
-
-  const updateItemListerner = (fieldsChanges) => {
-    const changes = {};
-
-    console.log(fieldsChanges, isSaved);
-
-    if (isSaved) return;
-
-    fieldsArray.forEach((field) => {
-      const newValue = fieldsChanges.get(field.columnName);
-      if (!newValue) return;
-      changes[field.mutation()] = newValue;
-    });
-
-    changeDataStatus(true);
-
-    updateItem({ variables: { id: featureId, changes } });
-  };
+  const [isLoading, changeLoadingStatus] = useLoadingDataStatus(
+    table.tableName.name,
+  );
+  const resetDataState = useResetDataStatus(table.tableName.name);
 
   const GET_DATA_STATE = gql`
     query {
@@ -126,18 +99,53 @@ const TableItem = ({ table }) => {
 
   const GET_DATA = composeGraphQlQuery(table);
 
-  const { data, loading, error, refetch } = useQuery(GET_DATA, {
+  const { data, loading, error } = useQuery(GET_DATA, {
     variables: {
       id: featureId,
     },
   });
 
+  const DELETE_MUTATION = gql`
+    ${table.mutations.DELETE()}
+  `;
+
+  const [deleteItem] = useMutation(DELETE_MUTATION);
+
+  const UPDATE_MUTATION = gql`
+    ${table.mutations.UPDATE()}
+  `;
+
+  const [updateItem, { loading: loadingUpdate }] = useMutation(
+    UPDATE_MUTATION,
+    {
+      refetchQueries: [
+        {
+          query: GET_DATA,
+          variables: {
+            id: featureId,
+          },
+        },
+      ],
+    },
+  );
+
   if (loading) return <LoadingComponent />;
   if (error) return <h1>Erro na aplicação</h1>;
 
-  if (loadingUpdate) {
-    refetch();
-  }
+  const updateItemListerner = (fieldsChanges) => {
+    const changes = {};
+
+    if (isSaved) return;
+
+    fieldsArray.forEach((field) => {
+      const newValue = fieldsChanges.get(field.columnName);
+      if (!newValue) return;
+      changes[field.mutation()] = newValue;
+    });
+
+    updateItem({ variables: { id: featureId, changes } });
+    resetDataState(featureId);
+  };
 
   const row = data[table.tableName.nameByPk];
   const mainField = fieldsArray.filter((field) => field.isMain)[0];
@@ -151,6 +159,7 @@ const TableItem = ({ table }) => {
           tableName={table.tableName.name}
           featureId={featureId}
         />
+
         <EditPanelComponent
           tableName={table.tableName.name}
           onDelete={deleteItem}
