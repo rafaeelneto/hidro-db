@@ -118,9 +118,9 @@ const TableView = ({ table }) => {
 
   // SET TABLE's STATE VARIABLES AND HANDLE CHANGES ON PAGE
   const [tableSelectorHidden, setTableSelectorHidden] = useState(false);
-  const [page, setPage] = React.useState(0);
-  const [limit, setLimit] = React.useState(50);
-  const [offset, setOffset] = React.useState(0);
+  const [page, setPage] = useState(0);
+  const [limit] = useState(50);
+  const [offset, setOffset] = useState(0);
   const count = table.statistics.count();
 
   const handlePageChange = (event, newPage) => {
@@ -159,7 +159,7 @@ const TableView = ({ table }) => {
     },
   );
 
-  const [isSaved, changeDataStatus] = useDataStateStatus(table.tableName.name);
+  const [, changeDataStatus] = useDataStateStatus(table.tableName.name);
 
   if (!loadingMutation && isLoading) {
     changeLoadingStatus(false);

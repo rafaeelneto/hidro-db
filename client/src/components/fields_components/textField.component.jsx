@@ -36,14 +36,9 @@ const TextFieldComponent = ({
     field.columnName,
   );
 
-  const [fieldValue, setValue] = useState(
-    valueModified.newValue ? valueModified.newValue : value,
-  );
-
   const handleChange = (event) => {
     const newValue = event.target.value;
     changeDataState(value, newValue, field.columnName, featureId);
-    setValue(newValue);
   };
 
   return (
@@ -54,7 +49,7 @@ const TextFieldComponent = ({
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...otherProps}
           id="component-simple"
-          value={fieldValue}
+          value={valueModified.newValue ? valueModified.newValue : value}
           onChange={handleChange}
         />
       </FormControl>

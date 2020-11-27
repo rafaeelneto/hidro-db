@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // eslint-disable-next-line react/prop-types
-export default ({ tableName, onDelete, onUpdate }) => {
+export default ({ tableName, onDelete, onUpdate, featureId }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -122,6 +122,15 @@ export default ({ tableName, onDelete, onUpdate }) => {
     if (isOnEdit && selectedItems.length > 0) setDeleteDialogOpen(true);
   };
 
+  const handleDiscardBtn = () => {
+    if (featureId) resetDataStatus(featureId);
+    else if (selectedItems) {
+      selectedItems.forEach((id) => {
+        resetDataStatus(id);
+      });
+    }
+  };
+
   return (
     <div className={classes.root}>
       <div>
@@ -172,6 +181,7 @@ export default ({ tableName, onDelete, onUpdate }) => {
             isOnEdit && unsavedChanges ? classes.btnActive : ''
           }`}
           disabled={!(isOnEdit && unsavedChanges)}
+          onClick={handleDiscardBtn}
         >
           <UndoIcon />
         </IconButton>

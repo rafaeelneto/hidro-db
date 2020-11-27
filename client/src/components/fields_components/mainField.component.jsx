@@ -26,13 +26,8 @@ const TextFieldComponent = ({ value, field, tableName, featureId }) => {
     field.columnName,
   );
 
-  const [fieldValue, setValue] = useState(
-    valueModified.newValue ? valueModified.newValue : value,
-  );
-
   const handleChange = (event) => {
     changeDataState(value, event.target.value, field.columnName, featureId);
-    setValue(event.target.value);
   };
 
   return (
@@ -41,7 +36,7 @@ const TextFieldComponent = ({ value, field, tableName, featureId }) => {
         disableUnderline
         className={classes.inputMain}
         id="component-simple"
-        value={fieldValue}
+        value={valueModified.newValue ? valueModified.newValue : value}
         onChange={handleChange}
       />
     </FormControl>

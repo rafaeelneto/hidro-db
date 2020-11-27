@@ -147,8 +147,6 @@ export const useResetDataStatus = (tableName) => {
 
     newDataState[tableName] = newTableState;
 
-    console.log(newDataState);
-
     dataStateVar(newDataState);
   };
 
@@ -158,8 +156,6 @@ export const useResetDataStatus = (tableName) => {
 export const useChangeDataState = (tableName) => {
   const previousDataState = useDataState();
   const previousTableState = { ...previousDataState[tableName] };
-
-  const [, changeDataStateStatus] = useDataStateStatus(tableName);
 
   const changeDataState = (oldValue, newValue, fieldName, id) => {
     // CLONE DATASTATE OBJECT

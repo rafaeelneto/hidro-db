@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import {
@@ -56,6 +56,14 @@ const useStyles = makeStyles((theme) => ({
   },
   subPageHeader: {
     paddingBottom: '20px',
+  },
+  tileLabel: {
+    display: 'block',
+    fontSize: '12pt',
+    fontWeight: 700,
+    letterSpacing: '.2em',
+    padding: '10px',
+    textTransform: 'uppercase',
   },
 }));
 
@@ -115,19 +123,16 @@ const TableItem = ({ table }) => {
     ${table.mutations.UPDATE()}
   `;
 
-  const [updateItem, { loading: loadingUpdate }] = useMutation(
-    UPDATE_MUTATION,
-    {
-      refetchQueries: [
-        {
-          query: GET_DATA,
-          variables: {
-            id: featureId,
-          },
+  const [updateItem] = useMutation(UPDATE_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_DATA,
+        variables: {
+          id: featureId,
         },
-      ],
-    },
-  );
+      },
+    ],
+  });
 
   if (loading) return <LoadingComponent />;
   if (error) return <h1>Erro na aplicação</h1>;
@@ -164,15 +169,16 @@ const TableItem = ({ table }) => {
           tableName={table.tableName.name}
           onDelete={deleteItem}
           onUpdate={updateItemListerner}
+          featureId={featureId}
         />
       </div>
       <div>
         <GridList cellHeight={160} cols={3}>
-          {table.fieldOrder.map((tile, index) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <GridListTile key={index} className={classes.gridTile}>
+          {table.fieldOrder.map((tile) => (
+            <GridListTile key={tile.label} className={classes.gridTile}>
               <Paper elevation={2} style={{ width: '100%' }}>
-                {tile.map((fieldName) => (
+                <span className={classes.tileLabel}>{tile.label}</span>
+                {tile.fields.map((fieldName) => (
                   <div key={fieldName}>
                     {fieldsArray
                       .filter((field) => field.columnName === fieldName)[0]

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, makeStyles, useTheme } from '@material-ui/core';
 import { gql, useQuery } from '@apollo/client';
