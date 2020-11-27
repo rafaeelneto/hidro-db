@@ -1,20 +1,30 @@
 /* eslint-disable react/prop-types */
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, FormControl, Input, InputLabel } from '@material-ui/core';
+import { TextField, makeStyles, useTheme } from '@material-ui/core';
 import { gql, useQuery } from '@apollo/client';
 
 import LoadingComponent from '../loadingComponent/loading.component';
 import {
   useChangeDataState,
-  useDataStateByField,
+  useDataChangesByField,
 } from '../../utils/dataState.manager';
 
 // CONSTRUCT THE QUERY TO EXECUTE BASED ON FIELDS STATE
 const GET_DATA = (queryText) => gql`
   ${queryText}
 `;
+
+const useStyles = makeStyles((theme) => ({
+  fieldWrapper: {
+    padding: '10px',
+  },
+  autoComplete: {
+    width: '100%',
+    padding: '10px',
+  },
+}));
 
 export default function AutoCompleteComponent({
   enumOptions,
@@ -24,16 +34,14 @@ export default function AutoCompleteComponent({
   tableName,
   featureId,
 }) {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
   const changeDataState = useChangeDataState(tableName);
-  const valueModified = useDataStateByField(
+  const valueModified = useDataChangesByField(
     tableName,
     featureId,
     field.columnName,
-  );
-
-  // SET VALUE ID STATE
-  const [valueId, setValueId] = useState(
-    valueModified.newValue ? valueModified.newValue : value,
   );
 
   let options = [];
@@ -58,23 +66,28 @@ export default function AutoCompleteComponent({
 
     // SET THE DATA STATE
     changeDataState(value, newValue.value, field.columnName, featureId);
-
-    // SET THIS STATE AS THE NEW VALUE
-    setValueId(newValue.value);
   };
 
   return (
-    <Autocomplete
-      id="combo-box-demo"
-      value={options.filter((option) => option.value === valueId)[0]}
-      options={options}
-      onChange={handleChange}
-      getOptionLabel={(option) => option.label}
-      renderInput={(params) => (
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        <TextField {...params} label={field.label} margin="normal" />
-      )}
-      style={{ width: 300 }}
-    />
+    <div classeName={classes.fieldWrapper}>
+      <Autocomplete
+        className={classes.autoComplete}
+        id="combo-box-demo"
+        value={
+          options.filter(
+            (option) =>
+              option.value ===
+              (valueModified.newValue ? valueModified.newValue : value),
+          )[0]
+        }
+        options={options}
+        onChange={handleChange}
+        getOptionLabel={(option) => option.label}
+        renderInput={(params) => (
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          <TextField {...params} label={field.label} margin="normal" />
+        )}
+      />
+    </div>
   );
 }

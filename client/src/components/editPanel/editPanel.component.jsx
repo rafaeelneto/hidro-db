@@ -14,7 +14,10 @@ import AlertDialog from '../alertDialog/alertDialog.component';
 import enums from '../../tables/enums';
 
 import { isOnEditVar } from '../../graphql/cache';
-import { useDataStateByTable } from '../../utils/dataState.manager';
+import {
+  useDataStateByTable,
+  useResetDataStatus,
+} from '../../utils/dataState.manager';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,16 +48,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // eslint-disable-next-line react/prop-types
-export default ({ tableName, onDelete }) => {
+export default ({ tableName, onDelete, onUpdate, featureId }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const { selectedItems } = useDataStateByTable(tableName);
+  const tableState = useDataStateByTable(tableName);
+  const resetDataStatus = useResetDataStatus(tableName);
+
+  const { selectedItems, changes } = tableState;
+
+  if (!selectedItems) {
+    delete tableState.selectedItems;
+  }
+
+  let unsavedChanges = false;
+  const fieldsChanged = new Map();
+
+  if (changes) {
+    Object.values(changes).forEach((featureItem) => {
+      Object.values(featureItem).forEach((field) => {
+        if (field.changed) {
+          unsavedChanges = true;
+          fieldsChanged.set(field.columnName, field.newValue);
+        }
+      });
+    });
+  }
 
   const onExitResponse = (response) => {
+    if (response) resetDataStatus();
     isOnEditVar(!response);
     setExitDialogOpen(false);
   };
@@ -86,13 +111,24 @@ export default ({ tableName, onDelete }) => {
 
   const handleEditBtn = () => {
     if (userInfo && enums.authRoles.includes(userInfo.role)) {
-      if (isOnEdit) setExitDialogOpen(true);
-      else isOnEditVar(true);
+      if (isOnEdit) {
+        if (unsavedChanges) setExitDialogOpen(true);
+        else isOnEditVar(false);
+      } else isOnEditVar(true);
     }
   };
 
   const handleDeleteBtn = () => {
     if (isOnEdit && selectedItems.length > 0) setDeleteDialogOpen(true);
+  };
+
+  const handleDiscardBtn = () => {
+    if (featureId) resetDataStatus(featureId);
+    else if (selectedItems) {
+      selectedItems.forEach((id) => {
+        resetDataStatus(id);
+      });
+    }
   };
 
   return (
@@ -128,16 +164,24 @@ export default ({ tableName, onDelete }) => {
       </Tooltip>
       <Tooltip title="Salvar alterações" placement="top">
         <IconButton
-          className={`${classes.btn} ${isOnEdit ? classes.btnActive : ''}`}
-          disabled={!isOnEdit}
+          className={`${classes.btn} ${
+            isOnEdit && unsavedChanges ? classes.btnActive : ''
+          }`}
+          disabled={!(isOnEdit && unsavedChanges)}
+          onClick={() => {
+            onUpdate(fieldsChanged);
+          }}
         >
           <SaveIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Descartar alterações" placement="top">
         <IconButton
-          className={`${classes.btn} ${isOnEdit ? classes.btnActive : ''}`}
-          disabled={!isOnEdit}
+          className={`${classes.btn} ${
+            isOnEdit && unsavedChanges ? classes.btnActive : ''
+          }`}
+          disabled={!(isOnEdit && unsavedChanges)}
+          onClick={handleDiscardBtn}
         >
           <UndoIcon />
         </IconButton>
@@ -150,8 +194,16 @@ export default ({ tableName, onDelete }) => {
       />
       <AlertDialog
         open={deleteDialogOpen}
-        title={`Excluir ${selectedItems.length} items selectionados`}
-        msg="Você tem certeza que vai excluir estes itens? Essa operação não pode ser desfeita"
+        title={`Excluir ${
+          selectedItems
+            ? `${selectedItems.length} items selectionados`
+            : 'este item?'
+        }`}
+        msg={`Você tem certeza que vai excluir ${
+          selectedItems
+            ? `${selectedItems.length} items selectionados`
+            : 'este item?'
+        }? Essa operação não pode ser desfeita`}
         onResponse={onDeleteResponse}
       />
     </div>
